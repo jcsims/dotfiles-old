@@ -1,85 +1,270 @@
-set noswapfile
+set nocompatible
+filetype off
 
-" ----------------------------------------------------------------------------
-"  Text Formatting
-" ----------------------------------------------------------------------------
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
 
-set autoindent             " automatic indent new lines
-set smartindent            " be smart about it
-inoremap # X<BS>#
-set nowrap                 " do not wrap lines
-set softtabstop=2          " yep, two
-set shiftwidth=2           " ..
-set tabstop=4
-set expandtab              " expand tabs to spaces
-set nosmarttab             " fuck tabs
-set formatoptions+=n       " support for numbered/bullet lists
-"set textwidth=80           " wrap at 80 chars by default
-set virtualedit=block      " allow virtual edit in visual block ..
+Bundle 'gmarik/vundle'
 
-" ----------------------------------------------------------------------------
-"  Remapping
-" ----------------------------------------------------------------------------
+"github repos
+Bundle 'tpope/vim-fugitive'
+Bundle 'tpope/vim-rails'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'skwp/vim-rspec'
+Bundle 'tpope/vim-bundler'
+Bundle 'scrooloose/nerdtree'
+Bundle 'tpope/vim-rake'
+Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-haml'
+Bundle 'tpope/vim-cucumber'
+Bundle 'tpope/vim-markdown'
+Bundle 'tpope/vim-speeddating'
+Bundle 'tpope/vim-commentary'
+Bundle 'Lokaltog/vim-powerline'
+Bundle 'godlygeek/tabular'
+Bundle 'ervandew/supertab'
+Bundle 'kien/ctrlp.vim'
+Bundle 'honza/snipmate-snippets'
+Bundle 'MarcWeber/vim-addon-mw-utils'
+Bundle 'tomtom/tlib_vim'
+Bundle 'garbas/vim-snipmate'
+Bundle 'scrooloose/syntastic'
+Bundle 'wlangstroth/vim-racket'
+Bundle 'adimit/prolog.vim'
+Bundle 'uggedal/go-vim'
+Bundle 'tomasr/molokai'
+Bundle 'kchmck/vim-coffee-script'
+Bundle 'tmatilai/gitolite.vim'
+Bundle 'vim-ruby/vim-ruby'
+Bundle 'sunaku/vim-ruby-minitest'
+Bundle 'jcf/vim-latex'
 
-" lead with ,
-let mapleader = ","
+filetype plugin indent on
+syntax on
 
-" exit to normal mode with 'jj'
-inoremap jj <ESC>
+"set shell=/bin/zsh\ -i
 
+"Set tab options to preferred 2 spaces
+set tabstop=2
+set shiftwidth=2
+set softtabstop=2
+set expandtab
 
-" reflow paragraph with Q in normal and visual mode
-nnoremap Q gqap
-vnoremap Q gq
+set encoding=utf-8
+set scrolloff=3
+set autoindent
+set copyindent
+set showmode
+set showcmd
+set hidden
+set wildmenu
+set wildmode=list:longest
+set wildignore=*.swp,*.bak
+set cursorline
+set ttyfast
+set ruler
+set backspace=indent,eol,start
+set laststatus=2
+set nu
+set title
 
-" sane movement with wrap turned on
+" Some settings for supertab and eclim
+"let g:SuperTabDefaultCompletionType = "context"
+"let g:SuperTabContextDefaultCompletionType = "<c-x><c-u>"
+"let g:SuperTabLongestHighlight = 1
+
+"Supertab + eclim key mappings
+" Eclim settings
+" ,i imports whatever is needed for current line
+nnoremap <silent> <leader>i :JavaImport<cr>
+" ,d opens javadoc for statement in browser
+nnoremap <silent> <leader>d :JavaDocSearch -x declarations<cr>
+" ,<enter> searches context for statement
+nnoremap <silent> <leader><cr> :JavaSearchContext<cr>
+" ,jv validates current java file
+nnoremap <silent> <leader>jv :Validate<cr>
+" ,jc shows corrections for the current line of java
+nnoremap <silent> <leader>jc :JavaCorrect<cr>
+
+"Search options, including <leader><space> to clear search results
+nnoremap / /\v
+vnoremap / /\v
+set ignorecase
+set smartcase
+set gdefault
+set incsearch
+set showmatch
+set hlsearch
+nnoremap <leader><space> :noh<cr>
+
+"Set up column at column width to stick with sane column width while coding
+set nowrap
+set formatoptions=qrn1
+"set colorcolumn=80
+
+"Save all files anytime focus is lost
+if (expand("%") != "")
+  au FocusLost * :wa
+endif
+
+"Allow for quick and easy editing and sourcing of vimrc
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
+
+"Attempt to force the terminal to display more colors
+set t_Co=256
+"Color scheme!
+"set background=light
+colorscheme molokai
+
+if has("gui_macvim")
+  set guifont=Menlo\ for\ Powerline:h12
+endif
+
+if has("gui_gvim")
+  set guifont=UbunutuMono-R-Powerline\ 12
+endif
+
+"Remove the menubar
+set guioptions-=T
+
+"Some options for NERDTree
+"Change vim's cwd when we change the root of NERDTree
+let NERDTreeChDirMode=2
+nnoremap <leader>n :NERDTreeToggle<CR>
+
+"Improved window movement/splitting
+"If we try to move in a direction with now open split, open a new one
+"pulled from http://www.agillo.net/simple-vim-window-management/
+function! WinMove(key)
+  let t:curwin = winnr()
+  exec "wincmd ".a:key
+  if (t:curwin == winnr()) "we havent moved
+    if (match(a:key,'[jk]')) "were we going up/down
+      wincmd v
+    else 
+      wincmd s
+    endif
+    exec "wincmd ".a:key
+  endif
+endfunction
+
+map <C-h> :call WinMove('h')<cr>
+map <C-k> :call WinMove('k')<cr>
+map <C-l> :call WinMove('l')<cr>
+map <C-j> :call WinMove('j')<cr>
+
+"Make proper use of the arrow keys - resize windows!
+nmap <left>  :3wincmd <<cr>
+nmap <right> :3wincmd ><cr>
+nmap <up>    :3wincmd +<cr>
+nmap <down>  :3wincmd -<cr>
+
+"Move by screen lines instead of file lines, in case of screen wrap
 nnoremap j gj
 nnoremap k gk
-vnoremap j gj
-vnoremap k gk
-nnoremap <Down> gj
-nnoremap <Up> gk
-vnoremap <Down> gj
-vnoremap <Up> gk
-inoremap <Down> <C-o>gj
-inoremap <Up> <C-o>gk
 
-" ----------------------------------------------------------------------------
-"  UI
-" ----------------------------------------------------------------------------
+"Remap jj to esc, for quicker exiting to normal mode
+inoremap jj <ESC>
 
-set ruler                  " show the cursor position all the time
-set noshowcmd              " don't display incomplete commands
-set nolazyredraw           " turn off lazy redraw
-set number                 " line numbers
-set wildmenu               " turn on wild menu
-set wildmode=list:longest,full
-set ch=2                   " command line height
-set backspace=2            " allow backspacing over everything in insert mode
-set whichwrap+=<,>,h,l,[,] " backspace and cursor keys wrap to
-set shortmess=filtIoOA     " shorten messages
-set report=0               " tell us about changes
-set nostartofline          " don't jump to the start of line when scrolling
+"Now using powerline plugin for improved status line
+let g:Powerline_symbols='fancy'
 
+"Show invisibles - tab and EOL, in the style of Textmate
+set listchars=tab:▸\ ,eol:¬
+nmap <leader>l :set list!<CR>
 
-" ----------------------------------------------------------------------------
-" Visual Cues
-" ----------------------------------------------------------------------------
-
-set showmatch              " brackets/braces that is
-set mat=5                  " duration to show matching brace (1/10 sec)
-set incsearch              " do incremental searching
-set laststatus=2           " always show the status line
-set ignorecase             " ignore case when searching
-set nohlsearch             " don't highlight searches
-set visualbell             " shut the fuck up
-
-
-" ---------------------------------------------------------------------------
-"  Strip all trailing whitespace in file
-" ---------------------------------------------------------------------------
-
-function! StripWhitespace ()
-    exec ':%s/ \+$//gc'
+function! s:align()
+  let p = '^\s*|\s.*\s|\s*$'
+  if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
+    let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
+    let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
+    Tabularize/|/l1
+    normal! 0
+    call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
+  endif
 endfunction
-map ,s :call StripWhitespace ()<CR>
+
+"Automatically tabulate when inserting the pipe symbol.
+"Borrowed from Tim Pope's gist: https://gist.github.com/287147
+inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
+
+"Some great mappings from Vimcast #29: http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
+nmap <leader>a= :Tabularize /=<CR>
+vmap <leader>a= :Tabularize /=<CR>
+nmap <leader>a: :Tabularize /:\zs<CR>
+vmap <leader>a: :Tabularize /:\zs<CR>
+
+"Attempt to prevent CtrlP from sometimes opening a new split, sometimes not
+let g:ctrlp_jump_to_buffer = 0
+
+autocmd FileType text set wrap
+
+"Insert a quick carriage return, instead of entering and exiting insert mode
+nmap <silent> <leader><CR> i<CR><ESC>
+
+"Easily navigate between open buffers
+nmap <leader>z :bp<CR>
+nmap <leader>x :bn<CR>
+
+" Taken from http://stackoverflow.com/questions/4331776/change-vim-swap-backup-undo-file-name 
+" Sets up undo, backup, and swap directories more like they should be
+
+" Backups, undos, and swap files                                                                                                                             {1
+"-----------------------------------------------------------------------------
+" Save your backups to a less annoying place than the current directory.
+" If you have .vim-backup in the current directory, it'll use that.
+" Otherwise it saves it to ~/.vim/backup or . if all else fails.
+if isdirectory($HOME . '/.vim/backup') == 0
+  :silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
+endif
+set backupdir^=~/.vim-tmp/backup/
+set backup
+" Prevent backups from overwriting each other. The naming is weird,
+" since I'm using the 'backupext' variable to append the path.
+" So the file '/home/docwhat/.vimrc' becomes '.vimrc%home%docwhat~'
+if has("autocmd")
+  autocmd BufWritePre * let &backupext = substitute(expand('%:p:h'), '/', '%', 'g') . '~'
+endif
+
+
+if has("macunix")
+  set backupskip+=/private/tmp/*
+endif
+
+" Save your swp files to a less annoying place than the current directory.
+" If you have .vim-swap in the current directory, it'll use that.
+" Otherwise it saves it to ~/.vim/swap, ~/tmp or .
+if isdirectory($HOME . '/.vim/swap') == 0
+  :silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
+endif
+set directory+=~/.vim-tmp/swap//
+set directory+=~/tmp//
+set directory+=.
+
+" viminfo stores the the state of your previous editing session
+set viminfo+=n~/.viminfo
+
+if exists("+undofile")
+  " undofile - This allows you to use undos after exiting and restarting
+  " This, like swap and backups, uses .vim-undo first, then ~/.vim/undo
+  " :help undo-persistence
+  " This is only present in 7.3+
+  if isdirectory($HOME . '/.vim/undo') == 0
+    :silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
+  endif
+  set undodir+=~/.vim-tmp/undo//
+  set undofile
+endif
+
+" When editing a file, always jump to the last known cursor position.
+" Don't do it when the position is invalid or when inside an event handler
+" (happens when dropping a file on gvim).
+" Also don't do it when the mark is in the first line, that is the default
+" position when opening a file.
+if has("autocmd")
+  autocmd BufReadPost *
+        \ if line("'\"") > 1 && line("'\"") <= line("$") |
+        \   exe "normal! g`\"" |
+        \ endif
+endif
