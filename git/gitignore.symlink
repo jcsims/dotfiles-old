@@ -13,3 +13,16 @@ vim/bundle
 .netrwhist
 tags
 viminfo
+
+# Emacs settings
+backups
+image-dired
+elpa
+places
+ac-comphist.dat
+auto-save-list
+swank
+.smex-items
+tramp
+emacs/**/url/cookies
+eshell
