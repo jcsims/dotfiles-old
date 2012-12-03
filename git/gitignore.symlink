@@ -2,11 +2,11 @@
 Session.vim
 *.sublime-project
 *.sublime-workspace
-vim/tmp
-vim/sessions
-vim/undo
-vim/backup
-vim/bundle
+vim/**/tmp
+vim/**/sessions
+vim/**/undo
+vim/**/backup
+vim/**/bundle
 *.un~
 *.swp
 *.swo
