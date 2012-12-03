@@ -38,6 +38,8 @@ Bundle 'tmatilai/gitolite.vim'
 Bundle 'vim-ruby/vim-ruby'
 Bundle 'sunaku/vim-ruby-minitest'
 Bundle 'jcf/vim-latex'
+Bundle 'Shougo/vimproc'
+Bundle 'eagletmt/ghcmod-vim'
 
 filetype plugin indent on
 syntax on
