@@ -3,12 +3,10 @@
 # You probably want to change the [user] section here since you are not me.
 
 [hub]
-	protocol = https
+	protocol = ssh
 [user]
         name = Chris Sims
         email = chris@jcsims.me
-[credential]
-        helper = osxkeychain
 [alias]
         co = checkout
         promote = !$ZSH/bin/git-promote
