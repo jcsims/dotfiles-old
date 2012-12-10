@@ -42,15 +42,11 @@ Bundle 'jcf/vim-latex'
 Bundle 'Shougo/vimproc'
 Bundle 'eagletmt/ghcmod-vim'
 Bundle 'scrooloose/nerdcommenter'
-Bundle 'vim-scripts/utl.vim'
-Bundle 'vim-scripts/calendar.vim--Matsumoto'
-Bundle 'vim-scripts/taglist.vim'
-Bundle 'hsitz/VimOrganizer'
 
 filetype plugin indent on
 syntax on
 
-set shell=/usr/local/bin/zsh\ -l
+"set shell=/usr/local/bin/zsh\ -l
 
 "Set tab options to preferred 2 spaces
 set tabstop=2

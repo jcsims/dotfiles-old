@@ -34,7 +34,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes (quote ("1b8d67b43ff1723960eb5e0cba512a2c7a2ad544ddb2533a90101fd1852b426e" "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a" "71b172ea4aad108801421cc5251edb6c792f3adbaecfa1c52e94e3d99634dee7" "4aee8551b53a43a883cb0b7f3255d6859d766b6c5e14bcb01bed572fcbef4328" "501caa208affa1145ccbb4b74b6cd66c3091e41c5bb66c677feda9def5eab19c" "71efabb175ea1cf5c9768f10dad62bb2606f41d110152f4ace675325d28df8bd" "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d" default)))
- '(line-number-mode nil))
+)
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -54,14 +54,18 @@
 ;; Org mode changes
 ;;;;;;;;;;;;;;;;;;;
 
+;; Directory where I store my org files
+(setq org-directory `"~/Dropbox/org")
+
 ;; Record time when a TODO is marked completed
 (setq org-log-done 'time)
 
 ;; Set up the proper directory for use with MobileOrg
 (setq org-mobile-directory "~/Dropbox/org/mobile")
+(setq org-mobile-inbox-for-pull "~/Dropbox/org/from-mobile.org")
 
 ;; The agenda view will pull info from these files
-(setq org-agenda-files (quote ("~/Dropbox/org/today.org"  "~/Dropbox/org/todo.org")))
+(setq org-agenda-files (quote ("~/Dropbox/org/birthday.org" "~/Dropbox/org/todo.org")))
 
 ;; Global shortcuts
 (global-set-key "\C-cl" 'org-store-link)
