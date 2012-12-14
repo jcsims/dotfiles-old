@@ -210,7 +210,7 @@ nmap <leader>x :bn<CR>
 if isdirectory($HOME . '/.vim/backup') == 0
   :silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
 endif
-set backupdir^=~/.vim-tmp/backup/
+set backupdir^=~/.vim/backup/
 set backup
 " Prevent backups from overwriting each other. The naming is weird,
 " since I'm using the 'backupext' variable to append the path.
@@ -230,7 +230,7 @@ endif
 if isdirectory($HOME . '/.vim/swap') == 0
   :silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
 endif
-set directory+=~/.vim-tmp/swap//
+set directory+=~/.vim/swap//
 set directory+=~/tmp//
 set directory+=.
 
@@ -245,7 +245,7 @@ if exists("+undofile")
   if isdirectory($HOME . '/.vim/undo') == 0
     :silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
   endif
-  set undodir+=~/.vim-tmp/undo//
+  set undodir+=~/.vim/undo//
   set undofile
 endif
 
