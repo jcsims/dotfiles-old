@@ -49,25 +49,6 @@ rb_prompt(){
   fi
 }
 
-# This keeps the number of todos always available the right hand side of my
-# command line. I filter it to only count those tagged as "+next", so it's more
-# of a motivation to clear out the list.
-todo(){
-  if $(which todo.sh &> /dev/null)
-  then
-    num=$(echo $(todo.sh ls +next | wc -l))
-    let todos=num-2
-    if [ $todos != 0 ]
-    then
-      echo "$todos"
-    else
-      echo ""
-    fi
-  else
-    echo ""
-  fi
-}
-
 directory_name(){
   echo "%{$fg_bold[cyan]%}%1/%\/%{$reset_color%}"
 }
@@ -76,9 +57,29 @@ machine_name(){
   echo "%{$fg_bold[green]%}$(echo $HOST | sed 's/\..*$//')%{$reset_color%}"
 }
 
+# Show count from TODOs, etc in the code when in a directory
+# Pulled from https://github.com/pengwynn/dotfiles/blob/master/zsh/prompt.zsh
+function notes_count() {
+if [[ -z $1 ]]; then
+  local NOTES_PATTERN="TODO|FIXME|HACK";
+else
+  local NOTES_PATTERN=$1;
+fi
+grep -ERn "\b($NOTES_PATTERN)\b" {app,config,lib,spec,test,src,} 2>/dev/null | wc -l | sed 's/ //g'
+}
+
+function notes_prompt() {
+local COUNT=$(notes_count $1);
+if [ $COUNT != 0 ]; then
+  echo "$1: $COUNT";
+else
+  echo "";
+fi
+}
+
 export PROMPT=$'\n$(rb_prompt) in $(machine_name):$(directory_name) $(git_dirty)$(need_push)\n› '
 set_prompt () {
-  export RPROMPT="%{$fg_bold[cyan]%}$(todo)%{$reset_color%}"
+  export RPROMPT="$(notes_prompt TODO) %{$fg_bold[yellow]%}$(notes_prompt HACK)%{$reset_color%} %{$fg_bold[red]%}$(notes_prompt FIXME)%{$reset_color%}"
 }
 
 precmd() {
