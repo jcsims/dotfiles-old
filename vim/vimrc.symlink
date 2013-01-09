@@ -12,7 +12,6 @@ Bundle 'tpope/vim-rails'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'skwp/vim-rspec'
 Bundle 'tpope/vim-bundler'
-Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-rake'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-haml'
@@ -42,11 +41,12 @@ Bundle 'jcf/vim-latex'
 Bundle 'Shougo/vimproc'
 Bundle 'eagletmt/ghcmod-vim'
 Bundle 'scrooloose/nerdcommenter'
+Bundle 'dag/vim2hs'
 
 filetype plugin indent on
 syntax on
 
-"set shell=/usr/local/bin/zsh\ -l
+set shell=/usr/local/bin/zsh\ -l
 
 "Set tab options to preferred 2 spaces
 set tabstop=2
@@ -72,7 +72,6 @@ set laststatus=2
 set nu
 set title
 
-" Some settings for supertab and eclim
 "let g:SuperTabDefaultCompletionType = "context"
 "let g:SuperTabContextDefaultCompletionType = "<c-x><c-u>"
 "let g:SuperTabLongestHighlight = 1
@@ -92,7 +91,14 @@ nnoremap <leader><space> :noh<cr>
 "Set up column at column width to stick with sane column width while coding
 set nowrap
 set formatoptions=qrn1
-"set colorcolumn=80
+set colorcolumn=80
+
+if has("autocmd")
+  autocmd FileType tex set fo+=t tw=80
+  autocmd FileType latex set fo+=t tw=80
+  autocmd FileType txt set fo+=t tw=80
+  autocmd FileType markdown set fo+=t tw=80
+endif
 
 "Save all files anytime focus is lost
 if (expand("%") != "")
@@ -106,7 +112,6 @@ nmap <silent> <leader>sv :so $MYVIMRC<CR>
 "Attempt to force the terminal to display more colors
 set t_Co=256
 "Color scheme!
-"set background=light
 colorscheme molokai
 
 if has("gui_macvim")
@@ -119,32 +124,6 @@ endif
 
 "Remove the menubar
 set guioptions-=T
-
-"Some options for NERDTree
-"Change vim's cwd when we change the root of NERDTree
-let NERDTreeChDirMode=2
-nnoremap <leader>n :NERDTreeToggle<CR>
-
-"Improved window movement/splitting
-"If we try to move in a direction with now open split, open a new one
-"pulled from http://www.agillo.net/simple-vim-window-management/
-function! WinMove(key)
-  let t:curwin = winnr()
-  exec "wincmd ".a:key
-  if (t:curwin == winnr()) "we havent moved
-    if (match(a:key,'[jk]')) "were we going up/down
-      wincmd v
-    else 
-      wincmd s
-    endif
-    exec "wincmd ".a:key
-  endif
-endfunction
-
-map <C-h> :call WinMove('h')<cr>
-map <C-k> :call WinMove('k')<cr>
-map <C-l> :call WinMove('l')<cr>
-map <C-j> :call WinMove('j')<cr>
 
 "Make proper use of the arrow keys - resize windows!
 nmap <left>  :3wincmd <<cr>
@@ -260,3 +239,6 @@ if has("autocmd")
         \   exe "normal! g`\"" |
         \ endif
 endif
+
+" Set syntastic to show error lines
+let g:syntastic_enable_signs=1
