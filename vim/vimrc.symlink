@@ -43,6 +43,7 @@ Bundle 'scrooloose/nerdcommenter'
 Bundle 'dag/vim2hs'
 Bundle 'ujihisa/neco-ghc'
 Bundle 'Shougo/neocomplcache'
+Bundle 'vim-scripts/sudo.vim'
 
 filetype plugin indent on
 syntax on
