@@ -9,7 +9,6 @@ Bundle 'gmarik/vundle'
 "github repos
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-rails'
-Bundle 'altercation/vim-colors-solarized'
 Bundle 'skwp/vim-rspec'
 Bundle 'tpope/vim-bundler'
 Bundle 'tpope/vim-rake'
@@ -42,6 +41,8 @@ Bundle 'Shougo/vimproc'
 Bundle 'eagletmt/ghcmod-vim'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'dag/vim2hs'
+Bundle 'ujihisa/neco-ghc'
+Bundle 'Shougo/neocomplcache'
 
 filetype plugin indent on
 syntax on
@@ -71,11 +72,6 @@ set backspace=indent,eol,start
 set laststatus=2
 set nu
 set title
-
-"let g:SuperTabDefaultCompletionType = "context"
-"let g:SuperTabContextDefaultCompletionType = "<c-x><c-u>"
-"let g:SuperTabLongestHighlight = 1
-
 
 "Search options, including <leader><space> to clear search results
 nnoremap / /\v
@@ -186,10 +182,10 @@ nmap <leader>x :bn<CR>
 " Save your backups to a less annoying place than the current directory.
 " If you have .vim-backup in the current directory, it'll use that.
 " Otherwise it saves it to ~/.vim/backup or . if all else fails.
-if isdirectory($HOME . '/.vim/backup') == 0
-  :silent !mkdir -p ~/.vim/backup >/dev/null 2>&1
+if isdirectory($HOME . '/.vim-backup') == 0
+  :silent !mkdir -p ~/.vim-backup >/dev/null 2>&1
 endif
-set backupdir^=~/.vim/backup/
+set backupdir^=~/.vim-backup/
 set backup
 " Prevent backups from overwriting each other. The naming is weird,
 " since I'm using the 'backupext' variable to append the path.
@@ -201,15 +197,16 @@ endif
 
 if has("macunix")
   set backupskip+=/private/tmp/*
+  set clipboard=unnamed "send yanks to the clipboard
 endif
 
 " Save your swp files to a less annoying place than the current directory.
 " If you have .vim-swap in the current directory, it'll use that.
 " Otherwise it saves it to ~/.vim/swap, ~/tmp or .
-if isdirectory($HOME . '/.vim/swap') == 0
-  :silent !mkdir -p ~/.vim/swap >/dev/null 2>&1
+if isdirectory($HOME . '/.vim-swap') == 0
+  :silent !mkdir -p ~/.vim-swap >/dev/null 2>&1
 endif
-set directory+=~/.vim/swap//
+set directory^=~/.vim-swap/
 set directory+=~/tmp//
 set directory+=.
 
@@ -221,11 +218,13 @@ if exists("+undofile")
   " This, like swap and backups, uses .vim-undo first, then ~/.vim/undo
   " :help undo-persistence
   " This is only present in 7.3+
-  if isdirectory($HOME . '/.vim/undo') == 0
-    :silent !mkdir -p ~/.vim/undo > /dev/null 2>&1
+  if isdirectory($HOME . '/.vim-undo') == 0
+    :silent !mkdir -p ~/.vim-undo > /dev/null 2>&1
   endif
-  set undodir+=~/.vim/undo//
+  set undodir^=~/.vim-undo/
   set undofile
+  set undolevels=1000
+  set undoreload=10000
 endif
 
 " When editing a file, always jump to the last known cursor position.
@@ -242,3 +241,55 @@ endif
 
 " Set syntastic to show error lines
 let g:syntastic_enable_signs=1
+
+"Prevent highlight being lost on indent change
+vnoremap < <gv
+vnoremap > >gv
+
+" Settings for neocomplcache
+let g:neocomplcache_enable_at_startup = 1
+" Use smartcase.
+let g:neocomplcache_enable_smart_case = 1
+" Use camel case completion.
+let g:neocomplcache_enable_camel_case_completion = 1
+" Use underscore completion.
+let g:neocomplcache_enable_underbar_completion = 1
+" Sets minimum char length of syntax keyword.
+let g:neocomplcache_min_syntax_length = 3
+
+" Define keyword, for minor languages
+if !exists('g:neocomplcache_keyword_patterns')
+  let g:neocomplcache_keyword_patterns = {}
+endif
+let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
+
+" SuperTab like snippets behavior.
+imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
+
+" Recommended key-mappings.
+" <CR>: close popup and save indent.
+inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
+" <TAB>: completion.
+inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
+" <C-h>, <BS>: close popup and delete backword char.
+inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
+inoremap <expr><C-y>  neocomplcache#close_popup()
+inoremap <expr><C-e>  neocomplcache#cancel_popup()
+
+" Enable omni completion. Not required if they are already set elsewhere in .vimrc
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+
+" Enable heavy omni completion, which require computational power and may stall the vim. 
+if !exists('g:neocomplcache_omni_patterns')
+  let g:neocomplcache_omni_patterns = {}
+endif
+let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
+let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
+let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
