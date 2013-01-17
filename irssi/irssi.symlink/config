@@ -5,6 +5,7 @@ servers = (
     chatnet = "freenode";
     port = "6697";
     use_ssl = "yes";
+    autoconnect = "yes";
 
   },
   {
@@ -35,8 +36,12 @@ chatnets = {
 
 channels = (
   { name = "#ecsig"; chatnet = "ecsig"; autojoin = "yes"; },
+  { name = "#golem"; chatnet = "ecsig"; autojoin = "yes"; },
+  { name = "#hubot"; chatnet = "ecsig"; autojoin = "yes"; },
   { name = "&bitlbee"; chatnet = "bitlbee"; autojoin = "yes"; },
-  { name = "#emacs"; chatnet = "freenode"; }
+  { name = "#vim"; chatnet = "freenode"; autojoin = "yes"; },
+  { name = "#cyanogenmod"; chatnet = "freenode"; autojoin = "yes"; },
+  { name = "#haskell"; chatnet = "freenode"; autojoin = "yes"; }
 );
 
 aliases = {
@@ -225,10 +230,10 @@ settings = {
     neat_colorize = "yes";
     nicklist_automode = "SCREEN";
     nicklist_width = "15";
-    neat_colors = "rRbBmMcCgG";
+    neat_colors = "rRbBmMgG";
     trackbar_style = "%B";
   };
-  "fe-common/core" = { theme = "awesome"; hilight_color = "= %R"; };
+  "fe-common/core" = { theme = "cloudhead"; hilight_color = "= %R"; };
 
 };
 logs = { };
@@ -252,7 +257,7 @@ windows = {
       {
         type = "CHANNEL";
         chat_type = "IRC";
-        name = "#509";
+        name = "#golem";
         tag = "ecsig";
       }
     );
@@ -262,12 +267,52 @@ windows = {
       {
         type = "CHANNEL";
         chat_type = "IRC";
+        name = "#haskell";
+        tag = "freenode";
+      }
+    );
+  };
+  5 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#vim";
+        tag = "freenode";
+      }
+    );
+  };
+  6 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "#cyanogenmod";
+        tag = "freenode";
+      }
+    );
+  };
+  7 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
         name = "#hubot";
         tag = "ecsig";
       }
     );
   };
-  5 = { name = "hilight"; sticky = "yes"; };
+  8 = {
+    items = (
+      {
+        type = "CHANNEL";
+        chat_type = "IRC";
+        name = "&bitlbee";
+        tag = "bitlbee";
+      }
+    );
+  };
+  9 = { name = "hilight"; sticky = "yes"; };
 };
 mainwindows = {
   2 = { first_line = "8"; lines = "14"; };
@@ -275,12 +320,8 @@ mainwindows = {
 };
 
 ignores = (
-
-  {
-    level = "MODES JOINS QUITS";
-    channels = ( "&bitlbee" );
-    network = "bitlbee";
-  },
-  { level = "JOINS PARTS QUITS NICKS"; channels = ( "#emacs" ); },
-  { level = "JOINS PARTS QUITS NICKS"; channels = ( "#haskell" ); }
+  { level = "MODES JOINS QUITS"; channels = ( "&bitlbee" ); network = "bitlbee"; },
+  { level = "JOINS PARTS QUITS NICKS"; channels = ( "#haskell" ); },
+  { level = "JOINS PARTS QUITS NICKS"; channels = ( "#cyanogenmod" ); },
+  { level = "JOINS PARTS QUITS NICKS"; channels = ( "#vim" ); }
 );
