@@ -19,6 +19,7 @@ Bundle 'tpope/vim-markdown'
 Bundle 'tpope/vim-speeddating'
 Bundle 'tpope/vim-commentary'
 Bundle 'tpope/vim-repeat'
+Bundle 'tpope/vim-characterize'
 Bundle 'godlygeek/tabular'
 Bundle 'ervandew/supertab'
 Bundle 'kien/ctrlp.vim'
@@ -43,6 +44,7 @@ Bundle 'dag/vim2hs'
 Bundle 'ujihisa/neco-ghc'
 Bundle 'Shougo/neocomplcache'
 Bundle 'vim-scripts/sudo.vim'
+Bundle 'klen/python-mode'
 
 filetype plugin indent on
 syntax on
@@ -234,6 +236,9 @@ let g:syntastic_enable_signs=1
 "Prevent highlight being lost on indent change
 vnoremap < <gv
 vnoremap > >gv
+
+"Keybinding to pretty-print the current day
+nnoremap <leader>d "=strftime("%a %b %d %G")<CR>p
 
 " Settings for neocomplcache
 let g:neocomplcache_enable_at_startup = 1
