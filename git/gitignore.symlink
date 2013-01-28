@@ -4,3 +4,13 @@ vim/**/bundle
 .netrwhist
 tags
 viminfo
+
+
+# Haskell files
+dist
+cabal-dev
+*.o
+*.hi
+*.chi
+*.chs.h
+.virthualenv

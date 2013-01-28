@@ -1,2 +1,2 @@
 # Add any cabal-installed executables to the path
-export PATH=$PATH:$HOME/.cabal/bin
+export PATH=$HOME/.cabal/bin:$PATH
