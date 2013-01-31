@@ -8,13 +8,7 @@ Bundle 'gmarik/vundle'
 
 "github repos
 Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-rails'
-Bundle 'skwp/vim-rspec'
-Bundle 'tpope/vim-bundler'
-Bundle 'tpope/vim-rake'
 Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-haml'
-Bundle 'tpope/vim-cucumber'
 Bundle 'tpope/vim-markdown'
 Bundle 'tpope/vim-speeddating'
 Bundle 'tpope/vim-commentary'
@@ -28,23 +22,18 @@ Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
 Bundle 'garbas/vim-snipmate'
 Bundle 'scrooloose/syntastic'
-Bundle 'wlangstroth/vim-racket'
-Bundle 'adimit/prolog.vim'
-Bundle 'uggedal/go-vim'
 Bundle 'tomasr/molokai'
-Bundle 'kchmck/vim-coffee-script'
-Bundle 'tmatilai/gitolite.vim'
 Bundle 'vim-ruby/vim-ruby'
-Bundle 'sunaku/vim-ruby-minitest'
 Bundle 'jcf/vim-latex'
 Bundle 'Shougo/vimproc'
 Bundle 'eagletmt/ghcmod-vim'
-Bundle 'scrooloose/nerdcommenter'
 Bundle 'dag/vim2hs'
 Bundle 'ujihisa/neco-ghc'
 Bundle 'Shougo/neocomplcache'
 Bundle 'vim-scripts/sudo.vim'
 Bundle 'klen/python-mode'
+Bundle 'ervandew/screen'
+Bundle 'vim-scripts/Vim-R-plugin'
 
 filetype plugin indent on
 syntax on
@@ -185,10 +174,11 @@ if has("autocmd")
   autocmd BufWritePre * let &backupext = substitute(expand('%:p:h'), '/', '%', 'g') . '~'
 endif
 
-
+" OSX-specific settings
 if has("macunix")
   set backupskip+=/private/tmp/*
   set clipboard=unnamed "send yanks to the clipboard
+  let vimrplugin_term = "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal"
 endif
 
 " Save your swp files to a less annoying place than the current directory.
