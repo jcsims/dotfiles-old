@@ -9,11 +9,11 @@ Bundle 'gmarik/vundle'
 "github repos
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-markdown'
 Bundle 'tpope/vim-speeddating'
 Bundle 'tpope/vim-commentary'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-characterize'
+Bundle 'tpope/vim-rails'
 Bundle 'godlygeek/tabular'
 Bundle 'ervandew/supertab'
 Bundle 'kien/ctrlp.vim'
@@ -22,9 +22,9 @@ Bundle 'MarcWeber/vim-addon-mw-utils'
 Bundle 'tomtom/tlib_vim'
 Bundle 'garbas/vim-snipmate'
 Bundle 'scrooloose/syntastic'
-Bundle 'tomasr/molokai'
 Bundle 'vim-ruby/vim-ruby'
 Bundle 'jcf/vim-latex'
+Bundle 'Rykka/colorv.vim'
 Bundle 'Shougo/vimproc'
 Bundle 'eagletmt/ghcmod-vim'
 Bundle 'dag/vim2hs'
@@ -33,7 +33,29 @@ Bundle 'Shougo/neocomplcache'
 Bundle 'vim-scripts/sudo.vim'
 Bundle 'klen/python-mode'
 Bundle 'ervandew/screen'
-Bundle 'vim-scripts/Vim-R-plugin'
+Bundle 'jcfaria/Vim-R-plugin'
+
+" Filetypes
+Bundle 'wavded/vim-stylus'
+Bundle 'slim-template/vim-slim'
+Bundle 'tpope/vim-haml'
+Bundle 'groenewege/vim-less'
+Bundle 'kchmck/vim-coffee-script'
+Bundle 'pangloss/vim-javascript'
+Bundle 'statianzo/vim-jade'
+Bundle 'timcharper/textile.vim'
+Bundle 'tpope/vim-liquid'
+Bundle 'tpope/vim-markdown'
+Bundle 'itspriddle/vim-jquery'
+Bundle 'nono/vim-handlebars'
+Bundle 'mutewinter/nginx.vim'
+Bundle 'hail2u/vim-css3-syntax'
+Bundle 'leshill/vim-json'
+
+" Colors!
+Bundle 'tomasr/molokai'
+Bundle 'chriskempson/vim-tomorrow-theme'
+
 
 filetype plugin indent on
 syntax on
@@ -178,7 +200,9 @@ endif
 if has("macunix")
   set backupskip+=/private/tmp/*
   set clipboard=unnamed "send yanks to the clipboard
-  let vimrplugin_term = "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal"
+  let g:vimrplugin_term = "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal"
+  "Force vim to use screen instead of communicating to the GUI
+  let g:vimrplugin_applescript = 0
 endif
 
 " Save your swp files to a less annoying place than the current directory.
