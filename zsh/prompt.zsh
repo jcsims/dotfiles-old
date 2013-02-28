@@ -103,4 +103,4 @@ PROMPT='
 %{$fg[cyan]%}%~ %{$reset_color%}
 $(ssh_prompt)${smiley}  %{$reset_color%}'
 
-RPROMPT='%{$fg[white]%} $(rb_prompt) $(git_dirty) $(need_push) %{$reset_color%}'
+RPROMPT='%{$fg[white]%} $(rb_prompt) $(git_dirty)$(need_push) %{$reset_color%}'
