@@ -100,7 +100,7 @@ function ssh_prompt() {
 
 # Show the relative path on one line, then the smiley.
 PROMPT='
-%{$fg[cyan]%}%~ %{$reset_color%}
+%{$fg[magenta]%}%T%{$reset_color%} on %{$fg[green]%}%m%{$reset_color%} in %{$fg[cyan]%}%~ %{$reset_color%}
 $(ssh_prompt)${smiley}  %{$reset_color%}'
 
 RPROMPT='%{$fg[white]%} $(rb_prompt) $(git_dirty)$(need_push) %{$reset_color%}'
