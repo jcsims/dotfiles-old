@@ -92,15 +92,9 @@ rb_prompt(){
 # Save a smiley to a local variable if the last command exited with success.
 local smiley="%(?,%{$fg[green]%}☺%{$reset_color%},%{$fg[red]%}☹%{$reset_color%})"
 
-function ssh_prompt() {
-  if [ -n "$SSH_CLIENT" ]; then
-    echo "%{$fg[yellow]%}༎%{$reset_color%}"
-  fi
-}
-
 # Show the relative path on one line, then the smiley.
 PROMPT='
 %{$fg[magenta]%}%T%{$reset_color%} on %{$fg[green]%}%m%{$reset_color%} in %{$fg[cyan]%}%~ %{$reset_color%}
-$(ssh_prompt)${smiley}  %{$reset_color%}'
+${smiley}  %{$reset_color%}'
 
 RPROMPT='%{$fg[white]%} $(rb_prompt) $(git_dirty)$(need_push) %{$reset_color%}'
