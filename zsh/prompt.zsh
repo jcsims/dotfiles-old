@@ -90,11 +90,11 @@ rb_prompt(){
 # Pulled from Geoffery Grosenbach's prompt
 # https://peepcode.com/blog/2012/my-command-line-prompt
 # Save a smiley to a local variable if the last command exited with success.
-local smiley="%(?,%{$fg[green]%}☺%{$reset_color%},%{$fg[red]%}☹%{$reset_color%})"
+local lambda="%(?,%{$fg[green]%}λ%{$reset_color%},%{$fg[red]%}λ%{$reset_color%})"
 
 # Show the relative path on one line, then the smiley.
 PROMPT='
 %{$fg[magenta]%}%T%{$reset_color%} on %{$fg[green]%}%m%{$reset_color%} in %{$fg[cyan]%}%~ %{$reset_color%}
-${smiley}  %{$reset_color%}'
+${lambda}  %{$reset_color%}'
 
 RPROMPT='%{$fg[white]%} $(rb_prompt) $(git_dirty)$(need_push) %{$reset_color%}'
