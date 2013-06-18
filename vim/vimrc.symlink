@@ -14,28 +14,26 @@ Bundle 'tpope/vim-commentary'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-characterize'
 Bundle 'tpope/vim-rails'
+Bundle 'tpope/vim-unimpaired'
 Bundle 'godlygeek/tabular'
-Bundle 'ervandew/supertab'
 Bundle 'kien/ctrlp.vim'
-Bundle 'honza/snipmate-snippets'
-Bundle 'MarcWeber/vim-addon-mw-utils'
-Bundle 'tomtom/tlib_vim'
-Bundle 'garbas/vim-snipmate'
 Bundle 'scrooloose/syntastic'
-Bundle 'vim-ruby/vim-ruby'
-Bundle 'jcf/vim-latex'
 Bundle 'Rykka/colorv.vim'
 Bundle 'Shougo/vimproc'
 Bundle 'eagletmt/ghcmod-vim'
 Bundle 'dag/vim2hs'
-Bundle 'ujihisa/neco-ghc'
-Bundle 'Shougo/neocomplcache'
 Bundle 'vim-scripts/sudo.vim'
 Bundle 'klen/python-mode'
 Bundle 'ervandew/screen'
 Bundle 'jcfaria/Vim-R-plugin'
+" Bundle 'airblade/vim-gitgutter'
+Bundle 'mhinz/vim-signify'
+Bundle 'Valloric/YouCompleteMe'
+Bundle 'guns/ultisnips'
 
 " Filetypes
+Bundle 'vim-ruby/vim-ruby'
+Bundle 'jcf/vim-latex'
 Bundle 'wavded/vim-stylus'
 Bundle 'slim-template/vim-slim'
 Bundle 'tpope/vim-haml'
@@ -51,6 +49,7 @@ Bundle 'nono/vim-handlebars'
 Bundle 'mutewinter/nginx.vim'
 Bundle 'hail2u/vim-css3-syntax'
 Bundle 'leshill/vim-json'
+Bundle 'rkaup/vim-tup-syntax'
 
 " Colors!
 Bundle 'tomasr/molokai'
@@ -254,37 +253,6 @@ vnoremap > >gv
 "Keybinding to pretty-print the current day
 nnoremap <leader>d "=strftime("%a %b %d %G")<CR>p
 
-" Settings for neocomplcache
-let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
-let g:neocomplcache_enable_smart_case = 1
-" Use camel case completion.
-let g:neocomplcache_enable_camel_case_completion = 1
-" Use underscore completion.
-let g:neocomplcache_enable_underbar_completion = 1
-" Sets minimum char length of syntax keyword.
-let g:neocomplcache_min_syntax_length = 3
-
-" Define keyword, for minor languages
-if !exists('g:neocomplcache_keyword_patterns')
-  let g:neocomplcache_keyword_patterns = {}
-endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-
-" SuperTab like snippets behavior.
-imap <expr><TAB> neocomplcache#sources#snippets_complete#expandable() ? "\<Plug>(neocomplcache_snippets_expand)" : pumvisible() ? "\<C-n>" : "\<TAB>"
-
-" Recommended key-mappings.
-" <CR>: close popup and save indent.
-inoremap <expr><CR>  neocomplcache#smart_close_popup() . "\<CR>"
-" <TAB>: completion.
-inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-" <C-h>, <BS>: close popup and delete backword char.
-inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-inoremap <expr><C-y>  neocomplcache#close_popup()
-inoremap <expr><C-e>  neocomplcache#cancel_popup()
-
 " Enable omni completion. Not required if they are already set elsewhere in .vimrc
 autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
 autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
@@ -292,15 +260,6 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-
-" Enable heavy omni completion, which require computational power and may stall the vim. 
-if !exists('g:neocomplcache_omni_patterns')
-  let g:neocomplcache_omni_patterns = {}
-endif
-let g:neocomplcache_omni_patterns.ruby = '[^. *\t]\.\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-let g:neocomplcache_omni_patterns.c = '\%(\.\|->\)\h\w*'
-let g:neocomplcache_omni_patterns.cpp = '\h\w*\%(\.\|->\)\h\w*\|\h\w*::'
 
 " Status line
 " Pulled from http://stackoverflow.com/questions/5375240/a-more-useful-statusline-in-vim/10416234#10416234
