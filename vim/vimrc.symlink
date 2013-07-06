@@ -5,7 +5,7 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
-
+"{{{ Bundles
 "github repos
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-surround'
@@ -26,12 +26,15 @@ Bundle 'vim-scripts/sudo.vim'
 Bundle 'klen/python-mode'
 Bundle 'ervandew/screen'
 Bundle 'jcfaria/Vim-R-plugin'
-" Bundle 'airblade/vim-gitgutter'
 Bundle 'mhinz/vim-signify'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'guns/ultisnips'
+Bundle 'tpope/vim-classpath'
+Bundle 'tpope/vim-fireplace'
+Bundle 'dahu/LearnVim'
 
 " Filetypes
+Bundle 'guns/vim-clojure-static'
 Bundle 'vim-ruby/vim-ruby'
 Bundle 'jcf/vim-latex'
 Bundle 'wavded/vim-stylus'
@@ -54,12 +57,13 @@ Bundle 'rkaup/vim-tup-syntax'
 " Colors!
 Bundle 'tomasr/molokai'
 Bundle 'chriskempson/vim-tomorrow-theme'
-
+Bundle 'kien/rainbow_parentheses.vim'
+"}}}
 
 filetype plugin indent on
 syntax on
 
-set shell=/usr/local/bin/zsh\ -l
+set shell=/usr/bin/zsh\ -l
 
 "Set tab options to preferred 2 spaces
 set tabstop=2
@@ -84,6 +88,9 @@ set backspace=indent,eol,start
 set laststatus=2
 set nu
 set title
+
+" Visual block mode allows bounds outside the text (freeform)
+set virtualedit=block
 
 "Search options, including <leader><space> to clear search results
 nnoremap / /\v
@@ -114,22 +121,22 @@ if (expand("%") != "")
 endif
 
 "Allow for quick and easy editing and sourcing of vimrc
-nmap <silent> <leader>ev :e $MYVIMRC<CR>
-nmap <silent> <leader>sv :so $MYVIMRC<CR>
+nnoremap <silent> <leader>ev :e $MYVIMRC<CR>
+nnoremap <silent> <leader>sv :so $MYVIMRC<CR>
 
 "Attempt to force the terminal to display more colors
 set t_Co=256
 "Color scheme!
 colorscheme molokai
+"Rainbow parens on all the time
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
 
 "Remove the menubar
 set guioptions-=T
 
-"Make proper use of the arrow keys - resize windows!
-nmap <left>  :3wincmd <<cr>
-nmap <right> :3wincmd ><cr>
-nmap <up>    :3wincmd +<cr>
-nmap <down>  :3wincmd -<cr>
 
 "Move by screen lines instead of file lines, in case of screen wrap
 nnoremap j gj
@@ -140,7 +147,7 @@ inoremap jj <ESC>
 
 "Show invisibles - tab and EOL, in the style of Textmate
 set listchars=tab:▸\ ,eol:¬
-nmap <leader>l :set list!<CR>
+nnoremap <leader>l :set list!<CR>
 
 function! s:align()
   let p = '^\s*|\s.*\s|\s*$'
@@ -158,10 +165,10 @@ endfunction
 inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
 
 "Some great mappings from Vimcast #29: http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
-nmap <leader>a= :Tabularize /=<CR>
-vmap <leader>a= :Tabularize /=<CR>
-nmap <leader>a: :Tabularize /:\zs<CR>
-vmap <leader>a: :Tabularize /:\zs<CR>
+nnoremap <leader>a= :Tabularize /=<CR>
+vnoremap <leader>a= :Tabularize /=<CR>
+nnoremap <leader>a: :Tabularize /:\zs<CR>
+vnoremap <leader>a: :Tabularize /:\zs<CR>
 
 "Attempt to prevent CtrlP from sometimes opening a new split, sometimes not
 let g:ctrlp_jump_to_buffer = 0
@@ -169,11 +176,42 @@ let g:ctrlp_jump_to_buffer = 0
 autocmd FileType text set wrap
 
 "Insert a quick carriage return, instead of entering and exiting insert mode
-nmap <silent> <leader><CR> i<CR><ESC>
+nnoremap <silent> <leader><CR> i<CR><ESC>
 
 "Easily navigate between open buffers
-nmap <leader>z :bp<CR>
-nmap <leader>x :bn<CR>
+nnoremap <leader>z :bp<CR>
+nnoremap <leader>x :bn<CR>
+
+" Window navigation
+" from http://www.agillo.net/simple-vim-window-management/
+function! WinMove(key) 
+  let t:curwin = winnr()
+  exec "wincmd ".a:key
+  if (t:curwin == winnr()) "we havent moved
+    if (match(a:key,'[jk]')) "were we going up/down
+      wincmd v
+    else 
+      wincmd s
+    endif
+    exec "wincmd ".a:key
+  endif
+endfunction
+ 
+map <c-h>  :call WinMove('h')<cr>
+map <c-k>  :call WinMove('k')<cr>
+map <c-l>  :call WinMove('l')<cr>
+map <c-j>  :call WinMove('j')<cr>
+map <leader>wc :wincmd q<cr>
+map <leader>wr <C-W>r
+map <leader>H  :wincmd H<cr>
+map <leader>K  :wincmd K<cr>
+map <leader>L  :wincmd L<cr>
+map <leader>J  :wincmd J<cr>
+
+nnoremap <left>  :3wincmd <<cr>
+nnoremap <right> :3wincmd ><cr>
+nnoremap <up>    :3wincmd +<cr>
+nnoremap <down>  :3wincmd -<cr>
 
 " Taken from http://stackoverflow.com/questions/4331776/change-vim-swap-backup-undo-file-name 
 " Sets up undo, backup, and swap directories more like they should be
@@ -193,15 +231,6 @@ set backup
 " So the file '/home/docwhat/.vimrc' becomes '.vimrc%home%docwhat~'
 if has("autocmd")
   autocmd BufWritePre * let &backupext = substitute(expand('%:p:h'), '/', '%', 'g') . '~'
-endif
-
-" OSX-specific settings
-if has("macunix")
-  set backupskip+=/private/tmp/*
-  set clipboard=unnamed "send yanks to the clipboard
-  let g:vimrplugin_term = "/Applications/Utilities/Terminal.app/Contents/MacOS/Terminal"
-  "Force vim to use screen instead of communicating to the GUI
-  let g:vimrplugin_applescript = 0
 endif
 
 " Save your swp files to a less annoying place than the current directory.
