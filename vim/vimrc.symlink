@@ -13,50 +13,32 @@ Bundle 'tpope/vim-speeddating'
 Bundle 'tpope/vim-commentary'
 Bundle 'tpope/vim-repeat'
 Bundle 'tpope/vim-characterize'
-Bundle 'tpope/vim-rails'
 Bundle 'tpope/vim-unimpaired'
 Bundle 'godlygeek/tabular'
 Bundle 'kien/ctrlp.vim'
 Bundle 'scrooloose/syntastic'
 Bundle 'Rykka/colorv.vim'
-Bundle 'Shougo/vimproc'
-Bundle 'eagletmt/ghcmod-vim'
-Bundle 'dag/vim2hs'
 Bundle 'vim-scripts/sudo.vim'
-Bundle 'klen/python-mode'
-Bundle 'ervandew/screen'
-Bundle 'jcfaria/Vim-R-plugin'
+" Bundle 'ervandew/screen'
+" Bundle 'jcfaria/Vim-R-plugin'
 Bundle 'mhinz/vim-signify'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'guns/ultisnips'
 Bundle 'tpope/vim-classpath'
 Bundle 'tpope/vim-fireplace'
 Bundle 'dahu/LearnVim'
+Bundle 'vim-scripts/paredit.vim'
 
 " Filetypes
 Bundle 'guns/vim-clojure-static'
-Bundle 'vim-ruby/vim-ruby'
 Bundle 'jcf/vim-latex'
-Bundle 'wavded/vim-stylus'
-Bundle 'slim-template/vim-slim'
-Bundle 'tpope/vim-haml'
-Bundle 'groenewege/vim-less'
-Bundle 'kchmck/vim-coffee-script'
-Bundle 'pangloss/vim-javascript'
-Bundle 'statianzo/vim-jade'
-Bundle 'timcharper/textile.vim'
 Bundle 'tpope/vim-liquid'
 Bundle 'tpope/vim-markdown'
-Bundle 'itspriddle/vim-jquery'
-Bundle 'nono/vim-handlebars'
 Bundle 'mutewinter/nginx.vim'
-Bundle 'hail2u/vim-css3-syntax'
 Bundle 'leshill/vim-json'
-Bundle 'rkaup/vim-tup-syntax'
 
 " Colors!
 Bundle 'tomasr/molokai'
-Bundle 'chriskempson/vim-tomorrow-theme'
 Bundle 'kien/rainbow_parentheses.vim'
 "}}}
 
@@ -92,6 +74,10 @@ set title
 " Visual block mode allows bounds outside the text (freeform)
 set virtualedit=block
 
+" Electric return for paredit mode
+" Example: http://img8.imageshack.us/img8/9479/openparen.gif
+let g:paredit_electric_returns = 1
+
 "Search options, including <leader><space> to clear search results
 nnoremap / /\v
 vnoremap / /\v
@@ -113,6 +99,7 @@ if has("autocmd")
   autocmd FileType latex set fo+=t tw=80
   autocmd FileType txt set fo+=t tw=80
   autocmd FileType markdown set fo+=t tw=80
+  autocmd FileType liquid set fo+=t tw=80
 endif
 
 "Save all files anytime focus is lost
@@ -197,16 +184,16 @@ function! WinMove(key)
   endif
 endfunction
  
-map <c-h>  :call WinMove('h')<cr>
-map <c-k>  :call WinMove('k')<cr>
-map <c-l>  :call WinMove('l')<cr>
-map <c-j>  :call WinMove('j')<cr>
-map <leader>wc :wincmd q<cr>
-map <leader>wr <C-W>r
-map <leader>H  :wincmd H<cr>
-map <leader>K  :wincmd K<cr>
-map <leader>L  :wincmd L<cr>
-map <leader>J  :wincmd J<cr>
+nnoremap <c-h>  :call WinMove('h')<cr>
+nnoremap <c-k>  :call WinMove('k')<cr>
+nnoremap <c-l>  :call WinMove('l')<cr>
+nnoremap <c-j>  :call WinMove('j')<cr>
+nnoremap <leader>wc :wincmd q<cr>
+nnoremap <leader>wr <C-W>r
+nnoremap <leader>H  :wincmd H<cr>
+nnoremap <leader>K  :wincmd K<cr>
+nnoremap <leader>L  :wincmd L<cr>
+nnoremap <leader>J  :wincmd J<cr>
 
 nnoremap <left>  :3wincmd <<cr>
 nnoremap <right> :3wincmd ><cr>
