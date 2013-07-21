@@ -6,3 +6,13 @@ away.log
 fnotify
 nickserv.auth
 saved_colors
+        
+# Emacs
+**elpa**
+**backups**
+**eshell**
+**url**
+**auto-save-list**
+.smex-items
+ac-comphist.dat
+places
