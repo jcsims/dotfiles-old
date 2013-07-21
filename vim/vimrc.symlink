@@ -5,7 +5,7 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
 Bundle 'gmarik/vundle'
-"{{{ Bundles
+" Bundles
 "github repos
 Bundle 'tpope/vim-fugitive'
 Bundle 'tpope/vim-surround'
@@ -19,8 +19,6 @@ Bundle 'kien/ctrlp.vim'
 Bundle 'scrooloose/syntastic'
 Bundle 'Rykka/colorv.vim'
 Bundle 'vim-scripts/sudo.vim'
-" Bundle 'ervandew/screen'
-" Bundle 'jcfaria/Vim-R-plugin'
 Bundle 'mhinz/vim-signify'
 Bundle 'Valloric/YouCompleteMe'
 Bundle 'guns/ultisnips'
@@ -31,7 +29,7 @@ Bundle 'vim-scripts/paredit.vim'
 
 " Filetypes
 Bundle 'guns/vim-clojure-static'
-Bundle 'jcf/vim-latex'
+" Bundle 'jcf/vim-latex'
 Bundle 'tpope/vim-liquid'
 Bundle 'tpope/vim-markdown'
 Bundle 'mutewinter/nginx.vim'
@@ -40,7 +38,6 @@ Bundle 'leshill/vim-json'
 " Colors!
 Bundle 'tomasr/molokai'
 Bundle 'kien/rainbow_parentheses.vim'
-"}}}
 
 filetype plugin indent on
 syntax on
