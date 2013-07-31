@@ -3,6 +3,8 @@
 (require 'package)
 (add-to-list 'package-archives
              '("marmalade" . "http://marmalade-repo.org/packages/") t)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
 
 (defvar my-packages '(starter-kit
@@ -27,7 +29,8 @@
 (load "~/.emacs.d/funcs.el")
 
 ;; Aesthetics
-(load-theme 'monokai t)
+(load-theme 'base16-eighties t)
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 ;; Enable whitespace mode for progamming languages, and highlight when
 ;; lines are over 80 characters long
@@ -37,6 +40,8 @@
 
 ;; Clojure mode
 (add-hook 'clojure-mode-hook 'paredit-mode)
+(add-hook 'nrepl-mode-hook 'paredit-mode)
+(add-hook 'nrepl-mode-hook 'rainbow-delimiters-mode)
 
 ;; Save backups to a central location
 ;; Taken from http://whattheemacsd.com/init.el-02.html
@@ -65,3 +70,4 @@
 ;; Bind expand-region
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
+
