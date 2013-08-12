@@ -52,3 +52,20 @@ point reaches the beginning or end of buffer, stop there."
   `(eval-after-load ,package-name
      '(defadvice ,mode (after rename-modeline activate)
         (setq mode-name ,new-name))))
+
+;; Highlight annotations in comments, take from Emacs Redux
+;; http://emacsredux.com/blog/2013/07/24/highlight-comment-annotations/
+(defun font-lock-comment-annotations ()
+  "Highlight a bunch of well-known comment annotations."
+  (font-lock-add-keywords
+   nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|OPTIMIZE\\|HACK\\|REFACTOR\\):"
+          1 font-lock-warning-face t))))
+
+(add-hook 'prog-mode-hook 'font-lock-comment-annotations)
+
+;; Taken from technomancy's emacs.d
+(global-set-key (kbd "C-c n")
+                (defun pnh-cleanup-buffer () (interactive)
+                  (delete-trailing-whitespace)
+                  (untabify (point-min) (point-max))
+                  (indent-region (point-min) (point-max))))
