@@ -5,8 +5,8 @@
 [hub]
 	protocol = ssh
 [user]
-        name = Chris Sims
-        email = chris@jcsims.me
+	name = Chris Sims
+	email = chris@jcsims.me
 [alias]
         co = checkout
         promote = !$ZSH/bin/git-promote
@@ -29,3 +29,5 @@
         prompt = false
 [help]
         autocorrect = 1
+[credential]
+	helper = cache --timeout=3600
