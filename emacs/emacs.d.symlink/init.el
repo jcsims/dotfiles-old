@@ -6,10 +6,11 @@
 (add-to-list 'package-archives
              '("melpa" . "http://melpa.milkbox.net/packages/") t)
 (package-initialize)
+(require 'pallet)
 
 ;; Load other files
 (load "~/.emacs.d/funcs.el")
-(load "~/.emacs.d/packages.el")
+
 
 ;; Aesthetics
 (load-theme 'base16-eighties t)
@@ -63,45 +64,3 @@
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
-;; Some misc taken from the starter kits
-(setq visible-bell t
-      inhibit-startup-message t
-      color-theme-is-global t
-      sentence-end-double-space nil
-      shift-select-mode nil
-      mouse-yank-at-point t
-      uniquify-buffer-name-style 'forward
-      whitespace-style '(face trailing lines-tail tabs)
-      whitespace-line-column 80
-      ediff-window-setup-function 'ediff-setup-windows-plain
-      oddmuse-directory (concat user-emacs-directory "oddmuse")
-      save-place-file (concat user-emacs-directory "places")
-      backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
-      diff-switches "-u")
-
-(show-paren-mode 1)
-
-(ido-mode t)
-(ido-ubiquitous t)
-
-(add-hook 'text-mode-hook 'turn-on-autofill)
-(add-hook 'text-mode-hook 'turn-on-flyspell)
-
-(defalias 'yes-or-no-p 'y-or-n-p)
-
-(random t)
-
-
-(setq smex-save-file (concat user-emacs-directory ".smex-items"))
-(smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
-
-;;; elisp
-
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'emacs-lisp-mode-hook 'elisp-slime-nav-mode)
-(add-hook 'emacs-lisp-mode-hook 'paredit-mode)
-
-(define-key emacs-lisp-mode-map (kbd "C-c v") 'eval-buffer)
-
-(define-key lisp-mode-shared-map (kbd "RET") 'reindent-then-newline-and-indent)
