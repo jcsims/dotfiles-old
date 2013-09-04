@@ -16,6 +16,9 @@
 ;; Load other files
 (load "~/.emacs.d/funcs.el")
 
+;; Be evil!
+(setq evil-want-C-u-scroll 1)
+(evil-mode 1)
 
 ;; Aesthetics
 (load-theme 'base16-eighties t)

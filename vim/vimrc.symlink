@@ -29,7 +29,8 @@ Bundle 'vim-scripts/paredit.vim'
 
 " Filetypes
 Bundle 'guns/vim-clojure-static'
-" Bundle 'jcf/vim-latex'
+Bundle 'gerw/vim-latex-suite'
+Bundle 'xuhdev/vim-latex-live-preview'
 Bundle 'tpope/vim-liquid'
 Bundle 'tpope/vim-markdown'
 Bundle 'mutewinter/nginx.vim'
@@ -37,6 +38,7 @@ Bundle 'leshill/vim-json'
 
 " Colors!
 Bundle 'tomasr/molokai'
+Bundle 'chriskempson/base16-vim'
 Bundle 'kien/rainbow_parentheses.vim'
 
 filetype plugin indent on
@@ -111,6 +113,7 @@ nnoremap <silent> <leader>sv :so $MYVIMRC<CR>
 "Attempt to force the terminal to display more colors
 set t_Co=256
 "Color scheme!
+set background=dark
 colorscheme molokai
 "Rainbow parens on all the time
 au VimEnter * RainbowParenthesesToggle
