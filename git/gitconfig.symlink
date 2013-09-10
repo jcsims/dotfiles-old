@@ -6,7 +6,7 @@
 	protocol = ssh
 [user]
 	name = Chris Sims
-	email = chris@jcsims.me
+	email = chris@jcsi.ms
 [alias]
         co = checkout
         promote = !$ZSH/bin/git-promote
