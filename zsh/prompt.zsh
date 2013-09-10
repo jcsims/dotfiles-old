@@ -51,8 +51,7 @@ need_push () {
 local lambda="%(?,%{$fg[green]%}λ%{$reset_color%},%{$fg[red]%}λ%{$reset_color%})"
 
 # Show the relative path on one line, then the smiley.
-PROMPT='
-%{$fg[magenta]%}%T%{$reset_color%} on %{$fg[green]%}%m%{$reset_color%} in %{$fg[cyan]%}%~ %{$reset_color%}
+PROMPT='%{$fg[magenta]%}%T%{$reset_color%} on %{$fg[green]%}%m%{$reset_color%} in %{$fg[cyan]%}%~ %{$reset_color%}
 ${lambda}  %{$reset_color%}'
 
 RPROMPT='%{$fg[white]%} $(git_dirty)$(need_push) %{$reset_color%}'
