@@ -69,3 +69,5 @@ point reaches the beginning or end of buffer, stop there."
                   (delete-trailing-whitespace)
                   (untabify (point-min) (point-max))
                   (indent-region (point-min) (point-max))))
+
+;; Some functions carried over from the emacs starter kit
