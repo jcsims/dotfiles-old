@@ -10,6 +10,8 @@
 
 ;; Load other files
 (load "~/.emacs.d/funcs.el")
+(load "~/.emacs.d/init-smartparens.el")
+(load "~/.emacs.d/init-auctex.el")
 
 ;; Be evil!
 (setq evil-want-C-u-scroll 1)
@@ -35,8 +37,6 @@
 (add-hook 'prog-mode-hook 'whitespace-mode)
 
 ;; Clojure mode
-(add-hook 'clojure-mode-hook 'paredit-mode)
-(add-hook 'nrepl-mode-hook 'paredit-mode)
 (add-hook 'nrepl-mode-hook 'rainbow-delimiters-mode)
 
 ;; Save backups to a central location
@@ -53,6 +53,8 @@
 
 ;; Globally enable yasnippets
 (yas-global-mode 1)
+(setq yas/root-directory '("~/.emacs.d/snippets"))
+(mapc 'yas/load-directory yas/root-directory)
 
 ;; Configure auto-complete
 (require 'auto-complete-config)
@@ -67,26 +69,23 @@
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
-;; AUCTex settings
-; Since the latest is installed from source,
-; need to make sure it's loaded
-(setq TeX-data-directory "~/code/auctex/")
-(add-to-list 'load-path "~/code/auctex/")
-(add-to-list 'load-path "~/code/auctex/preview/")
-(add-to-list 'Info-directory-list "~/code/auctex/doc")
-
-(load "auctex.el" nil t t)
-(load "preview-latex.el" nil t t)
-
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master nil)
 
 ;; Fill mode is pretty handy
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'latex-mode 'turn-on-auto-fill)
+(add-hook 'org-mode 'turn-on-auto-fill)
 
 ;; smex
 (setq smex-save-file (concat user-emacs-directory ".smex-items"))
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
+
+;; Org-mode
+(define-key global-map "\C-cl" 'org-store-link)
+(define-key global-map "\C-ca" 'org-agenda)
+(setq org-log-done t)
+
+(setq org-agenda-files (list "~/org/todo.org"
+                             "~/org/thesis.org"
+                             "~/org/ecsig.org"
+                             "~/org/school.org"))
