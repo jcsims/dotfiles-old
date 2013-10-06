@@ -50,3 +50,6 @@ cabal-dev
 *.vrb
 *.xdy
 *.tdo
+
+# Java files
+*.class
