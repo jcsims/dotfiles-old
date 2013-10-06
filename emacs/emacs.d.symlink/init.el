@@ -12,6 +12,7 @@
 (load "~/.emacs.d/funcs.el")
 (load "~/.emacs.d/init-smartparens.el")
 (load "~/.emacs.d/init-auctex.el")
+(load "~/.emacs.d/init-org.el")
 
 ;; Be evil!
 (setq evil-want-C-u-scroll 1)
@@ -80,12 +81,6 @@
 (smex-initialize)
 (global-set-key (kbd "M-x") 'smex)
 
-;; Org-mode
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'org-agenda)
-(setq org-log-done t)
 
-(setq org-agenda-files (list "~/org/todo.org"
-                             "~/org/thesis.org"
-                             "~/org/ecsig.org"
-                             "~/org/school.org"))
+;; Flycheck mode
+(add-hook 'after-init-hook #'global-flycheck-mode)
