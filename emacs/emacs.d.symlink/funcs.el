@@ -1,4 +1,4 @@
-;; Collection of functions added
+;;; Collection of functions added
 
 ;; Originally taken from:
 ;; http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
@@ -60,6 +60,7 @@ point reaches the beginning or end of buffer, stop there."
                   (untabify (point-min) (point-max))
                   (indent-region (point-min) (point-max))))
 
+
 ;; Some functions carried over from the emacs starter kit
 (defun esk-local-column-number-mode ()
   (make-local-variable 'column-number-mode)
@@ -96,3 +97,6 @@ point reaches the beginning or end of buffer, stop there."
 (add-hook 'prog-mode-hook 'esk-pretty-lambdas)
 (add-hook 'prog-mode-hook 'esk-add-watchwords)
 (add-hook 'prog-mode-hook 'idle-highlight-mode)
+
+(provide 'funcs)
+;;; funcs.el ends here
