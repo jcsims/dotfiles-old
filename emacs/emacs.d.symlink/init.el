@@ -12,12 +12,10 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Be evil!
+(setq evil-want-C-u-scroll 1)
 (use-package evil
   :ensure t
-  :init
-  (progn
-    (setq evil-want-C-u-scroll 1)
-    (evil-mode 1)))
+  :init (evil-mode 1))
 (use-package undo-tree :ensure t)
 (use-package evil-indent-textobject :ensure t)
 
@@ -33,8 +31,8 @@
 (use-package magit
   :ensure t
   :init (progn
-            (set-face-foreground 'magit-diff-add "green4")
-            (set-face-foreground 'magit-diff-del "red3")))
+          (set-face-foreground 'magit-diff-add "green4")
+          (set-face-foreground 'magit-diff-del "red3")))
 
 ;; Load a few other packages
 (require 'init-clojure)
@@ -66,8 +64,8 @@
   :ensure t
   :bind ("M-x" . smex)
   :init (progn
-            (setq smex-save-file (concat user-emacs-directory ".smex-items"))
-            (smex-initialize)))
+          (setq smex-save-file (concat user-emacs-directory ".smex-items"))
+          (smex-initialize)))
 
 ;; Flycheck mode
 (use-package flycheck
