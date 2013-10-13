@@ -53,3 +53,6 @@ cabal-dev
 
 # Java files
 *.class
+
+# Emacs lisp
+*.elc
