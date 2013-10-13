@@ -18,7 +18,7 @@ re-downloaded in order to locate PACKAGE."
         (package-install package)
       (progn
         (package-refresh-contents)
-        (require-package package min-version t)))))
+        (install-package package min-version t)))))
 
 
 (defvar my-packages '(yaml-mode
