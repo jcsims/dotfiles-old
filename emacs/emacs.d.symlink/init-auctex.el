@@ -9,7 +9,7 @@
       (add-to-list 'Info-directory-list "~/code/auctex/doc")
       (load "auctex.el" nil t t)
       (load "preview-latex.el" nil t t))
-  (install-package auctex))
+  (install-package 'auctex))
 
 
 
