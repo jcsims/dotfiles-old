@@ -4,3 +4,6 @@
 [submodule "emacs/emacs.d.symlink/snippets/latex-mode"]
 	path = emacs/emacs.d.symlink/snippets/latex-mode
 	url = https://github.com/madsdk/yasnippets-latex.git
+[submodule "emacs/emacs.d.symlink/snippets/java-mode"]
+	path = emacs/emacs.d.symlink/snippets/java-mode
+	url = https://github.com/nekop/yasnippet-java-mode.git
