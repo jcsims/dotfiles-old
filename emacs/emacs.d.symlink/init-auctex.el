@@ -6,11 +6,11 @@
       (setq TeX-data-directory "~/code/auctex/")
       (add-to-list 'load-path "~/code/auctex/")
       (add-to-list 'load-path "~/code/auctex/preview/")
-      (add-to-list 'Info-directory-list "~/code/auctex/doc"))
+      (add-to-list 'Info-directory-list "~/code/auctex/doc")
+      (load "auctex.el" nil t t)
+      (load "preview-latex.el" nil t t))
   (install-package auctex))
 
-(load "auctex.el" nil t t)
-(load "preview-latex.el" nil t t)
 
 
 (setq TeX-auto-save t)
