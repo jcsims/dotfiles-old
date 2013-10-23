@@ -54,5 +54,16 @@ cabal-dev
 # Java files
 *.class
 
-# Emacs lisp
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
 *.elc
+auto-save-list
+tramp
+.\#*
+
+# Org-mode
+.org-id-locations
+*_archive
