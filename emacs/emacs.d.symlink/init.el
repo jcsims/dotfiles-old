@@ -33,6 +33,8 @@
   :init (progn
           (set-face-foreground 'magit-diff-add "green4")
           (set-face-foreground 'magit-diff-del "red3")))
+;; Set frame transparency
+(add-to-list 'default-frame-alist '(alpha 85 70))
 
 ;; Load a few other packages
 (require 'init-clojure)

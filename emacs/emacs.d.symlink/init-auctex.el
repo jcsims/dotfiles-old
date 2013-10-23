@@ -18,6 +18,7 @@
 (setq-default TeX-master nil)
 ;; I always use pdf
 (setq TeX-PDF-mode t)
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 
 (provide 'init-auctex)
 ;;; init-auctex.el ends here

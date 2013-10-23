@@ -3,9 +3,10 @@
   :ensure t
   :init (rename-modeline "clojure-mode" clojure-mode "Clj"))
 
-(use-package nrepl
-  :ensure t
-  :init (add-hook 'nrepl-mode-hook 'rainbow-delimiters-mode))
+(require 'init-cider)
+;; (use-package nrepl
+;;   :ensure t
+;;   :init (add-hook 'nrepl-mode-hook 'rainbow-delimiters-mode))
 
 (use-package clojurescript-mode :ensure t)
 

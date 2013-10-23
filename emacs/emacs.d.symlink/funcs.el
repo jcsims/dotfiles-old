@@ -83,6 +83,12 @@ point reaches the beginning or end of buffer, stop there."
 (add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
 (add-hook 'emacs-lisp-mode-hook 'remove-elc-on-save)
 
+;; Set transparency of current frame
+(defun transparency (value)
+   "Sets the transparency of the frame window. 0=transparent/100=opaque"
+   (interactive "nTransparency Value 0 - 100 opaque:")
+   (set-frame-parameter (selected-frame) 'alpha value))
+
 ;; Some functions carried over from the emacs starter kit
 (defun esk-local-column-number-mode ()
   (make-local-variable 'column-number-mode)
