@@ -4,6 +4,6 @@ alias ls='ls --color=auto'
 alias tree='tree -C'
       
 alias e='emacsclient -t'
-alias ec'=emacsclient -c'
+alias ec='emacsclient -c'
 alias vi='emacsclient -t'
-alias vim-'emacsclient -t'
+alias vim='emacsclient -t'
