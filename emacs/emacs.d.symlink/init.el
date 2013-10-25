@@ -34,11 +34,12 @@
           (set-face-foreground 'magit-diff-add "green4")
           (set-face-foreground 'magit-diff-del "red3")))
 ;; Set frame transparency
-(add-to-list 'default-frame-alist '(alpha 85 70))
+(add-to-list 'default-frame-alist '(alpha 90 80))
 
 ;; Load a few other packages
 (require 'init-clojure)
 (require 'init-yasnippet)
+(require 'init-haskell)
 (require 'init-auto-complete)
 
 ;; Enable whitespace mode for programming languages, and highlight when
@@ -65,9 +66,8 @@
 (use-package smex
   :ensure t
   :bind ("M-x" . smex)
-  :init (progn
-          (setq smex-save-file (concat user-emacs-directory ".smex-items"))
-          (smex-initialize)))
+  :init (setq smex-save-file (concat user-emacs-directory ".smex-items")))
+(smex-initialize)
 
 ;; Flycheck mode
 (use-package flycheck
