@@ -59,7 +59,6 @@
 
 ;; Fill mode is pretty handy
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
-(add-hook 'latex-mode 'turn-on-auto-fill)
 (add-hook 'org-mode 'turn-on-auto-fill)
 
 ;; smex
@@ -73,3 +72,7 @@
 (use-package flycheck
   :ensure t
   :init (add-hook 'after-init-hook #'global-flycheck-mode))
+
+;; Flyspell mode
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)

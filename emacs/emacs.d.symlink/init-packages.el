@@ -22,7 +22,6 @@ re-downloaded in order to locate PACKAGE."
 
 
 (defvar my-packages '(yaml-mode
-                      slamhound
                       s
                       request
                       project-mode
