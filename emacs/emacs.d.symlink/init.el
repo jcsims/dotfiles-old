@@ -35,6 +35,11 @@
           (set-face-foreground 'magit-diff-del "red3")))
 ;; Set frame transparency
 (add-to-list 'default-frame-alist '(alpha 90 80))
+;; Clean up the modeline a bit
+(require 'smart-mode-line)
+(if after-init-time (sml/setup)
+  (add-hook 'after-init-hook 'sml/setup))
+
 
 ;; Load a few other packages
 (require 'init-clojure)

@@ -22,6 +22,7 @@ re-downloaded in order to locate PACKAGE."
 
 
 (defvar my-packages '(yaml-mode
+                      smart-mode-line
                       s
                       request
                       project-mode
