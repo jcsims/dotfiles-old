@@ -7,3 +7,6 @@
 [submodule "emacs/emacs.d.symlink/snippets/java-mode"]
 	path = emacs/emacs.d.symlink/snippets/java-mode
 	url = https://github.com/nekop/yasnippet-java-mode.git
+[submodule "antigen"]
+	path = antigen
+	url = https://github.com/zsh-users/antigen.git
