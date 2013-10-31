@@ -1,7 +1,9 @@
 (add-to-list 'load-path user-emacs-directory)
 
 ;; Package Management
-(require 'init-packages)
+(require 'cask "~/.cask/cask.el")
+(cask-initialize)
+(require 'pallet)
 
 (require 'funcs)
 (require 'init-smartparens)
@@ -13,26 +15,15 @@
 
 ;; Be evil!
 (setq evil-want-C-u-scroll 1)
-(use-package evil
-  :ensure t
-  :init (evil-mode 1))
-(use-package undo-tree :ensure t)
-(use-package evil-indent-textobject :ensure t)
+(evil-mode 1)
 
 ;; Aesthetics
 (load-theme 'base16-eighties t)
-(use-package rainbow-delimiters
-  :ensure t
-  :init (add-hook 'prog-mode-hook 'rainbow-delimiters-mode))
+(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (eval-after-load 'diff-mode
   '(progn
      (set-face-foreground 'diff-added "green4")
      (set-face-foreground 'diff-removed "red3")))
-(use-package magit
-  :ensure t
-  :init (progn
-          (set-face-foreground 'magit-diff-add "green4")
-          (set-face-foreground 'magit-diff-del "red3")))
 ;; Set frame transparency
 (add-to-list 'default-frame-alist '(alpha 90 80))
 ;; Clean up the modeline a bit
@@ -67,16 +58,13 @@
 (add-hook 'org-mode 'turn-on-auto-fill)
 
 ;; smex
-(use-package smex
-  :ensure t
-  :bind ("M-x" . smex)
-  :init (setq smex-save-file (concat user-emacs-directory ".smex-items")))
+(setq smex-save-file (concat user-emacs-directory ".smex-items"))
 (smex-initialize)
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
 ;; Flycheck mode
-(use-package flycheck
-  :ensure t
-  :init (add-hook 'after-init-hook #'global-flycheck-mode))
+(add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;; Flyspell mode
 (add-hook 'text-mode-hook 'flyspell-mode)

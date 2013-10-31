@@ -11,7 +11,6 @@
       (load "preview-latex.el" nil t t))
   (install-package 'auctex))
 
-(use-package latex-extra :ensure t)
 (eval-after-load 'latex '(latex/setup-keybinds))
 
 (setq TeX-auto-save t)
