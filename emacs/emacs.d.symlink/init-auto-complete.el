@@ -5,6 +5,9 @@
 (add-hook 'nrepl-mode-hook 'ac-nrepl-setup)
 (add-hook 'nrepl-interaction-mode-hook 'ac-nrepl-setup)
 (add-to-list 'ac-modes 'nrepl-mode)
+(add-to-list 'ac-sources 'ac-source-ghc-mod)
+(setq ac-use-fuzzy t)
+(ac-flyspell-workaround)
 
 (provide 'init-auto-complete)
 ;;; init-auto-complete.el ends here

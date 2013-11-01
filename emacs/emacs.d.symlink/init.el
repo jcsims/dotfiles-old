@@ -24,8 +24,6 @@
   '(progn
      (set-face-foreground 'diff-added "green4")
      (set-face-foreground 'diff-removed "red3")))
-;; Set frame transparency
-(add-to-list 'default-frame-alist '(alpha 90 80))
 ;; Clean up the modeline a bit
 (require 'smart-mode-line)
 (if after-init-time (sml/setup)
@@ -69,3 +67,16 @@
 ;; Flyspell mode
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
+
+;; eclipse integration
+(require 'eclim)
+(require 'eclimd)
+(setq eclim-executable "/home/jcsims/apps/eclipse/eclim")
+(setq help-at-pt-display-when-idle t)
+(setq help-at-pt-timer-delay 0.1)
+(help-at-pt-set-timer)
+;; add the emacs-eclim source
+(require 'ac-emacs-eclim-source)
+(ac-emacs-eclim-config)
+(global-eclim-mode)
+
