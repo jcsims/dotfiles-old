@@ -43,4 +43,4 @@ for config_file ($ZSH/**/completion.zsh) [[ "$(basename $config_file)" == "compl
 
 antigen apply
 
-fortune -s | cowsay
+fortune -s | cowsay | lolcat
