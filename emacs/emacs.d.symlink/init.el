@@ -19,7 +19,6 @@
 (require 'init-smartparens)
 (require 'init-auctex)
 (require 'init-org)
-(require 'init-helm)
 
 ;; y/n keypresses instead of typing out yes or no
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -90,8 +89,6 @@
 (require 'ac-emacs-eclim-source)
 (ac-emacs-eclim-config)
 (global-eclim-mode)
-
-;; Turn on helm
 
 
 ;;; init.el ends here

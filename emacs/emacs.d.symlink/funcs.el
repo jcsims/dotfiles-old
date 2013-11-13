@@ -1,5 +1,8 @@
-;;; Collection of functions added
+;;; funcs.el --- Collection of functions added
 
+;;; Commentary:
+
+;;; Code:
 ;; Originally taken from:
 ;; http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
 (defun smarter-move-beginning-of-line (arg)
@@ -10,7 +13,7 @@ If point is already there, move to the beginning of the line.
 Effectively toggle between the first non-whitespace character and
 the beginning of the line.
 
-If ARG is not nil or 1, move forward ARG - 1 lines first. If
+If ARG is not nil or 1, move forward ARG - 1 lines first.  If
 point reaches the beginning or end of buffer, stop there."
   (interactive "^p")
   (setq arg (or arg 1))
@@ -85,7 +88,7 @@ point reaches the beginning or end of buffer, stop there."
 
 ;; Set transparency of current frame
 (defun transparency (value)
-   "Sets the transparency of the frame window. 0=transparent/100=opaque"
+   "Set the transparency of the frame window.  VALUE: 0=transparent/100=opaque."
    (interactive "nTransparency Value 0 - 100 opaque:")
    (set-frame-parameter (selected-frame) 'alpha value))
 
