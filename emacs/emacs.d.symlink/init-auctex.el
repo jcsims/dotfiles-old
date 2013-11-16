@@ -30,12 +30,29 @@
 
 (defun ac-latex-mode-setup ()         ; add ac-sources to default ac-sources
   (setq ac-sources
-     (append '(ac-source-math-unicode 
-               ac-source-math-latex
-               ac-source-latex-commands)
-               ac-sources)))
+        (append '(ac-source-math-unicode
+                  ac-source-math-latex
+                  ac-source-latex-commands)
+                ac-sources)))
 
 (add-hook 'latex-mode-hook 'ac-latex-mode-setup)
+
+(when (eq system-type 'darwin) ;; mac-specific settings
+  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+
+  (setq TeX-source-correlate-method 'synctex)
+
+  (setq TeX-view-program-list
+        '(("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+
+  (setq TeX-view-program-selection '((output-pdf "Skim"))))
+
+(add-hook 'TeX-mode-hook
+          (lambda ()
+            (add-to-list 'TeX-output-view-style
+                         '("^pdf$" "."
+                           "/Applications/Skim.app/Contents/SharedSupport/displayline -b %n %o %b")))
+          )
 
 (provide 'init-auctex)
 ;;; init-auctex.el ends here

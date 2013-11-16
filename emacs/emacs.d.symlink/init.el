@@ -1,7 +1,7 @@
 ;;; init --- configuration starting point
 
 ;;; Commentary:
-;; 
+;;
 ;; Most of what is found in these files has
 ;; been pulled from the dotfiles of others.
 ;; Take what you want, but be prepared to
@@ -19,6 +19,11 @@
 (require 'init-smartparens)
 (require 'init-auctex)
 (require 'init-org)
+
+;; Always use UTF-8
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(prefer-coding-system 'utf-8)
 
 ;; y/n keypresses instead of typing out yes or no
 (defalias 'yes-or-no-p 'y-or-n-p)
