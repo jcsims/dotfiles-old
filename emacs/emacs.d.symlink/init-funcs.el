@@ -1,4 +1,4 @@
-;;; funcs.el --- Collection of functions added
+;;; init-funcs.el --- Collection of functions added
 
 ;;; Commentary:
 
@@ -142,5 +142,5 @@ re-downloaded in order to locate PACKAGE."
 (add-hook 'prog-mode-hook 'esk-add-watchwords)
 (add-hook 'prog-mode-hook 'idle-highlight-mode)
 
-(provide 'funcs)
-;;; funcs.el ends here
+(provide 'init-funcs)
+;;; init-funcs.el ends here

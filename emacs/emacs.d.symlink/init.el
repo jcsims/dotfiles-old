@@ -1,7 +1,6 @@
 ;;; init --- configuration starting point
 
 ;;; Commentary:
-;;
 ;; Most of what is found in these files has
 ;; been pulled from the dotfiles of others.
 ;; Take what you want, but be prepared to
@@ -15,7 +14,7 @@
 (cask-initialize)
 (require 'pallet)
 
-(require 'funcs)
+(require 'init-funcs)
 (require 'init-smartparens)
 (require 'init-auctex)
 (require 'init-org)
@@ -43,7 +42,6 @@
 (require 'smart-mode-line)
 (if after-init-time (sml/setup)
   (add-hook 'after-init-hook 'sml/setup))
-
 
 ;; Load a few other packages
 (require 'init-clojure)
@@ -86,7 +84,7 @@
 ;; eclipse integration
 (require 'eclim)
 (require 'eclimd)
-(setq eclim-executable "/home/jcsims/apps/eclipse/eclim")
+(setq eclim-executable "/Applications/eclipse/eclim")
 (setq help-at-pt-display-when-idle t)
 (setq help-at-pt-timer-delay 0.1)
 (help-at-pt-set-timer)
