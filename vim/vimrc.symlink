@@ -44,7 +44,7 @@ Bundle 'kien/rainbow_parentheses.vim'
 filetype plugin indent on
 syntax on
 
-set shell=/usr/bin/zsh\ -l
+set shell=/usr/local/bin/zsh\ -l
 
 "Set tab options to preferred 2 spaces
 set tabstop=2
