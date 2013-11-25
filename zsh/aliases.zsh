@@ -4,5 +4,3 @@ alias tree='tree -C'
       
 alias e='emacsclient -t -a ""'
 alias ec='emacsclient -c -a ""'
-alias vi='emacsclient -t -a ""'
-alias vim='emacsclient -t -a ""'

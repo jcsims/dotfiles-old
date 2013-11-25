@@ -27,6 +27,11 @@ Bundle 'tpope/vim-fireplace'
 Bundle 'dahu/LearnVim'
 Bundle 'vim-scripts/paredit.vim'
 
+" Haskell
+Bundle 'Shougo/vimproc'
+Bundle 'eaglemt/ghcmod-vim'
+Bundle 'vim-scripts/haskell.vim'
+
 " Filetypes
 Bundle 'guns/vim-clojure-static'
 Bundle 'gerw/vim-latex-suite'
@@ -76,6 +81,8 @@ set virtualedit=block
 " Electric return for paredit mode
 " Example: http://img8.imageshack.us/img8/9479/openparen.gif
 let g:paredit_electric_returns = 1
+" Use the same leader key for paredit
+let g:paredit_leader = '\'
 
 "Search options, including <leader><space> to clear search results
 nnoremap / /\v
@@ -105,6 +112,9 @@ endif
 if (expand("%") != "")
   au FocusLost * :wa
 endif
+
+" Check and lint Haskell files on save
+autocmd BuFWritePost *.hs GhcModCheckAndLintAsync
 
 "Allow for quick and easy editing and sourcing of vimrc
 nnoremap <silent> <leader>ev :e $MYVIMRC<CR>
