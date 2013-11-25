@@ -1,2 +1,2 @@
 # Add cask to path
-export PATH=$HOME/.cask/bin/:$PATH
+export PATH=$HOME/.cask/bin:$PATH
