@@ -26,6 +26,8 @@ Bundle 'tpope/vim-classpath'
 Bundle 'tpope/vim-fireplace'
 Bundle 'dahu/LearnVim'
 Bundle 'vim-scripts/paredit.vim'
+Bundle 'rking/ag.vim'
+Bundle 'mileszs/ack.vim'
 
 " Haskell
 Bundle 'Shougo/vimproc'
@@ -124,7 +126,7 @@ nnoremap <silent> <leader>sv :so $MYVIMRC<CR>
 set t_Co=256
 "Color scheme!
 set background=dark
-colorscheme molokai
+colorscheme base16-eighties
 "Rainbow parens on all the time
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
@@ -144,7 +146,7 @@ inoremap jj <ESC>
 
 "Show invisibles - tab and EOL, in the style of Textmate
 set listchars=tab:▸\ ,eol:¬
-nnoremap <leader>l :set list!<CR>
+nnoremap <leader>v :set list!<CR>
 
 function! s:align()
   let p = '^\s*|\s.*\s|\s*$'
@@ -194,11 +196,13 @@ function! WinMove(key)
   endif
 endfunction
  
-nnoremap <c-h>  :call WinMove('h')<cr>
-nnoremap <c-k>  :call WinMove('k')<cr>
-nnoremap <c-l>  :call WinMove('l')<cr>
-nnoremap <c-j>  :call WinMove('j')<cr>
+nnoremap <leader>h  :call WinMove('h')<cr>
+nnoremap <leader>k  :call WinMove('k')<cr>
+nnoremap <leader>l  :call WinMove('l')<cr>
+nnoremap <leader>j  :call WinMove('j')<cr>
+" Close window
 nnoremap <leader>wc :wincmd q<cr>
+"Rotate windows
 nnoremap <leader>wr <C-W>r
 nnoremap <leader>H  :wincmd H<cr>
 nnoremap <leader>K  :wincmd K<cr>
@@ -210,7 +214,8 @@ nnoremap <right> :3wincmd ><cr>
 nnoremap <up>    :3wincmd +<cr>
 nnoremap <down>  :3wincmd -<cr>
 
-" Taken from http://stackoverflow.com/questions/4331776/change-vim-swap-backup-undo-file-name 
+" Taken from
+" http://stackoverflow.com/questions/4331776/change-vim-swap-backup-undo-file-name 
 " Sets up undo, backup, and swap directories more like they should be
 
 " Backups, undos, and swap files                                                                                                                             {1
