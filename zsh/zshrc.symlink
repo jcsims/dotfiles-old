@@ -42,5 +42,3 @@ compinit
 for config_file ($ZSH/**/completion.zsh) [[ "$(basename $config_file)" == "completion.zsh" ]] || source $config_file
 
 antigen apply
-
-fortune -s | cowsay | lolcat

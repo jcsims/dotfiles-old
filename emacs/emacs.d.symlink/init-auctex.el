@@ -39,12 +39,9 @@
 
 (when (eq system-type 'darwin) ;; mac-specific settings
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-
   (setq TeX-source-correlate-method 'synctex)
-
   (setq TeX-view-program-list
         '(("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
-
   (setq TeX-view-program-selection '((output-pdf "Skim"))))
 
 (add-hook 'TeX-mode-hook
