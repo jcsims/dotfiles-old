@@ -1,57 +1,60 @@
 set nocompatible
 filetype off
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set runtimepath+=~/.vim/bundle/neobundle.vim/
+call neobundle#rc(expand('~/.vim/bundle/'))
 
-Bundle 'gmarik/vundle'
+NeoBundleFetch 'Shougo/neobundle.vim'
 " Bundles
 "github repos
-Bundle 'tpope/vim-fugitive'
-Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-speeddating'
-Bundle 'tpope/vim-commentary'
-Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-characterize'
-Bundle 'tpope/vim-unimpaired'
-Bundle 'godlygeek/tabular'
-Bundle 'kien/ctrlp.vim'
-Bundle 'scrooloose/syntastic'
-Bundle 'Rykka/colorv.vim'
-Bundle 'vim-scripts/sudo.vim'
-Bundle 'mhinz/vim-signify'
-Bundle 'Valloric/YouCompleteMe'
-Bundle 'guns/ultisnips'
-Bundle 'tpope/vim-classpath'
-Bundle 'tpope/vim-fireplace'
-Bundle 'dahu/LearnVim'
-Bundle 'vim-scripts/paredit.vim'
-Bundle 'rking/ag.vim'
-Bundle 'mileszs/ack.vim'
+NeoBundle 'tpope/vim-fugitive'
+NeoBundle 'tpope/vim-surround'
+NeoBundle 'tpope/vim-speeddating'
+NeoBundle 'tpope/vim-commentary'
+NeoBundle 'tpope/vim-repeat'
+NeoBundle 'tpope/vim-characterize'
+NeoBundle 'tpope/vim-unimpaired'
+NeoBundle 'godlygeek/tabular'
+NeoBundle 'kien/ctrlp.vim'
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'Rykka/colorv.vim'
+NeoBundle 'vim-scripts/sudo.vim'
+NeoBundle 'mhinz/vim-signify'
+NeoBundle 'Valloric/YouCompleteMe'
+NeoBundle 'guns/ultisnips'
+NeoBundle 'tpope/vim-classpath'
+NeoBundle 'tpope/vim-fireplace'
+NeoBundle 'dahu/LearnVim'
+NeoBundle 'vim-scripts/paredit.vim'
+NeoBundle 'rking/ag.vim'
+NeoBundle 'mileszs/ack.vim'
+NeoBundle 'tpope/vim-sensible'
 
 " Haskell
-Bundle 'Shougo/vimproc'
-Bundle 'eaglemt/ghcmod-vim'
-Bundle 'vim-scripts/haskell.vim'
+NeoBundle 'Shougo/vimproc'
+NeoBundle 'eaglemt/ghcmod-vim'
+NeoBundle 'vim-scripts/haskell.vim'
 
 " Filetypes
-Bundle 'guns/vim-clojure-static'
-Bundle 'gerw/vim-latex-suite'
-Bundle 'xuhdev/vim-latex-live-preview'
-Bundle 'tpope/vim-liquid'
-Bundle 'tpope/vim-markdown'
-Bundle 'mutewinter/nginx.vim'
-Bundle 'leshill/vim-json'
+NeoBundle 'guns/vim-clojure-static'
+NeoBundle 'gerw/vim-latex-suite'
+NeoBundle 'xuhdev/vim-latex-live-preview'
+NeoBundle 'tpope/vim-liquid'
+NeoBundle 'tpope/vim-markdown'
+NeoBundle 'mutewinter/nginx.vim'
+NeoBundle 'leshill/vim-json'
 
 " Colors!
-Bundle 'tomasr/molokai'
-Bundle 'chriskempson/base16-vim'
-Bundle 'kien/rainbow_parentheses.vim'
+NeoBundle 'tomasr/molokai'
+NeoBundle 'chriskempson/base16-vim'
+NeoBundle 'kien/rainbow_parentheses.vim'
+NeoBundle 'bling/vim-airline'
 
 filetype plugin indent on
 syntax on
 
-set shell=/usr/local/bin/zsh\ -l
+" Ensure that all the plugins we need are installed
+NeoBundleCheck
 
 "Set tab options to preferred 2 spaces
 set tabstop=2
@@ -59,20 +62,13 @@ set shiftwidth=2
 set softtabstop=2
 set expandtab
 
-set encoding=utf-8
-set scrolloff=3
-set autoindent
 set copyindent
 set showmode
-set showcmd
 set hidden
-set wildmenu
 set wildmode=list:longest
 set wildignore=*.swp,*.bak
 set cursorline
 set ttyfast
-set ruler
-set backspace=indent,eol,start
 set laststatus=2
 set nu
 set title
@@ -92,10 +88,8 @@ vnoremap / /\v
 set ignorecase
 set smartcase
 set gdefault
-set incsearch
 set showmatch
 set hlsearch
-nnoremap <leader><space> :noh<cr>
 
 "Set up column at column width to stick with sane column width while coding
 set nowrap
@@ -122,16 +116,25 @@ autocmd BuFWritePost *.hs GhcModCheckAndLintAsync
 nnoremap <silent> <leader>ev :e $MYVIMRC<CR>
 nnoremap <silent> <leader>sv :so $MYVIMRC<CR>
 
-"Attempt to force the terminal to display more colors
-set t_Co=256
+"" Aesthetics
+""""""""""""""""""""""""""""""""""""""""""""""""""""""
 "Color scheme!
 set background=dark
 colorscheme base16-eighties
+
 "Rainbow parens on all the time
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound
 au Syntax * RainbowParenthesesLoadSquare
 au Syntax * RainbowParenthesesLoadBraces
+
+" Set the font
+if has("gui_running")
+  set guifont=Sauce\ Code\ Powerline:h12
+endif
+
+" Attempt to use fancy symbols in the statusline
+let g:airline_powerline_fonts=1
 
 "Remove the menubar
 set guioptions-=T
@@ -145,7 +148,6 @@ nnoremap k gk
 inoremap jj <ESC>
 
 "Show invisibles - tab and EOL, in the style of Textmate
-set listchars=tab:▸\ ,eol:¬
 nnoremap <leader>v :set list!<CR>
 
 function! s:align()
@@ -183,19 +185,19 @@ nnoremap <leader>x :bn<CR>
 
 " Window navigation
 " from http://www.agillo.net/simple-vim-window-management/
-function! WinMove(key) 
+function! WinMove(key)
   let t:curwin = winnr()
   exec "wincmd ".a:key
   if (t:curwin == winnr()) "we havent moved
     if (match(a:key,'[jk]')) "were we going up/down
       wincmd v
-    else 
+    else
       wincmd s
     endif
     exec "wincmd ".a:key
   endif
 endfunction
- 
+
 nnoremap <leader>h  :call WinMove('h')<cr>
 nnoremap <leader>k  :call WinMove('k')<cr>
 nnoremap <leader>l  :call WinMove('l')<cr>
@@ -215,7 +217,7 @@ nnoremap <up>    :3wincmd +<cr>
 nnoremap <down>  :3wincmd -<cr>
 
 " Taken from
-" http://stackoverflow.com/questions/4331776/change-vim-swap-backup-undo-file-name 
+" http://stackoverflow.com/questions/4331776/change-vim-swap-backup-undo-file-name
 " Sets up undo, backup, and swap directories more like they should be
 
 " Backups, undos, and swap files                                                                                                                             {1
@@ -291,36 +293,3 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
-
-" Status line
-" Pulled from http://stackoverflow.com/questions/5375240/a-more-useful-statusline-in-vim/10416234#10416234
-set statusline=
-set statusline+=%7*\[%n]                                  "buffernr
-set statusline+=%1*\ %<%F\                                "File+path
-set statusline+=%2*\ %y\                                  "FileType
-set statusline+=%3*\ %{''.(&fenc!=''?&fenc:&enc).''}      "Encoding
-set statusline+=%3*\ %{(&bomb?\",BOM\":\"\")}\            "Encoding2
-set statusline+=%4*\ %{&ff}\                              "FileFormat (dos/unix..) 
-set statusline+=%5*\ %{&spelllang}\                       "Spellanguage & Highlight on?
-set statusline+=%8*\ %{fugitive#statusline()}\            "Current git status
-set statusline+=%8*\ %=\ row:%l/%L\ (%03p%%)\             "Rownumber/total (%)
-set statusline+=%9*\ col:%03c\                            "Colnr
-set statusline+=%0*\ \ %m%r%w\ %P\ \                      "Modified? Readonly? Top/bot.
-
-function! HighlightSearch()
-  if &hls
-    return 'H'
-  else
-    return ''
-  endif
-endfunction
-
-hi User1 guifg=#ffdad8  guibg=#880c0e ctermbg=88 ctermfg=15 
-hi User2 guifg=#000000  guibg=#F4905C ctermbg=130 ctermfg=0
-hi User3 guifg=#292b00  guibg=#f4f597 ctermbg=221 ctermfg=0
-hi User4 guifg=#112605  guibg=#aefe7B ctermbg=10 ctermfg=0
-hi User5 guifg=#051d00  guibg=#7dcc7d ctermbg=71 ctermfg=0
-hi User7 guifg=#ffffff  guibg=#880c0e gui=bold cterm=bold ctermbg=88 ctermfg=15
-hi User8 guifg=#ffffff  guibg=#5b7fbb ctermbg=25 ctermfg=15
-hi User9 guifg=#ffffff  guibg=#810085 ctermbg=54 ctermfg=15
-hi User0 guifg=#ffffff  guibg=#094afe ctermbg=11 ctermfg=0
