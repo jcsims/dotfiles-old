@@ -35,6 +35,10 @@
 ;; y/n keypresses instead of typing out yes or no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
+;; Be evil!
+(setq evil-want-C-u-scroll 1)
+(evil-mode 1)
+
 ;; Aesthetics
 (load-theme 'base16-eighties t)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
