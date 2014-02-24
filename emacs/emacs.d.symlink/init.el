@@ -89,22 +89,13 @@
 
 ;; Flycheck mode
 (add-hook 'after-init-hook #'global-flycheck-mode)
+(eval-after-load 'flycheck
+  '(define-key flycheck-mode-map (kbd "C-c ! h") 'helm-flycheck))
 
 ;; Flyspell mode
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
-;; eclipse integration
-(require 'eclim)
-(require 'eclimd)
-(setq eclim-executable "/Applications/eclipse/eclim")
-(setq help-at-pt-display-when-idle t)
-(setq help-at-pt-timer-delay 0.1)
-(help-at-pt-set-timer)
-;; add the emacs-eclim source
-(require 'ac-emacs-eclim-source)
-(ac-emacs-eclim-config)
-(global-eclim-mode)
-
 (require 'helm-config)
+(projectile-global-mode)
 ;;; init.el ends here
