@@ -1,0 +1,1 @@
+("~/code/ecsig.com/" "~/code/481/" "~/.dotfiles/")

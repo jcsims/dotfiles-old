@@ -27,8 +27,7 @@
         branch = auto
         ui = true
 [core]
-	excludesfile = /Users/chris/.gitignore
-        editor = vim
+	excludesfile = ~/.gitignore
 [apply]
         whitespace = nowarn
 [mergetool]
