@@ -22,18 +22,12 @@ NeoBundle 'vim-scripts/sudo.vim'
 NeoBundle 'mhinz/vim-signify'
 NeoBundle 'Valloric/YouCompleteMe'
 NeoBundle 'guns/ultisnips'
-NeoBundle 'tpope/vim-classpath'
 NeoBundle 'tpope/vim-fireplace'
 NeoBundle 'dahu/LearnVim'
 NeoBundle 'vim-scripts/paredit.vim'
 NeoBundle 'rking/ag.vim'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'tpope/vim-sensible'
-
-" Haskell
-NeoBundle 'Shougo/vimproc'
-NeoBundle 'eaglemt/ghcmod-vim'
-NeoBundle 'vim-scripts/haskell.vim'
 
 " Filetypes
 NeoBundle 'guns/vim-clojure-static'
@@ -44,7 +38,7 @@ NeoBundle 'tpope/vim-markdown'
 NeoBundle 'mutewinter/nginx.vim'
 NeoBundle 'leshill/vim-json'
 
-" Colors!
+" Aesthetics
 NeoBundle 'tomasr/molokai'
 NeoBundle 'chriskempson/base16-vim'
 NeoBundle 'kien/rainbow_parentheses.vim'
@@ -79,10 +73,10 @@ set virtualedit=block
 " Electric return for paredit mode
 " Example: http://img8.imageshack.us/img8/9479/openparen.gif
 let g:paredit_electric_returns = 1
-" Use the same leader key for paredit
-let g:paredit_leader = '\'
+" '(' and ')' will also jump to square brackets and curly braces
+let g:paredit_smartjump = 1
 
-"Search options, including <leader><space> to clear search results
+"Search options
 nnoremap / /\v
 vnoremap / /\v
 set ignorecase
@@ -109,9 +103,6 @@ if (expand("%") != "")
   au FocusLost * :wa
 endif
 
-" Check and lint Haskell files on save
-autocmd BuFWritePost *.hs GhcModCheckAndLintAsync
-
 "Allow for quick and easy editing and sourcing of vimrc
 nnoremap <silent> <leader>ev :e $MYVIMRC<CR>
 nnoremap <silent> <leader>sv :so $MYVIMRC<CR>
@@ -130,11 +121,17 @@ au Syntax * RainbowParenthesesLoadBraces
 
 " Set the font
 if has("gui_running")
-  set guifont=Sauce\ Code\ Powerline:h12
+  if has("gui_macvim")
+    set guifont=Sauce\ Code\ Powerline:h12
+  else
+    set guifont=Liberation\ Mono\ for\ Powerline\ 10
+  endif
 endif
 
 " Attempt to use fancy symbols in the statusline
 let g:airline_powerline_fonts=1
+"If there's only a single tab, show buffers instead
+let g:airline#extensions#tabline#enabled = 1
 
 "Remove the menubar
 set guioptions-=T
@@ -220,7 +217,7 @@ nnoremap <down>  :3wincmd -<cr>
 " http://stackoverflow.com/questions/4331776/change-vim-swap-backup-undo-file-name
 " Sets up undo, backup, and swap directories more like they should be
 
-" Backups, undos, and swap files                                                                                                                             {1
+" Backups, undos, and swap files
 "-----------------------------------------------------------------------------
 " Save your backups to a less annoying place than the current directory.
 " If you have .vim-backup in the current directory, it'll use that.
