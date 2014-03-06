@@ -31,16 +31,16 @@ point reaches the beginning or end of buffer, stop there."
 (global-set-key [remap move-beginning-of-line]
                 'smarter-move-beginning-of-line)
 
-;; Pair of functions to create newlines above or below the current
-;; line, even if you are midsentence
 ;; Taken from http://whattheemacsd.com/editing-defuns.el-01.html
 (defun open-line-below ()
+  "Anywhere on the line, open a new line below current line."
   (interactive)
   (end-of-line)
   (newline)
   (indent-for-tab-command))
 
 (defun open-line-above ()
+  "Anywhere on the line, open a new line above current line."
   (interactive)
   (beginning-of-line)
   (newline)
@@ -50,8 +50,10 @@ point reaches the beginning or end of buffer, stop there."
 (global-set-key (kbd "<C-return>") 'open-line-below)
 (global-set-key (kbd "<C-S-return>") 'open-line-above)
 
-;; Taken from what the emacs.d - clean up a mode name
 (defmacro rename-modeline (package-name mode new-name)
+  "Change the name of a mode on the mode-line.
+In PACKAGE-NAME, change MODE from PACKAGE-NAME to NEW-NAME.
+Taken from what the emacs.d."
   `(eval-after-load ,package-name
      '(defadvice ,mode (after rename-modeline activate)
         (setq mode-name ,new-name))))
@@ -70,6 +72,8 @@ point reaches the beginning or end of buffer, stop there."
   (byte-recompile-directory user-emacs-directory 0))
 
 (defun sudo-edit (&optional arg)
+  "Edit a file ARG using sudo.
+If no file is specified, use current buffer."
   (interactive "p")
   (if (or arg (not buffer-file-name))
       (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))

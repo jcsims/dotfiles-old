@@ -14,18 +14,18 @@
 (cask-initialize)
 (require 'pallet)
 
-;; Ensure that the PATH is set properly
-;; Credit goes to Steve Purcell
 (defun set-exec-path-from-shell-PATH ()
+  "Ensure that the path is set correctly.  Credit: Steve Purcell."
   (let ((path-from-shell (shell-command-to-string "$SHELL -i -c 'echo $PATH'")))
     (setenv "PATH" path-from-shell)
     (setq exec-path (split-string path-from-shell path-separator))))
 (when window-system (set-exec-path-from-shell-PATH))
 
 (require 'init-funcs)
-(require 'init-smartparens)
+;(require 'init-smartparens)
 (require 'init-auctex)
 (require 'init-org)
+(require 'init-evil)
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -35,9 +35,8 @@
 ;; y/n keypresses instead of typing out yes or no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
-;; Be evil!
-(setq evil-want-C-u-scroll 1)
-(evil-mode 1)
+;; Ensure that when we go to a new line, it's indented properly
+(electric-indent-mode 1)
 
 ;; Aesthetics
 (load-theme 'base16-eighties t)
