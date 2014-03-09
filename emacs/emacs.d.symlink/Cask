@@ -15,6 +15,7 @@
 (depends-on "bind-key")
 (depends-on "cask")
 (depends-on "cider")
+(depends-on "clj-refactor")
 (depends-on "clojure-mode")
 (depends-on "clojure-snippets")
 (depends-on "clojure-test-mode")

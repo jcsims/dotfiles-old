@@ -9,14 +9,10 @@
 (evil-set-initial-state 'cider-repl-mode 'insert)
 (evil-set-initial-state 'project-explorer-mode 'emacs)
 
-;; Ensure that Esc quits pretty much everywhere
-(define-key evil-normal-state-map [escape] 'keyboard-quit)
-(define-key evil-visual-state-map [escape] 'keyboard-quit)
-(define-key minibuffer-local-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-ns-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-completion-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-must-match-map [escape] 'minibuffer-keyboard-quit)
-(define-key minibuffer-local-isearch-map [escape] 'minibuffer-keyboard-quit)
+;; evil-paredit is fairly handicapped for now -
+;; it just tells you when you can't do something
+(add-hook 'emacs-lisp-mode-hook 'evil-paredit-mode)
+(add-hook 'clojure-mode-hook 'evil-paredit-mode)
 
 (provide 'init-evil)
 ;;; init-evil.el ends here

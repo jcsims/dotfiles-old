@@ -22,10 +22,9 @@
 (when window-system (set-exec-path-from-shell-PATH))
 
 (require 'init-funcs)
-;(require 'init-smartparens)
 (require 'init-auctex)
 (require 'init-org)
-(require 'init-evil)
+;(require 'init-evil)
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -55,6 +54,8 @@
 (require 'init-yasnippet)
 (require 'init-haskell)
 (require 'init-auto-complete)
+
+(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
 
 ;; Enable whitespace mode for programming languages, and highlight when
 ;; lines are over 80 characters long
