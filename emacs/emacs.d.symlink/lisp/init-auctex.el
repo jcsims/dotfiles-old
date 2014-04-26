@@ -1,6 +1,5 @@
 ;;; AUCTex settings
-;; If the latest is installed from source,
-;; use that
+;; If the latest is installed from source, use that
 (if (file-directory-p "~/code/auctex")
     (progn
       (setq TeX-data-directory "~/code/auctex/")
@@ -24,18 +23,18 @@
 (setq reftex-plug-into-AUCTeX t)
 
 ;; Set up auto-complete sources
-(require 'ac-math)
+;;(require 'ac-math)
 
-(add-to-list 'ac-modes 'latex-mode)   ; make auto-complete aware of `latex-mode`
+;;(add-to-list 'ac-modes 'latex-mode)   ; make auto-complete aware of `latex-mode`
 
-(defun ac-latex-mode-setup ()         ; add ac-sources to default ac-sources
-  (setq ac-sources
-        (append '(ac-source-math-unicode
-                  ac-source-math-latex
-                  ac-source-latex-commands)
-                ac-sources)))
+;; (defun ac-latex-mode-setup ()         ; add ac-sources to default ac-sources
+;;   (setq ac-sources
+;;         (append '(ac-source-math-unicode
+;;                   ac-source-math-latex
+;;                   ac-source-latex-commands)
+;;                ac-sources)))
 
-(add-hook 'latex-mode-hook 'ac-latex-mode-setup)
+;;(add-hook 'latex-mode-hook 'ac-latex-mode-setup)
 
 (when (eq system-type 'darwin) ;; mac-specific settings
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
@@ -46,10 +45,10 @@
 
 (add-hook 'TeX-mode-hook
           (lambda ()
-            (add-to-list 'TeX-output-view-style
-                         '("^pdf$" "."
-                           "/Applications/Skim.app/Contents/SharedSupport/displayline -b %n %o %b")))
-          )
+            (add-to-list
+             'TeX-output-view-style
+             '("^pdf$" "."
+               "/Applications/Skim.app/Contents/SharedSupport/displayline -b %n %o %b"))))
 
 (provide 'init-auctex)
 ;;; init-auctex.el ends here

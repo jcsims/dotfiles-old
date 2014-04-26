@@ -7,24 +7,22 @@
 ;; troubleshoot yourself!
 
 ;;; Code:
-(add-to-list 'load-path user-emacs-directory)
+(add-to-list 'load-path (concat user-emacs-directory "lisp"))
 
 ;; Package Management
 (require 'cask "~/.cask/cask.el")
 (cask-initialize)
 (require 'pallet)
 
-(defun set-exec-path-from-shell-PATH ()
-  "Ensure that the path is set correctly.  Credit: Steve Purcell."
-  (let ((path-from-shell (shell-command-to-string "$SHELL -i -c 'echo $PATH'")))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
-(when window-system (set-exec-path-from-shell-PATH))
+;; Ensure that the PATH is set correctly
+(when (memq window-system '(mac ns))
+  (exec-path-from-shell-initialize))
 
 (require 'init-funcs)
+(require 'init-smartparens)
 (require 'init-auctex)
 (require 'init-org)
-;(require 'init-evil)
+;;(require 'init-evil)
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -35,9 +33,11 @@
 (defalias 'yes-or-no-p 'y-or-n-p)
 
 ;; Ensure that when we go to a new line, it's indented properly
-(electric-indent-mode 1)
+(electric-indent-mode)
+;; Since electric indent is turned on, re-purpose <C-j>
+(global-set-key (kbd "C-j") 'join-line)
 
-;; Aesthetics
+ ;;; Aesthetics
 (load-theme 'base16-eighties t)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (eval-after-load 'diff-mode
@@ -48,14 +48,23 @@
 (require 'smart-mode-line)
 (if after-init-time (sml/setup)
   (add-hook 'after-init-hook 'sml/setup))
+(set-default-font "Menlo 12")
+
+;; The audible bell is obnoxious
+(setq visible-bell t)
 
 ;; Load a few other packages
 (require 'init-clojure)
 (require 'init-yasnippet)
 (require 'init-haskell)
-(require 'init-auto-complete)
+;;(require 'init-auto-complete)
 
-(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+;; Use company mode for completion
+(add-hook 'after-init-hook 'global-company-mode)
+(eval-after-load 'company '(add-to-list 'company-backends 'company-cider))
+(eval-after-load 'company '(add-to-list 'company-backends 'company-tern))
+(eval-after-load 'company '(add-to-list 'company-backends 'company-inf-ruby))
+
 
 ;; Enable whitespace mode for programming languages, and highlight when
 ;; lines are over 80 characters long
@@ -96,6 +105,35 @@
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
-(require 'helm-config)
 (projectile-global-mode)
+(require 'expand-region)
+(global-set-key (kbd "C-=") 'er/expand-region)
+
+;; Auto-refresh buffers
+(global-auto-revert-mode 1)
+
+;; Also auto refresh dired buffers, but do it quietly
+(setq global-auto-revert-non-file-buffers t)
+(setq auto-revert-verbose nil)
+
+;; Octave mode for .m files
+(autoload 'octave-mode "octave-mod" nil t)
+(setq auto-mode-alist
+      (cons '("\\.m$" . octave-mode) auto-mode-alist))
+
+;; Quick access to a few files
+(global-set-key (kbd "C-c e i")
+                (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
+(global-set-key (kbd "C-c e t")
+                (lambda () (interactive) (find-file "~/org/todo.org")))
+
+;; Basic erc config
+(require 'erc)
+(require 'erc-image)
+(require 'erc-terminal-notifier)
+(require 'erc-tweet)
+(add-to-list 'erc-modules 'tweet)
+(add-to-list 'erc-modules 'image)
+(erc-update-modules)
+
 ;;; init.el ends here

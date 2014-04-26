@@ -2,8 +2,13 @@
 (require 'smartparens-config)
 (smartparens-global-mode t)
 
-;; keybinding management
+;; Show as many matching pairs as smartparens knows about
+(show-smartparens-global-mode t)
 
+;; Always enable string parens
+(smartparens-strict-mode t)
+
+;; keybinding management
 (define-key sp-keymap (kbd "C-M-f") 'sp-forward-sexp)
 (define-key sp-keymap (kbd "C-M-b") 'sp-backward-sexp)
 

@@ -12,10 +12,7 @@
 (setq org-startup-folded t)
 
 (setq org-agenda-files (list "~/org/todo.org"
-                             "~/org/thesis.org"
-                             "~/org/ecsig.org"
-                             "~/org/school.org"
-                             "~/org/home.org"))
+                             "~/org/thesis.org"))
 (setq org-default-notes-file
       (concat org-directory "/todo.org"))
 
