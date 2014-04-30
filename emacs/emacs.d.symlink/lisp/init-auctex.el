@@ -1,5 +1,10 @@
-;;; AUCTex settings
+;;; AUCTeX --- Summary
+;; AUCTeX config
+
+;;; Commentary:
 ;; If the latest is installed from source, use that
+
+;;; Code:
 (if (file-directory-p "~/code/auctex")
     (progn
       (setq TeX-data-directory "~/code/auctex/")
@@ -20,21 +25,8 @@
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+
 (setq reftex-plug-into-AUCTeX t)
-
-;; Set up auto-complete sources
-;;(require 'ac-math)
-
-;;(add-to-list 'ac-modes 'latex-mode)   ; make auto-complete aware of `latex-mode`
-
-;; (defun ac-latex-mode-setup ()         ; add ac-sources to default ac-sources
-;;   (setq ac-sources
-;;         (append '(ac-source-math-unicode
-;;                   ac-source-math-latex
-;;                   ac-source-latex-commands)
-;;                ac-sources)))
-
-;;(add-hook 'latex-mode-hook 'ac-latex-mode-setup)
 
 (when (eq system-type 'darwin) ;; mac-specific settings
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
@@ -49,6 +41,7 @@
              'TeX-output-view-style
              '("^pdf$" "."
                "/Applications/Skim.app/Contents/SharedSupport/displayline -b %n %o %b"))))
+
 
 (provide 'init-auctex)
 ;;; init-auctex.el ends here
