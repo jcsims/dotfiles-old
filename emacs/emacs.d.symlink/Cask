@@ -49,6 +49,7 @@
 (depends-on "package-build")
 (depends-on "paredit")
 (depends-on "pkg-info")
+(depends-on "polymode")
 (depends-on "popup")
 (depends-on "pos-tip")
 (depends-on "project-explorer")

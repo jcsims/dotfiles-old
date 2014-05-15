@@ -140,4 +140,13 @@
                                  (ess-fl-keyword:= . t)
                                  (ess-R-fl-keyword:F&T . t)))
 
+;; poly-mode R modes
+(add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
+(add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
+(add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
+
+(add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
+
+(add-to-list 'auto-mode-alist '("\\.org" . poly-org-mode))
+
 ;;; init.el ends here
