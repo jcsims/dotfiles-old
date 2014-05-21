@@ -1,60 +1,13 @@
 ## dotfiles
 
-These are my dotfiles. I've forked @holman's dotfile repo, so look there
-for more details. Use at your own risk - I'm not responsible for helping
-you out!
+These are my dotfiles. They've grown organically over time, so use at
+your own risk - I'm not responsible for helping you out!
 
 ## install
 
-Run this:
-
-```sh
-git clone https://github.com/jcsims/dotfiles.git ~/.dotfiles
-cd ~/.dotfiles
-script/bootstrap
-```
-
-This will symlink the appropriate files in `.dotfiles` to your home directory.
-Everything is configured and tweaked within `~/.dotfiles`, though.
-
-The main file you'll want to change right off the bat is `zsh/zshrc.symlink`,
-which sets up a few paths that'll be different on your particular machine.
-
-You'll also want to change `git/gitconfig.symlink`, which will set you up as
-committing as Chris Sims. You probably don't want that.
-
-## topical
-
-Everything's built around topic areas. If you're adding a new area to your
-forked dotfiles — say, "Java" — you can simply add a `java` directory and put
-files in there. Anything with an extension of `.zsh` will get automatically
-included into your shell. Anything with an extension of `.symlink` will get
-symlinked without extension into `$HOME` when you run `rake install`.
-
-## what's inside
-
-A lot of stuff. Seriously, a lot of stuff. Check them out in the file browser
-above and see what components may mesh up with you. Fork it, remove what you
-don't use, and build on what you do use.
-
-## components
-
-There's a few special files in the hierarchy.
-
-- **bin/**: Anything in `bin/` will get added to your `$PATH` and be made
-  available everywhere.
-- **topic/\*.zsh**: Any files ending in `.zsh` get loaded into your
-  environment.
-- **topic/\*.symlink**: Any files ending in `*.symlink` get symlinked into
-  your `$HOME`. This is so you can keep all of those versioned in your dotfiles
-  but still keep those autoloaded files in your home directory. These get
-  symlinked in when you run `rake install`.
-- **topic/\*.completion.sh**: Any files ending in `completion.sh` get loaded
-  last so that they get loaded after we set up zsh autocomplete functions.
-
-
-## thanks
-
-I forked [Zach Holman](http://github.com/holman)'s excellent
-[dotfiles](http://github.com/holman/dotfiles), and tweaked it a bit to make
-it mine.
+Everything just needs to be symlinked into your home directory. You
+can do this by hand, or use
+[`rcm`](https://github.com/thoughtbot/rcm). The initial link (and
+susequent checks) take a good bit of time (a couple minutes,
+probably), because `rcm` currently checks _every_ file in a directory,
+and the emacs and vim directories have many files.

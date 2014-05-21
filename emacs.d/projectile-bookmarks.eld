@@ -1,0 +1,1 @@
+("~/.dotfiles/" "~/code/thesis/" "~/code/jcsi.ms/" "~/code/cljagents/" "/usr/local/" "~/code/ExData_Plotting1/" "~/tmp/phd-thesis/" "~/code/481/" "~/code/logic-tutorial/" "~/code/jcsims.me/" "~/tmp/om-async/" "~/code/auctex/" "~/code/jcsi-ms/" "~/code/ecsig.com/")
