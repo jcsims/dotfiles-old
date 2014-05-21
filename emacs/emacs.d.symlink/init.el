@@ -140,6 +140,10 @@
                                  (ess-fl-keyword:= . t)
                                  (ess-R-fl-keyword:F&T . t)))
 
+;; The fact that ess-mode doesn't inherit from prog-mode is a bit of a
+;; pain
+(setq ess-mode-hook (append ess-mode-hook prog-mode-hook))
+
 ;; poly-mode R modes
 (add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
 (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
