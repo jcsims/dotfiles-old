@@ -4,7 +4,6 @@ filetype off
 set runtimepath+=~/.vim/bundle/neobundle.vim/
 call neobundle#rc(expand('~/.vim/bundle/'))
 
-NeoBundleFetch 'Shougo/neobundle.vim'
 " Bundles
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-surround'
