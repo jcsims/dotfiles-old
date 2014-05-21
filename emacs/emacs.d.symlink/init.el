@@ -153,4 +153,56 @@
 
 (add-to-list 'auto-mode-alist '("\\.org" . poly-org-mode))
 
+;; mu4e
+(add-to-list 'load-path "/usr/local/share/emacs/site-lisp/mu4e")
+;; SMTP Setings
+(setq smtpmail-smtp-server "mail.messagingengine.com"
+      smtpmail-smtp-service 465
+      smtpmail-smtp-user "jcsims@f-m.fm"
+      smtpmail-stream-type 'ssl)
+(require 'mu4e)
+
+(setq
+ mu4e-maildir       "~/mail"
+ mu4e-sent-folder   "/INBOX.Sent Items"
+ mu4e-drafts-folder "/INBOX.Drafts"
+ mu4e-trash-folder  "/INBOX.Trash"
+ mu4e-refile-folder "/INBOX.Archive"
+ mu4e-get-mail-command "true" ;; let offlineimap handle it
+ message-send-mail-function 'smtpmail-send-it
+ send-mail-function 'smtpmail-send-it
+ mu4e-view-show-images t
+ mu4e-view-prefer-html t
+ mu4e-html2text-command "html2text -width 72"
+ message-kill-buffer-on-exit t
+ mail-user-agent 'mu4e-user-agent
+ mu4e-use-fancy-chars t
+ mu4e-user-mail-address-list
+ '("chris@jcsi.ms" "chris@jcsims.me" "jcsims@gmail.com")
+ user-mail-address "chris@jcsi.ms"
+ user-full-name "Chris Sims"
+ mu4e-get-mail-command "offlineimap")
+
+(when (fboundp 'imagemagick-register-types)
+  (imagemagick-register-types))
+
+(defun mu4e-msgv-action-view-in-browser (msg)
+      "View the body of the message MSG in a web browser."
+      (interactive)
+      (let ((html (mu4e-msg-field (mu4e-message-at-point t) :body-html))
+            (tmpfile (format "%s/%d.html" temporary-file-directory (random))))
+        (unless html (error "No html part for this message"))
+        (with-temp-file tmpfile
+          (insert
+           "<html>"
+           "<head><meta http-equiv=\"content-type\""
+           "content=\"text/html;charset=UTF-8\">"
+           html))
+        (browse-url (concat "file://" tmpfile))))
+ 
+    (add-to-list 'mu4e-view-actions
+                 '("View in browser" . mu4e-msgv-action-view-in-browser) t)
+
+;; For some reason, zsh files are not opened in shell mode =/
+(add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
 ;;; init.el ends here
