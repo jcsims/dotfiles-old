@@ -1,6 +1,7 @@
 (source gnu)
 (source marmalade)
 (source melpa)
+(source "melpa-stable" "http://melpa-stable.milkbox.net/packages/")
 
 (depends-on "4clojure")
 (depends-on "auctex")
@@ -47,6 +48,7 @@
 (depends-on "multiple-cursors")
 (depends-on "osx-pseudo-daemon")
 (depends-on "package-build")
+(depends-on "pallet")
 (depends-on "paredit")
 (depends-on "pkg-info")
 (depends-on "polymode")
@@ -59,6 +61,7 @@
 (depends-on "request")
 (depends-on "s")
 (depends-on "shut-up")
+(depends-on "smart-mode-line")
 (depends-on "smartparens")
 (depends-on "smex")
 (depends-on "tern")
