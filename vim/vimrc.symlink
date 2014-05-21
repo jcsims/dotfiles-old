@@ -6,7 +6,6 @@ call neobundle#rc(expand('~/.vim/bundle/'))
 
 NeoBundleFetch 'Shougo/neobundle.vim'
 " Bundles
-"github repos
 NeoBundle 'tpope/vim-fugitive'
 NeoBundle 'tpope/vim-surround'
 NeoBundle 'tpope/vim-speeddating'
@@ -37,6 +36,7 @@ NeoBundle 'tpope/vim-liquid'
 NeoBundle 'tpope/vim-markdown'
 NeoBundle 'mutewinter/nginx.vim'
 NeoBundle 'leshill/vim-json'
+NeoBundle 'vim-scripts/Vim-R-plugin'
 
 " Aesthetics
 NeoBundle 'tomasr/molokai'
@@ -111,6 +111,7 @@ nnoremap <silent> <leader>sv :so $MYVIMRC<CR>
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 "Color scheme!
 set background=dark
+let base16colorspace=256  " Access colors present in 256 colorspace
 colorscheme base16-eighties
 
 "Rainbow parens on all the time
@@ -290,3 +291,8 @@ autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
 autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
+
+" Press the space bar to send lines (in Normal mode) and selections to R:
+vmap <Space> <Plug>RDSendSelection
+nmap <Space> <Plug>RDSendLine
+" let vimrplugin_term = "iterm"
