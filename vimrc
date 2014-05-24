@@ -26,6 +26,7 @@ NeoBundle 'vim-scripts/paredit.vim'
 NeoBundle 'rking/ag.vim'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'tpope/vim-sensible'
+NeoBundle 'JuliaLang/julia-vim'
 
 " Filetypes
 NeoBundle 'guns/vim-clojure-static'
