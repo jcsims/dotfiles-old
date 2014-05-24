@@ -129,6 +129,10 @@ export PATH=/usr/local/heroku/bin:$PATH
 # Brew-installed-npm binaries
 export PATH=/usr/local/share/npm/bin:$PATH
 
+# Haskell
+export PATH=~/.cabal/bin:$PATH
+export PATH=$HOME/Library/Haskell/bin:$PATH
+
 
 ## Rbenv
 eval "$(rbenv init -)"
