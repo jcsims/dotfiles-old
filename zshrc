@@ -15,7 +15,6 @@ setopt NO_LIST_BEEP
 setopt LOCAL_OPTIONS # allow functions to have local options
 setopt LOCAL_TRAPS # allow functions to have local traps
 setopt HIST_VERIFY
-setopt SHARE_HISTORY # share history between sessions ???
 setopt EXTENDED_HISTORY # add timestamps to history
 setopt PROMPT_SUBST
 setopt CORRECT
@@ -114,7 +113,7 @@ BASE16_SHELL="$HOME/.config/base16-shell/base16-$BASE16_SCHEME.dark.sh"
 # GRC colorizes nifty unix tools all over the place
 if (( $+commands[grc] )) && (( $+commands[brew] ))
 then
-  source `brew --prefix`/etc/grc.bashrc
+    source `brew --prefix`/etc/grc.bashrc
 fi
 
 
@@ -132,7 +131,7 @@ export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 export PATH=$HOME/.cask/bin:$PATH
 # Add any cabal-installed executables to the path
 export PATH=$HOME/.cabal/bin:$PATH
-export PATH=$HOME/bin:$PATH 
+export PATH=$HOME/bin:$PATH
 
 #Heroku toolbelt
 export PATH=/usr/local/heroku/bin:$PATH
@@ -154,15 +153,15 @@ eval "$(rbenv init -)"
 #   `brew install coreutils`
 if $(gls &>/dev/null)
 then
-  alias ls="gls -F --color"
-  alias l="gls -lAh --color"
-  alias ll="gls -l --color"
-  alias la='gls -A --color'
+    alias ls="gls -F --color"
+    alias l="gls -lAh --color"
+    alias ll="gls -l --color"
+    alias la='gls -A --color'
 fi
 alias reload!='. ~/.zshrc'
 alias fact="elinks -dump randomfunfacts.com | sed -n '/^| /p' | tr -d \|"
 alias tree='tree -C'
-      
+
 alias e='emacsclient -t -a ""'
 alias ec='emacsclient -c -a ""'
 
@@ -182,7 +181,7 @@ alias grs='git reset'
 alias hclean="ghc-pkg check --simple-output | xargs -n 1 ghc-pkg unregister --force"
 
 case $OSTYPE in darwin*)
-  alias mvim='mvim --remote-silent'
+        alias mvim='mvim --remote-silent'
 esac
 
 
@@ -219,12 +218,11 @@ git_dirty() {
 
 git_prompt_info () {
     ref=$($git symbolic-ref HEAD 2>/dev/null) || return
-    # echo "(%{\e[0;33m%}${ref#refs/heads/}%{\e[0m%})"
     echo "${ref#refs/heads/}"
 }
 
 unpushed () {
-    /usr/bin/git cherry -v @{upstream} 2>/dev/null
+    $git cherry -v @{upstream} 2>/dev/null
 }
 
 need_push () {
@@ -236,33 +234,13 @@ need_push () {
     fi
 }
 
-# directory_name(){
-#   echo "%{$fg_bold[cyan]%}%1/%\/%{$reset_color%}"
-# }
-
-# machine_name(){
-#   echo "%{$fg_bold[green]%}$(echo $HOST | sed 's/\..*$//')%{$reset_color%}"
-# }
-
+local ctime="%{$fg[magenta]%}%T%{$reset_color%}"
+local mname="%{$fg[green]%}%m%{$reset_color%}"
+local cdir="%{$fg[cyan]%}%~ %{$reset_color%}"
 local lambda="%(?,%{$fg[green]%}λ%{$reset_color%},%{$fg[red]%}λ%{$reset_color%})"
 
-# Show the relative path on one line, then the smiley.
-PROMPT='%{$fg[magenta]%}%T%{$reset_color%} on %{$fg[green]%}%m%{$reset_color%} in %{$fg[cyan]%}%~ %{$reset_color%}
-${lambda}  %{$reset_color%}'
+
+PROMPT='$ctime on $mname in $cdir
+${lambda}  '
 
 RPROMPT='%{$fg[white]%} $(git_dirty)$(need_push) %{$reset_color%}'
-
-## Completion
-# Uses git's autocompletion for inner commands. Assumes an install of git's
-# bash `git-completion` script at $completion below (this is where Homebrew
-# tosses it, at least).
-completion='$(brew --prefix)/share/zsh/site-functions/_git'
-
-if test -f $completion
-then
-  source $completion
-fi
-
-## Functions
-fpath=(~/.functions $fpath)
-autoload -U ~/.functions/*(:t)
