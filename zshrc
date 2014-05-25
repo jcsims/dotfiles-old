@@ -62,8 +62,12 @@ export PROJECTS=~/code
 # want in your public, versioned repo.
 if [[ -a ~/.localrc ]]
 then
-  source ~/.localrc
+    source ~/.localrc
 fi
+
+## Functions
+fpath=(~/.functions $fpath)
+autoload -U ~/.functions/*(:t)
 
 
 ## Completion
@@ -89,9 +93,16 @@ zstyle ':completion:*' use-compctl false
 zstyle ':completion:*' verbose true
 zstyle ':completion:*:*:kill:*:processes' list-colors '=(#b) #([0-9]#)*=0=01;31'
 zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
-    
+
 # pasting with tabs doesn't perform completion
 zstyle ':completion:*' insert-tab pending
+
+completion='$(brew --prefix)/share/zsh/site-functions/_git'
+
+if test -f $completion
+then
+    source $completion
+fi
 
 
 ## Colors
