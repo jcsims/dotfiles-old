@@ -12,7 +12,6 @@
 (depends-on "clj-refactor")
 (depends-on "clojure-mode")
 (depends-on "clojure-snippets")
-(depends-on "clojurescript-mode")
 (depends-on "company")
 (depends-on "company-cider")
 (depends-on "company-inf-ruby")
