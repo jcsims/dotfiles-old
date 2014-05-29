@@ -1,0 +1,8 @@
+icon_gravity E
+geometry 5x1-1922+0
+max_geometry 5x1-1920+0
+background "#000000"
+skip_taskbar
+icon_size 17
+kludges force_icons_size
+window_strut none
