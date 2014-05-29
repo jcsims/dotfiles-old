@@ -12,14 +12,10 @@
 # TRAY ICON SOFTWARE
 #
 
-# Empathy chat client (-h: start hidden, -n: don't connect on launch)
-if [ -z "$(pgrep empathy)" ] ; then
-    empathy -h -n &
-fi
-
-# Remmina remote desktop connection client (-i: start hidden)
-if [ -z "$(pgrep remmina)" ] ; then
-    remmina -i &
+# Start up instant messaging. I rely on Pidgin starting up in it's
+# last configuration to start minimized to the system tray
+if [ -z "$(pgrep pidgin)" ] ; then
+    pidgin &
 fi
 
 # Network manager, so we don't have to configure wifi at the command line.
@@ -32,14 +28,8 @@ if [ -z "$(pgrep system-config-printer-applet)" ] ; then
     system-config-printer-applet &
 fi
 
-#
-# APPLICATION LAUNCHER
-#
-
-# Use synapse as our app launcher. (-s: don't display until requested) 
-if [ -z "$(pgrep synapse)" ] ; then
-    synapse -s &
-fi
+# Make sure that Dropbox is started
+dropbox start
 
 # On login, we unlock the ssh keychain so we're not prompted for 
 # passphrases later. We pipe /dev/null to ssh-add to make it realize 
