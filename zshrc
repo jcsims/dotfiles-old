@@ -23,7 +23,7 @@ setopt IGNORE_EOF
 
 setopt APPEND_HISTORY # adds history
 # adds history incrementally and share it across sessions
-setopt INC_APPEND_HISTORY SHARE_HISTORY  
+setopt INC_APPEND_HISTORY SHARE_HISTORY
 setopt HIST_IGNORE_ALL_DUPS  # don't record dupes in history
 setopt HIST_REDUCE_BLANKS
 
@@ -69,7 +69,12 @@ zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
 zstyle ':completion:*' format 'Completing %d'
 zstyle ':completion:*' group-name ''
-zstyle ':completion:*' menu select=2 eval "$(gdircolors -b)"
+if [[ $OSTYPE == darwin* ]]
+then
+    zstyle ':completion:*' menu select=2 eval "$(gdircolors -b)"
+else
+    zstyle ':completion:*' menu select=2 eval "$(dircolors -b)"
+fi
 zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' list-colors ''
 zstyle ':completion:*' list-prompt %SAt %p: Hit TAB for more, or the character to insert%s
@@ -99,9 +104,22 @@ BASE16_SHELL="$HOME/.config/base16-shell/base16-$BASE16_SCHEME.dark.sh"
 [[ -s $BASE16_SHELL ]] && . $BASE16_SHELL
 
 # GRC colorizes nifty unix tools all over the place
-if (( $+commands[grc] )) && (( $+commands[brew] ))
+
+GRC=`which grc`
+if [ "$TERM" != dumb ] && [ -n "$GRC" ]
 then
-    source `brew --prefix`/etc/grc.bashrc
+    alias colourify="$GRC -es --colour=auto"
+    alias configure='colourify ./configure'
+    alias diff='colourify diff'
+    alias make='colourify make'
+    alias gcc='colourify gcc'
+    alias g++='colourify g++'
+    alias as='colourify as'
+    alias gas='colourify gas'
+    alias ld='colourify ld'
+    alias netstat='colourify netstat'
+    alias ping='colourify ping'
+    alias traceroute='colourify /usr/sbin/traceroute'
 fi
 
 
@@ -141,9 +159,6 @@ export PATH=$HOME/bin:$PATH
 #Heroku toolbelt
 export PATH=/usr/local/heroku/bin:$PATH
 
-# Brew-installed-npm binaries
-export PATH=/usr/local/share/npm/bin:$PATH
-
 # Haskell
 export PATH=~/.cabal/bin:$PATH
 export PATH=$HOME/Library/Haskell/bin:$PATH
@@ -158,11 +173,15 @@ eval "$(rbenv init -)"
 #   `brew install coreutils`
 if $(gls &>/dev/null)
 then
-    alias ls="gls -F --color"
-    alias l="gls -lAh --color"
-    alias ll="gls -l --color"
-    alias la='gls -A --color'
+    lscom="gls"
+else
+    lscom="ls"
 fi
+alias ls="$lscom -F --color"
+alias l="$lscom -lAh --color"
+alias ll="$lscom -l --color"
+alias la='$lscom -A --color'
+
 alias reload!='. ~/.zshrc'
 alias fact="elinks -dump randomfunfacts.com | sed -n '/^| /p' | tr -d \|"
 alias tree='tree -C'
@@ -185,9 +204,10 @@ alias grs='git reset'
 
 alias hclean="ghc-pkg check --simple-output | xargs -n 1 ghc-pkg unregister --force"
 
-case $OSTYPE in darwin*)
-        alias mvim='mvim --remote-silent'
-esac
+if [[  $OSTYPE == darwin* ]]
+then
+    alias mvim='mvim --remote-silent'
+fi
 
 
 ## Prompt
@@ -195,13 +215,8 @@ autoload colors && colors
 # cheers, @ehrenmurdick
 # http://github.com/ehrenmurdick/config/blob/master/zsh/prompt.zsh
 
-if (( $+commands[git] ))
-then
-    git="$commands[git]"
-else
-    git="/usr/bin/git"
-fi
 
+git=`which git`
 
 git_branch() {
     echo $($git symbolic-ref HEAD 2>/dev/null | awk -F/ {'print $NF'})
