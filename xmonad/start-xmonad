@@ -1,0 +1,69 @@
+#!/bin/bash
+# 
+# xmonad startup script. Intended to be run from an xsession configuration
+# to run xmonad and some associated programs.
+# 
+# Author: David Brewer
+# Repository: https://github.com/davidbrewer/xmonad-ubuntu-conf
+
+#
+# GENERAL INITIALIZATION
+#
+
+# Identify the home of our gtkrc file, important for setting styles of 
+# gtk-based applications
+export GTK2_RC_FILES="$HOME/.gtkrc-2.0"
+
+# Load X resources (fixes some font issues)
+xrdb -merge .Xresources
+
+# Start compositing to support transparency. You can omit this
+# if you prefer not to use any transparency, but it is likely to cause
+# ugly black fringing with some programs such as synapse that expect
+# transparency support.
+xcompmgr -n &
+
+#
+# STARTUP ICON TRAY
+#
+
+# We are using stalonetray to create a small icon tray at the
+# top right of the screen. You are likely to want to tweak the
+# size of the icons and the width of the tray based upon the
+# size of your screen and your xmobar configuration. The goal is
+# to make stalonetray look like it is part of xmobar.
+# 
+# Line by line, the options used by default below mean:
+# - icons should be aligned with the "East" or right side of the tray
+# - the width of the tray should be 5 icons wide by one icon tall, and it 
+#   should be located 0 pixels from the right of the screen (-0) and 0 pixels
+#   from the top of the screen (+0).
+# - By setting our maximum geometry to the same thing, the tray will not grow.
+# - The background color of the tray should be black.
+# - This program should not show up in any taskbar.
+# - Icons should be set to size "24".
+# - Kludges argument of "force_icons_size" forces all icons to really, truly 
+#   be the size we set.
+# - window-strut "none" means windows are allowed to cover the tray. In
+#   other words, trust xmonad to handle this part.
+#
+stalonetray \
+  --icon-gravity E \
+  --geometry 5x1-1920+0 \
+  --max-geometry 5x1-1920+0 \
+  --background '#000000' \
+  --skip-taskbar \
+  --icon-size 16 \
+  --kludges force_icons_size \
+  --window-strut none \
+&
+
+# Run the gnome-keyring-daemon to avoid issues you otherwise may encounter
+# when using gnome applications which expect access to the keyring, such
+# as Empathy. This prevents prompts you may otherwise get for invalid
+# certificates and the like.
+gnome-keyring-daemon --start --components=gpg,pkcs11,secrets,ssh
+
+# Now, finally, start xmonad
+exec xmonad
+
