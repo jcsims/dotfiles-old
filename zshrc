@@ -185,6 +185,7 @@ alias la='$lscom -A --color'
 alias reload!='. ~/.zshrc'
 alias fact="elinks -dump randomfunfacts.com | sed -n '/^| /p' | tr -d \|"
 alias tree='tree -C'
+alias upgrade='sudo apt-get update && sudo apt-get upgrade'
 
 alias e='emacsclient -t -a ""'
 alias ec='emacsclient -c -a ""'
