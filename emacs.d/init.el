@@ -55,15 +55,11 @@
 
 ;; Load a few other packages
 (require 'init-clojure)
-(require 'init-yasnippet)
 (require 'init-haskell)
 
 ;; Use company mode for completion
 (add-hook 'after-init-hook 'global-company-mode)
 (eval-after-load 'company '(add-to-list 'company-backends 'company-cider))
-(eval-after-load 'company '(add-to-list 'company-backends 'company-tern))
-(eval-after-load 'company '(add-to-list 'company-backends 'company-inf-ruby))
-
 
 ;; Enable whitespace mode for programming languages, and highlight when
 ;; lines are over 80 characters long
@@ -115,11 +111,6 @@
 (setq global-auto-revert-non-file-buffers t)
 (setq auto-revert-verbose nil)
 
-;; Octave mode for .m files
-(autoload 'octave-mode "octave-mod" nil t)
-(setq auto-mode-alist
-      (cons '("\\.m$" . octave-mode) auto-mode-alist))
-
 ;; Quick access to a few files
 (global-set-key (kbd "C-c e i")
                 (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
@@ -155,4 +146,39 @@
 
 ;; For some reason, zsh files are not opened in shell mode =/
 (add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
+
+;; Some settings stolen from better-defaults
+(setq ido-enable-flex-matching t)
+
+(menu-bar-mode -1)
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+
+(require 'uniquify)
+(setq uniquify-buffer-name-style 'forward)
+
+(require 'saveplace)
+(setq-default save-place t)
+
+(global-set-key (kbd "C-x C-b") 'ibuffer)
+
+(global-set-key (kbd "C-s") 'isearch-forward-regexp)
+(global-set-key (kbd "C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-M-s") 'isearch-forward)
+(global-set-key (kbd "C-M-r") 'isearch-backward)
+
+;; Highlight matching parens
+(show-paren-mode 1)
+
+;; Never indent with tabs (unless set in the local buffer,
+;; e.g. Makefiles)
+(setq-default indent-tabs-mode nil)
+(setq x-select-enable-clipboard t
+      x-select-enable-primary t
+      save-interprogram-paste-before-kill t
+      apropos-do-all t
+      mouse-yank-at-point t
+      save-place-file (concat user-emacs-directory "places"))
 ;;; init.el ends here
