@@ -1,4 +1,4 @@
-### 
+###
 use_xft yes
 # xftfont Helvetica:size=15
 # xftalpha 0.9
@@ -31,7 +31,7 @@ short_units yes
 ## How strict should if_up be when testing an interface for being up?
 ## The value is one of up, link or address, to check for the interface
 ## being solely up, being up and having link or being up, having link
-## and an assigned IP address. 
+## and an assigned IP address.
 if_up_strictness address
 
 ## Add spaces to keep things from moving about?  This only affects certain objects.
@@ -45,14 +45,16 @@ override_utf8_locale no
 ## set to 1 to disable averaging
 cpu_avg_samples 2
 
+temperature_unit fahrenheit
+
 ## Sensors examples
 # Top Process: ${top name 1}
 # Root: {fs_used /}/${fs_size /} /home ${fs_free /home} /${fs_size /home}
-# Load: ${loadavg 1} ${loadavg 2} ${loadavg 3} 
+# Load: ${loadavg 1} ${loadavg 2} ${loadavg 3}
 # Load: $loadavg
 # Swap: ${swap}/${swapmax} (${swapperc}%)
 # Processes: ${running_processes} / ${processes}
-# CPU: $cpu% 
+# CPU: $cpu%
 # HDD: $diskio_read :Read $diskio_write :Write
 # Temp: Core0: ${exec sensors | awk '/Core 0/ {print $3}'} Core1: ${exec sensors | awk '/Core 1/ {print $3}'}
 # Freq: ${freq cpu0}Mhz
@@ -63,15 +65,18 @@ cpu_avg_samples 2
 
 ## Stuff after 'TEXT' will be formatted on screen
 TEXT
-# Free space on /
-/ ${fs_used /}/${fs_size /} | \
-# Ethernet status
-${if_up eth0}eth0 ${addr eth0} | ${endif}\
-# CPU stats
-CPU ${cpu cpu0}% ${exec sensors -f | grep -m 1 "CPU Temperature"|awk '{print $3}'} | \
-# RAM in use
-RAM ${memperc}% | \
-${time %a %d.%m.%y} ${time %H:%M} | \
-# Weather temperature
-${exec weather --headers="Temperature" -q | awk '/Temperature/ {print $2}'}F ${exec weather --headers="Sky conditions" -q | awk '/Sky conditions/ {print $3 " " $4}'} | \
+[
+{"full_text" : "fs: ${fs_used /} /${fs_size /}"},
 
+{"full_text" :  "${if_up eth0} eth0 ${upspeedf eth0}KB↑ ${downspeedf eth0}KB↓ ${endif}"},
+
+{"full_text" : " CPU ${cpu cpu0}% ${exec sensors -f |  grep -m 1 "CPU Temperature"|awk '{print $3}'} "},
+
+{"full_text" : " RAM ${memperc}% ",
+"color" : ${if_match ${memperc}<50}"\#ffffff"${else}"\#ff0000"${endif}},
+
+{"full_text" : " ${time %a %e %b} ${time %H:%M} ",
+"color" : "\#ff8000"},
+
+{"full_text" : "${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSTS temperature}F ${weather http://weather.noaa.gov/pub/data/observations/metar/stations/ KSTS weather}" ,
+"color" : "\#12e1b6"}],

@@ -162,11 +162,16 @@ bindsym $mod+Pause mode "$mode_system"
 # finds out, if available)
 bar {
         output DVI-I-1
-        status_command conky -c ~/.i3/conkybar
-        tray_output DVI-I-1
+        output DVI-D-0
+        status_command ~/.i3/init-conky.sh
+        tray_output DVI-D-0
         position top
 }
 
 ## Programs that need to autostart
 exec --no-startup-id dropbox start
 exec --no-startup-id pidgin
+exec --no-startup-id "SSH_ASKPASS=\"/usr/bin/ssh-askpass\" cat /dev/null | ssh-add"
+
+## Take a screenshot
+bindsym --release $mod+Print exec scrot -s "$HOME/Dropbox/Public/%F_%s.png" -e 'dropbox puburl $f | xclip'
