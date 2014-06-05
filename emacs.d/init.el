@@ -21,6 +21,7 @@
 (require 'init-smartparens)
 (require 'init-auctex)
 (require 'init-org)
+(require 'init-evil)
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
