@@ -27,6 +27,7 @@ NeoBundle 'rking/ag.vim'
 NeoBundle 'mileszs/ack.vim'
 NeoBundle 'tpope/vim-sensible'
 NeoBundle 'JuliaLang/julia-vim'
+NeoBundle 'Shougo/vimproc'
 
 " Filetypes
 NeoBundle 'guns/vim-clojure-static'
@@ -37,6 +38,9 @@ NeoBundle 'tpope/vim-markdown'
 NeoBundle 'mutewinter/nginx.vim'
 NeoBundle 'leshill/vim-json'
 NeoBundle 'vim-scripts/Vim-R-plugin'
+NeoBundle 'dag/vim2hs'
+NeoBundle 'eagletmt/ghcmod-vim'
+NeoBundle 'eagletmt/neco-ghc'
 
 " Aesthetics
 NeoBundle 'tomasr/molokai'
@@ -293,6 +297,13 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 autocmd FileType ruby setlocal omnifunc=rubycomplete#Complete
 
 " Press the space bar to send lines (in Normal mode) and selections to R:
-vmap <Space> <Plug>RDSendSelection
-nmap <Space> <Plug>RDSendLine
-" let vimrplugin_term = "iterm"
+autocmd FileType r vmap <Space> <Plug>RDSendSelection
+autocmd FileType r nmap <Space> <Plug>RDSendLine
+
+" Haskell goodness
+autocmd FileType haskell nmap <F2> :GhcModType<CR>
+autocmd FileType haskell nmap <silent> <F3> :GhcModTypeClear<CR>
+autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+let g:ycm_semantic_triggers = {'haskell' : ['.']}
+
+
