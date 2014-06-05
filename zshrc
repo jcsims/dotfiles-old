@@ -155,14 +155,10 @@ export PATH=$HOME/.cask/bin:$PATH
 # Add any cabal-installed executables to the path
 export PATH=$HOME/.cabal/bin:$PATH
 export PATH=$HOME/bin:$PATH
+export PATH=$HOME/Library/Haskell/bin:$PATH
 
 #Heroku toolbelt
 export PATH=/usr/local/heroku/bin:$PATH
-
-# Haskell
-export PATH=~/.cabal/bin:$PATH
-export PATH=$HOME/Library/Haskell/bin:$PATH
-
 
 ## Rbenv
 eval "$(rbenv init -)"
