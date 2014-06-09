@@ -49,7 +49,7 @@
 (if after-init-time (sml/setup)
   (add-hook 'after-init-hook 'sml/setup))
 (when (memq window-system '(mac ns))
-  (set-frame-font "Menlo 12"))
+  (set-frame-font "Menlo 13"))
 
 ;; The audible bell is obnoxious
 (setq visible-bell t)
@@ -135,18 +135,18 @@
 ;; The fact that ess-mode doesn't inherit from prog-mode is a bit of a
 ;; pain
 (setq ess-mode-hook (append ess-mode-hook prog-mode-hook))
+(setq ess-default-style 'GNU)
 
 ;; poly-mode R modes
 (add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
 (add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
 (add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
-
 (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
-
 (add-to-list 'auto-mode-alist '("\\.org" . poly-org-mode))
 
 ;; For some reason, zsh files are not opened in shell mode =/
-(add-to-list 'auto-mode-alist '("\\.zsh\\'" . sh-mode))
+(add-to-list 'auto-mode-alist '("\\*.zsh*\\'" . sh-mode))
+(add-to-list 'auto-mode-alist '("\\zshrc\\'" . sh-mode))
 
 ;; Some settings stolen from better-defaults
 (setq ido-enable-flex-matching t)
@@ -182,4 +182,10 @@
       apropos-do-all t
       mouse-yank-at-point t
       save-place-file (concat user-emacs-directory "places"))
+
+;; Ensure that a server is running for quicker start times
+(require 'server)
+(unless (server-running-p)
+  (server-start))
+
 ;;; init.el ends here
