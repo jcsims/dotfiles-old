@@ -1,58 +1,59 @@
 set nocompatible
 filetype off
 
-set runtimepath+=~/.vim/bundle/neobundle.vim/
-call neobundle#rc(expand('~/.vim/bundle/'))
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
+
+Plugin 'gmarik/Vundle.vim'
 
 " Bundles
-NeoBundle 'tpope/vim-fugitive'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-speeddating'
-NeoBundle 'tpope/vim-commentary'
-NeoBundle 'tpope/vim-repeat'
-NeoBundle 'tpope/vim-characterize'
-NeoBundle 'tpope/vim-unimpaired'
-NeoBundle 'godlygeek/tabular'
-NeoBundle 'kien/ctrlp.vim'
-NeoBundle 'scrooloose/syntastic'
-NeoBundle 'Rykka/colorv.vim'
-NeoBundle 'vim-scripts/sudo.vim'
-NeoBundle 'mhinz/vim-signify'
-NeoBundle 'Valloric/YouCompleteMe'
-NeoBundle 'guns/ultisnips'
-NeoBundle 'tpope/vim-fireplace'
-NeoBundle 'dahu/LearnVim'
-NeoBundle 'vim-scripts/paredit.vim'
-NeoBundle 'rking/ag.vim'
-NeoBundle 'mileszs/ack.vim'
-NeoBundle 'tpope/vim-sensible'
-NeoBundle 'JuliaLang/julia-vim'
-NeoBundle 'Shougo/vimproc'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-speeddating'
+Plugin 'tpope/vim-commentary'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-characterize'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'godlygeek/tabular'
+Plugin 'kien/ctrlp.vim'
+Plugin 'scrooloose/syntastic'
+Plugin 'Rykka/colorv.vim'
+Plugin 'vim-scripts/sudo.vim'
+Plugin 'mhinz/vim-signify'
+Plugin 'Valloric/YouCompleteMe'
+Plugin 'guns/ultisnips'
+Plugin 'tpope/vim-fireplace'
+Plugin 'dahu/LearnVim'
+Plugin 'vim-scripts/paredit.vim'
+Plugin 'rking/ag.vim'
+Plugin 'mileszs/ack.vim'
+Plugin 'tpope/vim-sensible'
+Plugin 'JuliaLang/julia-vim'
+Plugin 'Shougo/vimproc'
 
 " Filetypes
-NeoBundle 'guns/vim-clojure-static'
-NeoBundle 'gerw/vim-latex-suite'
-NeoBundle 'xuhdev/vim-latex-live-preview'
-NeoBundle 'tpope/vim-liquid'
-NeoBundle 'tpope/vim-markdown'
-NeoBundle 'mutewinter/nginx.vim'
-NeoBundle 'leshill/vim-json'
-NeoBundle 'vim-scripts/Vim-R-plugin'
-NeoBundle 'dag/vim2hs'
-NeoBundle 'eagletmt/ghcmod-vim'
-NeoBundle 'eagletmt/neco-ghc'
+Plugin 'guns/vim-clojure-static'
+Plugin 'gerw/vim-latex-suite'
+Plugin 'xuhdev/vim-latex-live-preview'
+Plugin 'tpope/vim-liquid'
+Plugin 'tpope/vim-markdown'
+Plugin 'mutewinter/nginx.vim'
+Plugin 'leshill/vim-json'
+Plugin 'vim-scripts/Vim-R-plugin'
+Plugin 'dag/vim2hs'
+Plugin 'eagletmt/ghcmod-vim'
+Plugin 'eagletmt/neco-ghc'
 
 " Aesthetics
-NeoBundle 'tomasr/molokai'
-NeoBundle 'chriskempson/base16-vim'
-NeoBundle 'kien/rainbow_parentheses.vim'
-NeoBundle 'bling/vim-airline'
+Plugin 'tomasr/molokai'
+Plugin 'chriskempson/base16-vim'
+Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'bling/vim-airline'
+
+call vundle#end()
 
 filetype plugin indent on
 syntax on
-
-" Ensure that all the plugins we need are installed
-NeoBundleCheck
 
 "Set tab options to preferred 2 spaces
 set tabstop=2
@@ -88,6 +89,8 @@ set smartcase
 set gdefault
 set showmatch
 set hlsearch
+" Clear search highlighting with Escape
+nnoremap <silent> <esc> :noh<return><esc>
 
 "Set up column at column width to stick with sane column width while coding
 set nowrap
@@ -304,6 +307,8 @@ autocmd FileType r nmap <Space> <Plug>RDSendLine
 autocmd FileType haskell nmap <F2> :GhcModType<CR>
 autocmd FileType haskell nmap <silent> <F3> :GhcModTypeClear<CR>
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
+autocmd FileType haskell setlocal iskeyword=a-z,A-Z,_,.,39
 let g:ycm_semantic_triggers = {'haskell' : ['.']}
 
-
+" Attempt to pull completion words from the languages' syntax file
+let g:ycm_seed_identifiers_with_syntax = 1
