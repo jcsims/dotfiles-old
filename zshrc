@@ -104,7 +104,6 @@ BASE16_SHELL="$HOME/.config/base16-shell/base16-$BASE16_SCHEME.dark.sh"
 [[ -s $BASE16_SHELL ]] && . $BASE16_SHELL
 
 # GRC colorizes nifty unix tools all over the place
-
 GRC=`which grc`
 if [ "$TERM" != dumb ] && [ -n "$GRC" ]
 then
@@ -149,16 +148,18 @@ bindkey -M vicmd 'j' history-substring-search-down
 
 
 ## Path
+typeset -U PATH=/usr/local/bin:/usr/local/sbin:$PATH
+# Add GHC and cabal-install installer to path
+typeset -U PATH=/Applications/ghc-7.8.2.app/Contents/bin:$PATH
 # Add cask to path
-export PATH=/usr/local/bin:/usr/local/sbin:$PATH
-export PATH=$HOME/.cask/bin:$PATH
+typeset -U PATH=$HOME/.cask/bin:$PATH
 # Add any cabal-installed executables to the path
-export PATH=$HOME/.cabal/bin:$PATH
-export PATH=$HOME/bin:$PATH
-export PATH=$HOME/Library/Haskell/bin:$PATH
+typeset -U PATH=$HOME/.cabal/bin:$PATH
+typeset -U PATH=$HOME/bin:$PATH
+typeset -U PATH=$HOME/Library/Haskell/bin:$PATH
 
 #Heroku toolbelt
-export PATH=/usr/local/heroku/bin:$PATH
+typeset -U PATH=/usr/local/heroku/bin:$PATH
 
 ## Rbenv
 eval "$(rbenv init -)"
@@ -177,6 +178,7 @@ alias ls="$lscom -F --color"
 alias l="$lscom -lAh --color"
 alias ll="$lscom -l --color"
 alias la='$lscom -A --color'
+alias grep='grep --color=auto'
 
 alias reload!='. ~/.zshrc'
 alias fact="elinks -dump randomfunfacts.com | sed -n '/^| /p' | tr -d \|"
