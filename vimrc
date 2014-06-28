@@ -14,38 +14,28 @@ Plugin 'tpope/vim-commentary'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-characterize'
 Plugin 'tpope/vim-unimpaired'
-Plugin 'godlygeek/tabular'
+Plugin 'tommcdo/vim-lion'
 Plugin 'kien/ctrlp.vim'
 Plugin 'scrooloose/syntastic'
 Plugin 'Rykka/colorv.vim'
-Plugin 'vim-scripts/sudo.vim'
 Plugin 'mhinz/vim-signify'
 Plugin 'Valloric/YouCompleteMe'
-Plugin 'guns/ultisnips'
 Plugin 'tpope/vim-fireplace'
-Plugin 'dahu/LearnVim'
 Plugin 'vim-scripts/paredit.vim'
-Plugin 'rking/ag.vim'
-Plugin 'mileszs/ack.vim'
 Plugin 'tpope/vim-sensible'
-Plugin 'JuliaLang/julia-vim'
 Plugin 'Shougo/vimproc'
+Plugin 'majutsushi/tagbar'
 
 " Filetypes
 Plugin 'guns/vim-clojure-static'
-Plugin 'gerw/vim-latex-suite'
-Plugin 'xuhdev/vim-latex-live-preview'
-Plugin 'tpope/vim-liquid'
 Plugin 'tpope/vim-markdown'
-Plugin 'mutewinter/nginx.vim'
-Plugin 'leshill/vim-json'
 Plugin 'vim-scripts/Vim-R-plugin'
 Plugin 'dag/vim2hs'
 Plugin 'eagletmt/ghcmod-vim'
 Plugin 'eagletmt/neco-ghc'
+Plugin 'LaTeX-Box-Team/LaTeX-Box'
 
 " Aesthetics
-Plugin 'tomasr/molokai'
 Plugin 'chriskempson/base16-vim'
 Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'bling/vim-airline'
@@ -55,21 +45,32 @@ call vundle#end()
 filetype plugin indent on
 syntax on
 
+scriptencoding utf-8
+set encoding=utf-8
+
 "Set tab options to preferred 2 spaces
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set expandtab
 
+set history=250        " Save last 250 commands
+if $TMUX == ''
+  set clipboard=unnamed " Yanks go on the clipboard
+endif
+set pastetoggle=<F10>  " Safer pastes
+set autoread           " Update buffer when file changes
+set splitbelow         " Split windows at bottom
+set splitright         " Split windows to the right
 set copyindent
 set showmode
 set hidden
 set wildmode=list:longest
 set wildignore=*.swp,*.bak
+set wildmenu
 set cursorline
 set ttyfast
 set laststatus=2
-set nu
 set title
 
 " Visual block mode allows bounds outside the text (freeform)
@@ -89,8 +90,6 @@ set smartcase
 set gdefault
 set showmatch
 set hlsearch
-" Clear search highlighting with Escape
-nnoremap <silent> <esc> :noh<return><esc>
 
 "Set up column at column width to stick with sane column width while coding
 set nowrap
@@ -144,7 +143,6 @@ let g:airline#extensions#tabline#enabled = 1
 "Remove the menubar
 set guioptions-=T
 
-
 "Move by screen lines instead of file lines, in case of screen wrap
 nnoremap j gj
 nnoremap k gk
@@ -154,27 +152,6 @@ inoremap jj <ESC>
 
 "Show invisibles - tab and EOL, in the style of Textmate
 nnoremap <leader>v :set list!<CR>
-
-function! s:align()
-  let p = '^\s*|\s.*\s|\s*$'
-  if exists(':Tabularize') && getline('.') =~# '^\s*|' && (getline(line('.')-1) =~# p || getline(line('.')+1) =~# p)
-    let column = strlen(substitute(getline('.')[0:col('.')],'[^|]','','g'))
-    let position = strlen(matchstr(getline('.')[0:col('.')],'.*|\s*\zs.*'))
-    Tabularize/|/l1
-    normal! 0
-    call search(repeat('[^|]*|',column).'\s\{-\}'.repeat('.',position),'ce',line('.'))
-  endif
-endfunction
-
-"Automatically tabulate when inserting the pipe symbol.
-"Borrowed from Tim Pope's gist: https://gist.github.com/287147
-inoremap <silent> <Bar>   <Bar><Esc>:call <SID>align()<CR>a
-
-"Some great mappings from Vimcast #29: http://vimcasts.org/episodes/aligning-text-with-tabular-vim/
-nnoremap <leader>a= :Tabularize /=<CR>
-vnoremap <leader>a= :Tabularize /=<CR>
-nnoremap <leader>a: :Tabularize /:\zs<CR>
-vnoremap <leader>a: :Tabularize /:\zs<CR>
 
 "Attempt to prevent CtrlP from sometimes opening a new split, sometimes not
 let g:ctrlp_jump_to_buffer = 0
@@ -216,10 +193,18 @@ nnoremap <leader>K  :wincmd K<cr>
 nnoremap <leader>L  :wincmd L<cr>
 nnoremap <leader>J  :wincmd J<cr>
 
-nnoremap <left>  :3wincmd <<cr>
-nnoremap <right> :3wincmd ><cr>
-nnoremap <up>    :3wincmd +<cr>
-nnoremap <down>  :3wincmd -<cr>
+if $TMUX == ''
+  nnoremap <left>  :3wincmd <<cr>
+  nnoremap <right> :3wincmd ><cr>
+  nnoremap <up>    :3wincmd +<cr>
+  nnoremap <down>  :3wincmd -<cr>
+else
+  nnoremap OD :3wincmd <<cr>
+  nnoremap OC :3wincmd ><cr>
+  nnoremap OA :3wincmd +<cr>
+  nnoremap OB :3wincmd -<cr>
+endif
+
 
 " Taken from
 " http://stackoverflow.com/questions/4331776/change-vim-swap-backup-undo-file-name
@@ -304,11 +289,63 @@ autocmd FileType r vmap <Space> <Plug>RDSendSelection
 autocmd FileType r nmap <Space> <Plug>RDSendLine
 
 " Haskell goodness
-autocmd FileType haskell nmap <F2> :GhcModType<CR>
-autocmd FileType haskell nmap <silent> <F3> :GhcModTypeClear<CR>
+autocmd FileType haskell nmap <leader>ht :GhcModType<CR>
+autocmd FileType haskell nmap <silent> <leader>hc :GhcModTypeClear<CR>
+autocmd FileType haskell nmap <leader>hl :GhcModLint<CR>
 autocmd FileType haskell setlocal omnifunc=necoghc#omnifunc
 autocmd FileType haskell setlocal iskeyword=a-z,A-Z,_,.,39
 let g:ycm_semantic_triggers = {'haskell' : ['.']}
+" Check and lint on buffer save
+autocmd BufWritePost *.hs GhcModCheckAndLintAsync
 
 " Attempt to pull completion words from the languages' syntax file
 let g:ycm_seed_identifiers_with_syntax = 1
+
+" View tags
+nmap <leader>t :TagbarToggle<CR>
+
+" If a directory is specified, explore the directory on startup
+autocmd VimEnter * if isdirectory(expand('<afile>')) | Explore | endif
+
+" Tags support for Hasktags, according to the tagbar wiki
+let g:tagbar_type_haskell = {
+    \ 'ctagsbin'  : 'hasktags',
+    \ 'ctagsargs' : '-x -c -o-',
+    \ 'kinds'     : [
+        \  'm:modules:0:1',
+        \  'd:data: 0:1',
+        \  'd_gadt: data gadt:0:1',
+        \  't:type names:0:1',
+        \  'nt:new types:0:1',
+        \  'c:classes:0:1',
+        \  'cons:constructors:1:1',
+        \  'c_gadt:constructor gadt:1:1',
+        \  'c_a:constructor accessors:1:1',
+        \  'ft:function types:1:1',
+        \  'fi:function implementations:0:1',
+        \  'o:others:0:1'
+    \ ],
+    \ 'sro'        : '.',
+    \ 'kind2scope' : {
+        \ 'm' : 'module',
+        \ 'c' : 'class',
+        \ 'd' : 'data',
+        \ 't' : 'type'
+    \ },
+    \ 'scope2kind' : {
+        \ 'module' : 'm',
+        \ 'class'  : 'c',
+        \ 'data'   : 'd',
+        \ 'type'   : 't'
+    \ }
+\ }
+
+" Tags support for R, according to tagbar wiki
+let g:tagbar_type_r = {
+    \ 'ctagstype' : 'r',
+    \ 'kinds'     : [
+        \ 'f:Functions',
+        \ 'g:GlobalVariables',
+        \ 'v:FunctionVariables',
+    \ ]
+\ }
