@@ -10,9 +10,45 @@
 (add-to-list 'load-path (concat user-emacs-directory "lisp"))
 
 ;; Package Management
-(require 'cask "~/.cask/cask.el")
-(cask-initialize)
-(require 'pallet)
+(require 'package)
+(add-to-list 'package-archives
+             '("melpa" . "http://melpa.milkbox.net/packages/")
+             '("marmalade" . "http://marmalade-repo.org/packages/"))
+(package-initialize)
+
+(setq package-list '(auctex
+                     cider
+                     clj-refactor
+                     clojure-mode
+                     company
+                     csv-mode
+                     diminish
+                     ess
+                     evil
+                     exec-path-from-shell
+                     expand-region
+                     flycheck
+                     ghc
+                     haskell-mode
+                     idle-highlight-mode
+                     ido-vertical-mode
+                     markdown-mode
+                     monokai-theme
+                     pos-tip
+                     projectile
+                     rainbow-delimiters
+                     smart-mode-line
+                     smartparens
+                     smex
+                     undo-tree
+                     yaml-mode
+                     yasnippet))
+
+(when (not package-archive-contents)
+  (package-refresh-contents))
+(dolist (package package-list)
+  (when (not (package-installed-p package))
+    (package-install package)))
 
 ;; Ensure that the PATH is set correctly
 (exec-path-from-shell-initialize)
