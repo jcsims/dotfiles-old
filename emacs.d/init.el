@@ -73,7 +73,8 @@
 (global-set-key (kbd "C-j") 'join-line)
 
  ;;; Aesthetics
-(load-theme 'base16-eighties t)
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
+(load-theme 'base16-eighties-dark t)
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (eval-after-load 'diff-mode
@@ -81,11 +82,9 @@
      (set-face-foreground 'diff-added "green4")
      (set-face-foreground 'diff-removed "red3")))
 ;; Clean up the modeline a bit
-(require 'smart-mode-line)
-(if after-init-time (sml/setup)
-  (add-hook 'after-init-hook 'sml/setup))
+(sml/setup)
 (when (memq window-system '(mac ns))
-  (set-frame-font "Menlo 13"))
+  (set-frame-font "Menlo 12"))
 
 ;; The audible bell is obnoxious
 (setq visible-bell t)
@@ -138,6 +137,7 @@
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
 
 (projectile-global-mode)
+
 (require 'expand-region)
 (global-set-key (kbd "C-=") 'er/expand-region)
 
@@ -187,7 +187,6 @@
 ;; Some settings stolen from better-defaults
 (setq ido-enable-flex-matching t)
 
-(menu-bar-mode -1)
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode)
