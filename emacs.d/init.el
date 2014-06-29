@@ -173,13 +173,6 @@
 (setq ess-mode-hook (append ess-mode-hook prog-mode-hook))
 (setq ess-default-style 'GNU)
 
-;; poly-mode R modes
-(add-to-list 'auto-mode-alist '("\\.Snw" . poly-noweb+r-mode))
-(add-to-list 'auto-mode-alist '("\\.Rnw" . poly-noweb+r-mode))
-(add-to-list 'auto-mode-alist '("\\.Rmd" . poly-markdown+r-mode))
-(add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
-(add-to-list 'auto-mode-alist '("\\.org" . poly-org-mode))
-
 ;; For some reason, zsh files are not opened in shell mode =/
 (add-to-list 'auto-mode-alist '("\\*.zsh*\\'" . sh-mode))
 (add-to-list 'auto-mode-alist '("\\zshrc\\'" . sh-mode))
@@ -224,3 +217,11 @@
   (server-start))
 
 ;;; init.el ends here
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(haskell-process-auto-import-loaded-modules t)
+ '(haskell-process-log t)
+ '(haskell-process-suggest-remove-import-lines t))
