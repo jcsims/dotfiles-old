@@ -150,7 +150,7 @@ bindkey -M vicmd 'j' history-substring-search-down
 ## Path
 typeset -U PATH=/usr/local/bin:/usr/local/sbin:$PATH
 # Add GHC and cabal-install installer to path
-typeset -U PATH=/Applications/ghc-7.8.2.app/Contents/bin:$PATH
+typeset -U PATH=/Applications/ghc-7.8.3.app/Contents/bin:$PATH
 # Add cask to path
 typeset -U PATH=$HOME/.cask/bin:$PATH
 # Add any cabal-installed executables to the path
