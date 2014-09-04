@@ -2,19 +2,8 @@
 ;; AUCTeX config
 
 ;;; Commentary:
-;; If the latest is installed from source, use that
 
 ;;; Code:
-(if (file-directory-p "~/code/auctex")
-    (progn
-      (setq TeX-data-directory "~/code/auctex/")
-      (add-to-list 'load-path "~/code/auctex/")
-      (add-to-list 'load-path "~/code/auctex/preview/")
-      (add-to-list 'Info-directory-list "~/code/auctex/doc")
-      (load "auctex.el" nil t t)
-      (load "preview-latex.el" nil t t))
-  (install-package 'auctex))
-
 (eval-after-load 'latex '(latex/setup-keybinds))
 
 (setq TeX-auto-save t)
@@ -25,6 +14,7 @@
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(company-auctex-init)
 
 (setq reftex-plug-into-AUCTeX t)
 

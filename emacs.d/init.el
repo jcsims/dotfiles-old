@@ -1,9 +1,8 @@
 ;;; init --- configuration starting point
 
 ;;; Commentary:
-;; Most of what is found in these files has
-;; been pulled from the dotfiles of others.
-;; Take what you want, but be prepared to
+;; Most of what is found in these files has been pulled from the
+;; dotfiles of others.  Take what you want, but be prepared to
 ;; troubleshoot yourself!
 
 ;;; Code:
@@ -16,11 +15,14 @@
              '("marmalade" . "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
+;; Make sure that the package list is up to date
+(package-refresh-contents)
 (setq package-list '(auctex
                      cider
                      clj-refactor
                      clojure-mode
                      company
+                     company-auctex
                      csv-mode
                      diminish
                      ess
@@ -30,16 +32,21 @@
                      flycheck
                      ghc
                      haskell-mode
+                     helm
+                     helm-projectile
                      idle-highlight-mode
                      ido-vertical-mode
+                     js2-mode
+                     latex-extra
+                     magit
                      markdown-mode
                      monokai-theme
                      pos-tip
                      projectile
+                     project-explorer
                      rainbow-delimiters
                      smart-mode-line
                      smartparens
-                     smex
                      undo-tree
                      yaml-mode
                      yasnippet))
@@ -58,6 +65,7 @@
 (require 'init-auctex)
 (require 'init-org)
 (require 'init-evil)
+(require 'init-helm)
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -73,8 +81,7 @@
 (global-set-key (kbd "C-j") 'join-line)
 
  ;;; Aesthetics
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes")
-(load-theme 'base16-eighties-dark t)
+(load-theme 'monokai t)
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 (eval-after-load 'diff-mode
@@ -95,7 +102,6 @@
 
 ;; Use company mode for completion
 (add-hook 'after-init-hook 'global-company-mode)
-(eval-after-load 'company '(add-to-list 'company-backends 'company-cider))
 
 ;; Enable whitespace mode for programming languages, and highlight when
 ;; lines are over 80 characters long
@@ -117,10 +123,10 @@
 (add-hook 'org-mode 'turn-on-auto-fill)
 
 ;; smex
-(setq smex-save-file (concat user-emacs-directory ".smex-items"))
-(smex-initialize)
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; (setq smex-save-file (concat user-emacs-directory ".smex-items"))
+;; (smex-initialize)
+;; (global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
 ;; ido
 (require 'ido-vertical-mode)
@@ -216,12 +222,24 @@
 (unless (server-running-p)
   (server-start))
 
+;; Use js2 mode
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
 ;;; init.el ends here
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   (quote
+    ("bd115791a5ac6058164193164fd1245ac9dc97207783eae036f0bfc9ad9670e0" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" "025354235e98db5e7fd9c1a74622ff53ad31b7bde537d290ff68d85665213d85" default)))
  '(haskell-process-auto-import-loaded-modules t)
  '(haskell-process-log t)
  '(haskell-process-suggest-remove-import-lines t))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )

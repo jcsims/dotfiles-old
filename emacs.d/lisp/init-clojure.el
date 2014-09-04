@@ -1,4 +1,6 @@
-;;; Clojure
+;;; Clojure --- Summary
+;;; Commentary:
+;;; Code:
 (rename-modeline "clojure-mode" clojure-mode "Clj")
 
 ;;; Cider
