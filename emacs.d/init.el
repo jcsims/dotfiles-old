@@ -35,7 +35,6 @@
                      helm
                      helm-projectile
                      idle-highlight-mode
-                     ido-vertical-mode
                      js2-mode
                      latex-extra
                      magit
@@ -128,11 +127,6 @@
 ;; (global-set-key (kbd "M-x") 'smex)
 ;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
-;; ido
-(require 'ido-vertical-mode)
-(ido-mode 1)
-(ido-vertical-mode 1)
-
 ;; Flycheck mode
 ;; We shouldn't need this require, but it isn't loaded without it
 (require 'flycheck)
@@ -182,9 +176,6 @@
 ;; For some reason, zsh files are not opened in shell mode =/
 (add-to-list 'auto-mode-alist '("\\*.zsh*\\'" . sh-mode))
 (add-to-list 'auto-mode-alist '("\\zshrc\\'" . sh-mode))
-
-;; Some settings stolen from better-defaults
-(setq ido-enable-flex-matching t)
 
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
