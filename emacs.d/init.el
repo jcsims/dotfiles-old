@@ -11,8 +11,7 @@
 ;; Package Management
 (require 'package)
 (add-to-list 'package-archives
-             '("melpa" . "http://melpa.milkbox.net/packages/")
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
+             '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/"))
 (package-initialize)
 
 ;; Make sure that the package list is up to date
@@ -22,16 +21,11 @@
                      clj-refactor
                      clojure-mode
                      company
-                     company-auctex
                      csv-mode
                      diminish
-                     ess
-                     evil
                      exec-path-from-shell
                      expand-region
                      flycheck
-                     ghc
-                     haskell-mode
                      helm
                      helm-projectile
                      idle-highlight-mode
@@ -39,16 +33,11 @@
                      latex-extra
                      magit
                      markdown-mode
-                     monokai-theme
-                     pos-tip
+                     paredit
+                     paredit-everywhere
                      projectile
-                     project-explorer
                      rainbow-delimiters
-                     smart-mode-line
-                     smartparens
-                     undo-tree
-                     yaml-mode
-                     yasnippet))
+                     smart-mode-line))
 
 (when (not package-archive-contents)
   (package-refresh-contents))
@@ -60,11 +49,19 @@
 (exec-path-from-shell-initialize)
 
 (require 'init-funcs)
-(require 'init-smartparens)
+;;(require 'init-smartparens)
 (require 'init-auctex)
 (require 'init-org)
-(require 'init-evil)
+;;(require 'init-evil)
 (require 'init-helm)
+
+;; Use paredit until smartparens gets a bit more stable
+(require 'paredit)
+(add-hook 'clojure-mode-hook 'enable-paredit-mode)
+(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
+
+;;  a subset of paredit can be handy in other languages as well
+(add-hook 'prog-mode-hook 'paredit-everywhere-mode)
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -80,6 +77,7 @@
 (global-set-key (kbd "C-j") 'join-line)
 
  ;;; Aesthetics
+(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'monokai t)
 (require 'rainbow-delimiters)
 (add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
@@ -97,7 +95,7 @@
 
 ;; Load a few other packages
 (require 'init-clojure)
-(require 'init-haskell)
+;;(require 'init-haskell)
 
 ;; Use company mode for completion
 (add-hook 'after-init-hook 'global-company-mode)
@@ -120,12 +118,6 @@
 ;; Fill mode is pretty handy
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'org-mode 'turn-on-auto-fill)
-
-;; smex
-;; (setq smex-save-file (concat user-emacs-directory ".smex-items"))
-;; (smex-initialize)
-;; (global-set-key (kbd "M-x") 'smex)
-;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
 ;; Flycheck mode
 ;; We shouldn't need this require, but it isn't loaded without it
@@ -155,23 +147,23 @@
                 (lambda () (interactive) (find-file "~/org/todo.org")))
 
 ;; Emacs Speaks Statistics
-(require 'ess-site)
-(setq ess-R-font-lock-keywords '((ess-R-fl-keyword:modifiers . t)
-                                 (ess-R-fl-keyword:fun-defs . t)
-                                 (ess-R-fl-keyword:keywords . t)
-                                 (ess-R-fl-keyword:assign-ops . t)
-                                 (ess-R-fl-keyword:constants . t)
-                                 (ess-fl-keyword:fun-calls . t)
-                                 (ess-fl-keyword:numbers . t)
-                                 (ess-fl-keyword:operators . t)
-                                 (ess-fl-keyword:delimiters . t)
-                                 (ess-fl-keyword:= . t)
-                                 (ess-R-fl-keyword:F&T . t)))
+;;(require 'ess-site)
+;; (setq ess-R-font-lock-keywords '((ess-R-fl-keyword:modifiers . t)
+;;                                  (ess-R-fl-keyword:fun-defs . t)
+;;                                  (ess-R-fl-keyword:keywords . t)
+;;                                  (ess-R-fl-keyword:assign-ops . t)
+;;                                  (ess-R-fl-keyword:constants . t)
+;;                                  (ess-fl-keyword:fun-calls . t)
+;;                                  (ess-fl-keyword:numbers . t)
+;;                                  (ess-fl-keyword:operators . t)
+;;                                  (ess-fl-keyword:delimiters . t)
+;;                                  (ess-fl-keyword:= . t)
+;;                                  (ess-R-fl-keyword:F&T . t)))
 
 ;; The fact that ess-mode doesn't inherit from prog-mode is a bit of a
 ;; pain
-(setq ess-mode-hook (append ess-mode-hook prog-mode-hook))
-(setq ess-default-style 'GNU)
+;;(setq ess-mode-hook (append ess-mode-hook prog-mode-hook))
+;;(setq ess-default-style 'GNU)
 
 ;; For some reason, zsh files are not opened in shell mode =/
 (add-to-list 'auto-mode-alist '("\\*.zsh*\\'" . sh-mode))
@@ -187,8 +179,6 @@
 
 (require 'saveplace)
 (setq-default save-place t)
-
-(global-set-key (kbd "C-x C-b") 'ibuffer)
 
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)

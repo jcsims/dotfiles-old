@@ -14,7 +14,6 @@
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-(company-auctex-init)
 
 (setq reftex-plug-into-AUCTeX t)
 
