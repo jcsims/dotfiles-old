@@ -10,6 +10,9 @@
 (add-hook 'clojure-mode-hook 'enable-paredit-mode)
 (setq nrepl-hide-special-buffers t)
 
+;; Known endpoint for the workhorse machine
+(setq cider-known-endpoints '(("workhorse" "10.0.1.10" "31415")))
+
 ;; Add some goodies from Emacs Live
 (eval-after-load 'clojure-mode
   '(font-lock-add-keywords
