@@ -1,7 +1,0 @@
-[default]
-defargs = home
-cacheage = 600
-imperial = True
-
-[home]
-metar = http://weather.noaa.gov/pub/data/observations/metar/decoded/KSTS.TXT

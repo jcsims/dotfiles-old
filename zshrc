@@ -185,6 +185,7 @@ alias upgrade='sudo apt-get update && sudo apt-get upgrade'
 alias e='emacsclient -t -a ""'
 alias ec='emacsclient -c -a ""'
 
+## Git aliases
 alias gl="git log --graph --abbrev-commit --date=relative --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 alias gp='git push origin HEAD'
 alias gpl='fact && git pull --rebase --prune'
@@ -200,11 +201,7 @@ alias grs='git reset'
 
 alias hclean="ghc-pkg check --simple-output | xargs -n 1 ghc-pkg unregister --force"
 
-if [[  $OSTYPE == darwin* ]]
-then
-    alias mvim='mvim --remote-silent'
-fi
-
+alias pg-server="postgres -D /usr/local/var/postgres"
 
 ## Prompt
 autoload colors && colors
