@@ -9,50 +9,16 @@
 (add-to-list 'load-path (concat user-emacs-directory "lisp"))
 
 ;; Package Management
-(require 'package)
-(add-to-list 'package-archives
-             '("melpa-stable" . "http://melpa-stable.milkbox.net/packages/"))
-(package-initialize)
-
-;; Make sure that the package list is up to date
-(package-refresh-contents)
-(setq package-list '(auctex
-                     cider
-                     clj-refactor
-                     clojure-mode
-                     company
-                     csv-mode
-                     diminish
-                     exec-path-from-shell
-                     expand-region
-                     flycheck
-                     helm
-                     helm-projectile
-                     idle-highlight-mode
-                     js2-mode
-                     latex-extra
-                     magit
-                     markdown-mode
-                     paredit
-                     paredit-everywhere
-                     projectile
-                     rainbow-delimiters
-                     smart-mode-line))
-
-(when (not package-archive-contents)
-  (package-refresh-contents))
-(dolist (package package-list)
-  (when (not (package-installed-p package))
-    (package-install package)))
+(require 'cask "~/.cask/cask.el")
+(cask-initialize)
+(require 'pallet)
 
 ;; Ensure that the PATH is set correctly
 (exec-path-from-shell-initialize)
 
 (require 'init-funcs)
-;;(require 'init-smartparens)
 (require 'init-auctex)
 (require 'init-org)
-;;(require 'init-evil)
 (require 'init-helm)
 
 ;; Use paredit until smartparens gets a bit more stable
@@ -73,14 +39,12 @@
 
 ;; Ensure that when we go to a new line, it's indented properly
 (electric-indent-mode)
-;; Since electric indent is turned on, re-purpose <C-j>
-(global-set-key (kbd "C-j") 'join-line)
 
  ;;; Aesthetics
 (add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'monokai t)
 (require 'rainbow-delimiters)
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
 (eval-after-load 'diff-mode
   '(progn
      (set-face-foreground 'diff-added "green4")
@@ -118,6 +82,7 @@
 ;; Fill mode is pretty handy
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'org-mode 'turn-on-auto-fill)
+(add-hook 'markdown-mode 'turn-on-auto-fill)
 
 ;; Flycheck mode
 ;; We shouldn't need this require, but it isn't loaded without it
@@ -145,25 +110,6 @@
                 (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 (global-set-key (kbd "C-c e t")
                 (lambda () (interactive) (find-file "~/org/todo.org")))
-
-;; Emacs Speaks Statistics
-;;(require 'ess-site)
-;; (setq ess-R-font-lock-keywords '((ess-R-fl-keyword:modifiers . t)
-;;                                  (ess-R-fl-keyword:fun-defs . t)
-;;                                  (ess-R-fl-keyword:keywords . t)
-;;                                  (ess-R-fl-keyword:assign-ops . t)
-;;                                  (ess-R-fl-keyword:constants . t)
-;;                                  (ess-fl-keyword:fun-calls . t)
-;;                                  (ess-fl-keyword:numbers . t)
-;;                                  (ess-fl-keyword:operators . t)
-;;                                  (ess-fl-keyword:delimiters . t)
-;;                                  (ess-fl-keyword:= . t)
-;;                                  (ess-R-fl-keyword:F&T . t)))
-
-;; The fact that ess-mode doesn't inherit from prog-mode is a bit of a
-;; pain
-;;(setq ess-mode-hook (append ess-mode-hook prog-mode-hook))
-;;(setq ess-default-style 'GNU)
 
 ;; For some reason, zsh files are not opened in shell mode =/
 (add-to-list 'auto-mode-alist '("\\*.zsh*\\'" . sh-mode))
@@ -214,10 +160,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
    (quote
-    ("bd115791a5ac6058164193164fd1245ac9dc97207783eae036f0bfc9ad9670e0" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" "025354235e98db5e7fd9c1a74622ff53ad31b7bde537d290ff68d85665213d85" default)))
- '(haskell-process-auto-import-loaded-modules t)
- '(haskell-process-log t)
- '(haskell-process-suggest-remove-import-lines t))
+    ("3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
