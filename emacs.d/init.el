@@ -131,9 +131,6 @@
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
 
-(require 'uniquify)
-(setq uniquify-buffer-name-style 'forward)
-
 (require 'saveplace)
 (setq-default save-place t)
 
