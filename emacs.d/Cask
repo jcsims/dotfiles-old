@@ -29,6 +29,7 @@
 (depends-on "latex-extra")
 (depends-on "magit")
 (depends-on "markdown-mode")
+(depends-on "monokai-theme")
 (depends-on "multiple-cursors")
 (depends-on "package-build")
 (depends-on "pallet")

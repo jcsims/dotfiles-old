@@ -27,14 +27,16 @@
 ;; Ensure that the PATH is set correctly
 (exec-path-from-shell-initialize)
 
+(require 'paredit)
+
+;; External user config
 (require 'init-funcs)
 (require 'init-auctex)
 (require 'init-org)
 (require 'init-helm)
+(require 'init-clojure)
 
 ;; Use paredit until smartparens gets a bit more stable
-(require 'paredit)
-(add-hook 'clojure-mode-hook 'enable-paredit-mode)
 (add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
 
 ;;  a subset of paredit can be handy in other languages as well
@@ -52,14 +54,9 @@
 (electric-indent-mode)
 
  ;;; Aesthetics
-(add-to-list 'custom-theme-load-path "~/.emacs.d/themes/")
 (load-theme 'monokai t)
 (require 'rainbow-delimiters)
 (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
-(eval-after-load 'diff-mode
-  '(progn
-     (set-face-foreground 'diff-added "green4")
-     (set-face-foreground 'diff-removed "red3")))
 ;; Clean up the modeline a bit
 (sml/setup)
 (when (memq window-system '(mac ns))
@@ -69,7 +66,7 @@
 (setq visible-bell t)
 
 ;; Load a few other packages
-(require 'init-clojure)
+
 ;;(require 'init-haskell)
 
 ;; Use company mode for completion
