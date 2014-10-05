@@ -161,6 +161,9 @@ typeset -U PATH=$HOME/Library/Haskell/bin:$PATH
 #Heroku toolbelt
 typeset -U PATH=/usr/local/heroku/bin:$PATH
 
+#rbenv
+if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
 ## Aliases
 # grc overides for ls
 #   Made possible through contributions from generous benefactors like
