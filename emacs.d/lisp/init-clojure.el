@@ -45,5 +45,17 @@
 ;; Sort Clojure namespaces with similar namespaces towards the top
 (setq cljr-sort-comparator 'cljr--semantic-comparator)
 
+;; Set up proper indentation for a few compojure functions
+(eval-after-load 'clojure-mode
+  '(define-clojure-indent
+     (defroutes 'defun)
+     (GET 2)
+     (POST 2)
+     (PUT 2)
+     (DELETE 2)
+     (HEAD 2)
+     (ANY 2)
+     (context 2)))
+
 (provide 'init-clojure)
 ;;; init-clojure.el ends here
