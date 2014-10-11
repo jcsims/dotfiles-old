@@ -142,10 +142,6 @@ bindkey '^[[B' history-substring-search-down
 bindkey -M emacs '^P' history-substring-search-up
 bindkey -M emacs '^N' history-substring-search-down
 
-# bind k and j for VI mode
-bindkey -M vicmd 'k' history-substring-search-up
-bindkey -M vicmd 'j' history-substring-search-down
-
 
 ## Path
 typeset -U PATH=/usr/local/bin:/usr/local/sbin:$PATH
@@ -204,7 +200,6 @@ alias grs='git reset'
 
 alias hclean="ghc-pkg check --simple-output | xargs -n 1 ghc-pkg unregister --force"
 
-alias pg-server="postgres -D /usr/local/var/postgres"
 
 ## Prompt
 autoload colors && colors
@@ -212,79 +207,52 @@ autoload colors && colors
 # http://github.com/ehrenmurdick/config/blob/master/zsh/prompt.zsh
 
 
-git=`which git`
+# git=`which git`
 
-git_branch() {
-    echo $($git symbolic-ref HEAD 2>/dev/null | awk -F/ {'print $NF'})
-}
+# git_branch() {
+#     echo $($git symbolic-ref HEAD 2>/dev/null | awk -F/ {'print $NF'})
+# }
 
-git_dirty() {
-    if $(! $git status -s &> /dev/null)
-    then
-        echo ""
-    else
-        if [[ $($git status --porcelain) == "" ]]
-        then
-            echo "on %{$fg[green]%}$(git_prompt_info)%{$reset_color%}"
-        else
-            echo "on %{$fg[red]%}$(git_prompt_info)%{$reset_color%}"
-        fi
-    fi
-}
+# git_dirty() {
+#     if $(! $git status -s &> /dev/null)
+#     then
+#         echo ""
+#     else
+#         if [[ $($git status --porcelain) == "" ]]
+#         then
+#             echo "on %{$fg[green]%}$(git_prompt_info)%{$reset_color%}"
+#         else
+#             echo "on %{$fg[red]%}$(git_prompt_info)%{$reset_color%}"
+#         fi
+#     fi
+# }
 
-git_prompt_info () {
-    ref=$($git symbolic-ref HEAD 2>/dev/null) || return
-    echo "${ref#refs/heads/}"
-}
+# git_prompt_info () {
+#     ref=$($git symbolic-ref HEAD 2>/dev/null) || return
+#     echo "${ref#refs/heads/}"
+# }
 
-unpushed () {
-    $git cherry -v @{upstream} 2>/dev/null
-}
+# unpushed () {
+#     $git cherry -v @{upstream} 2>/dev/null
+# }
 
-need_push () {
-    if [[ $(unpushed) == "" ]]
-    then
-        echo " "
-    else
-        echo " with %{$fg[magenta]%}unpushed%{$reset_color%} "
-    fi
-}
+# need_push () {
+#     if [[ $(unpushed) == "" ]]
+#     then
+#         echo " "
+#     else
+#         echo " with %{$fg[magenta]%}unpushed%{$reset_color%} "
+#     fi
+# }
 
-local ctime="%{$fg[magenta]%}%T%{$reset_color%}"
-local mname="%{$fg[green]%}%m%{$reset_color%}"
-local cdir="%{$fg[cyan]%}%~ %{$reset_color%}"
-local lambda="%(?,%{$fg[green]%}λ%{$reset_color%},%{$fg[red]%}λ%{$reset_color%})"
+# local ctime="%{$fg[magenta]%}%T%{$reset_color%}"
+# local mname="%{$fg[green]%}%m%{$reset_color%}"
+# local cdir="%{$fg[cyan]%}%~ %{$reset_color%}"
+# local lambda="%(?,%{$fg[green]%}λ%{$reset_color%},%{$fg[red]%}λ%{$reset_color%})"
 
 
-PROMPT='$ctime on $mname in $cdir
-${lambda}  '
+# PROMPT='$ctime on $mname in $cdir
+# ${lambda}  '
 
-RPROMPT='%{$fg[white]%} $(git_dirty)$(need_push) %{$reset_color%}'
-
-# Start up tmux and vim properly for R dev
-# Change the TERM environment variable (to get 256 colors) and make Vim
-# connecting to X Server even if running in a terminal emulator (to get
-# dynamic update of syntax highlight and Object Browser):
-if [[ "x$DISPLAY" != "x" ]]
-then
-  if [[ "screen" = "$TERM" ]]
-  then
-    export TERM=screen-256color
-  else
-    export TERM=xterm-256color
-  fi
-  alias vim='vim --servername VIM'
-  if [[ "x$TERM" == "xxterm" ]] || [[ "x$TERM" == "xxterm-256color" ]]
-  then
-    function tvim(){ tmux -2 new-session "TERM=screen-256color vim --servername VIM $@" ; }
-  else
-    function tvim(){ tmux new-session "vim --servername VIM $@" ; }
-  fi
-else
-  if [[ "x$TERM" == "xxterm" ]] || [[ "x$TERM" == "xxterm-256color" ]]
-  then
-    function tvim(){ tmux -2 new-session "TERM=screen-256color vim $@" ; }
-  else
-    function tvim(){ tmux new-session "vim $@" ; }
-  fi
-fi
+# RPROMPT='%{$fg[white]%} $(git_dirty)$(need_push) %{$reset_color%}'
+antigen bundle sindresorhus/pure
