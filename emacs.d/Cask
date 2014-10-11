@@ -1,6 +1,7 @@
 (source gnu)
 (source melpa)
 
+(depends-on "ansi")
 (depends-on "async")
 (depends-on "auctex")
 (depends-on "base16-theme")
@@ -34,6 +35,7 @@
 (depends-on "multiple-cursors")
 (depends-on "package-build")
 (depends-on "pallet")
+(depends-on "paradox")
 (depends-on "paredit")
 (depends-on "paredit-everywhere")
 (depends-on "pkg-info")
