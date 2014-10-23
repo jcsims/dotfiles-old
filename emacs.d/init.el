@@ -14,29 +14,15 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-backends (quote (company-elisp
-                            company-bbdb
-                            company-nxml
-                            company-css
-                            company-eclim
-                            company-semantic
-                            company-clang
-                            company-xcode
-                            company-ropemacs
-                            company-cmake
-                            company-capf (company-dabbrev-code
-                                          company-gtags
-                                          company-etags
-                                          company-keywords)
-                            company-oddmuse
-                            company-files
-                            company-dabbrev
-                            company-ispell)))
+ '(company-backends
+   (quote
+    (company-elisp company-bbdb company-nxml company-css company-eclim company-semantic company-clang company-xcode company-ropemacs company-cmake company-capf
+                   (company-dabbrev-code company-gtags company-etags company-keywords)
+                   company-oddmuse company-files company-dabbrev company-ispell)))
  '(custom-safe-themes
    (quote
-    ("3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723"
-     "756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e"
-     "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default))))
+    ("3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default)))
+ '(paradox-github-token t))
 
 (add-to-list 'load-path (concat user-emacs-directory "lisp"))
 
@@ -82,6 +68,7 @@
 (sml/setup)
 (when (memq window-system '(mac ns))
   (set-frame-font "Menlo 12"))
+(global-prettify-symbols-mode 1)
 
 ;; The audible bell is obnoxious
 (setq visible-bell t)
@@ -159,7 +146,7 @@
 ;; Never indent with tabs (unless set in the local buffer,
 ;; e.g. Makefiles)
 (setq-default indent-tabs-mode nil)
-(setq x-select-enable-clipboard t
+(setq gui-select-enable-clipboard t
       x-select-enable-primary t
       save-interprogram-paste-before-kill t
       apropos-do-all t

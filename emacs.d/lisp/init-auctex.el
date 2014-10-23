@@ -17,6 +17,9 @@
 
 (setq reftex-plug-into-AUCTeX t)
 
+;; Use latex-extra package
+(add-hook 'LaTeX-mode-hook #'latex-extra-mode)
+
 (when (eq system-type 'darwin) ;; mac-specific settings
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
   (setq TeX-source-correlate-method 'synctex)
