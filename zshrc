@@ -200,6 +200,10 @@ alias grs='git reset'
 
 alias hclean="ghc-pkg check --simple-output | xargs -n 1 ghc-pkg unregister --force"
 
+if [[  $OSTYPE == darwin* ]]
+then
+    alias mvim='mvim --remote-silent'
+fi
 
 ## Prompt
 autoload colors && colors
