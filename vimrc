@@ -1,46 +1,47 @@
-set nocompatible
-filetype off
-
-set rtp+=~/.vim/bundle/Vundle.vim
-call vundle#begin()
-
-Plugin 'gmarik/Vundle.vim'
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !mkdir -p ~/.vim/autoload
+  silent !curl -fLo ~/.vim/autoload/plug.vim
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall
+endif
+call plug#begin('~/.vim/bundle')
 
 " Bundles
-Plugin 'tpope/vim-fugitive'
-Plugin 'tpope/vim-surround'
-Plugin 'tpope/vim-speeddating'
-Plugin 'tpope/vim-commentary'
-Plugin 'tpope/vim-repeat'
-Plugin 'tpope/vim-characterize'
-Plugin 'tpope/vim-unimpaired'
-Plugin 'tommcdo/vim-lion'
-Plugin 'kien/ctrlp.vim'
-Plugin 'scrooloose/syntastic'
-Plugin 'Rykka/colorv.vim'
-Plugin 'mhinz/vim-signify'
-Plugin 'Valloric/YouCompleteMe'
-Plugin 'tpope/vim-fireplace'
-Plugin 'vim-scripts/paredit.vim'
-Plugin 'tpope/vim-sensible'
-Plugin 'Shougo/vimproc'
-Plugin 'majutsushi/tagbar'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-speeddating'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-characterize'
+Plug 'tpope/vim-unimpaired'
+Plug 'tommcdo/vim-lion'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'scrooloose/syntastic'
+Plug 'Rykka/colorv.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
+Plug 'tpope/vim-sensible'
+Plug 'Shougo/vimproc'
+Plug 'majutsushi/tagbar'
+Plug 'tpope/vim-dispatch'
+Plug 'tpope/vim-projectionist'
+
+"Clojure
+Plug 'tpope/vim-fireplace', {'for': 'clojure' }
+Plug 'tpope/vim-leiningen', {'for': 'clojure' }
+Plug 'kovisoft/paredit', {'for': 'clojure' }
+Plug 'guns/vim-clojure-static', {'for': 'clojure' }
+Plug 'guns/vim-slamhound', {'for': 'clojure' }
 
 " Filetypes
-Plugin 'guns/vim-clojure-static'
-Plugin 'tpope/vim-markdown'
-Plugin 'vim-scripts/Vim-R-plugin'
-Plugin 'dag/vim2hs'
-Plugin 'eagletmt/ghcmod-vim'
-Plugin 'eagletmt/neco-ghc'
-Plugin 'LaTeX-Box-Team/LaTeX-Box'
+Plug 'tpope/vim-markdown'
 
 " Aesthetics
-Plugin 'chriskempson/base16-vim'
-Plugin 'kien/rainbow_parentheses.vim'
-Plugin 'bling/vim-airline'
+Plug 'chriskempson/base16-vim'
+Plug 'luochen1990/rainbow'
+Plug 'bling/vim-airline'
 
-call vundle#end()
+call plug#end()
 
 filetype plugin indent on
 syntax on
@@ -121,10 +122,7 @@ let base16colorspace=256  " Access colors present in 256 colorspace
 colorscheme base16-eighties
 
 "Rainbow parens on all the time
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
+let g:rainbow_active = 1
 
 " Set the font
 if has("gui_running")
