@@ -161,6 +161,9 @@
 ;; Use js2 mode
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
+;; Show the git gutter everywhere
+(global-git-gutter-mode +1)
+
 ;;; init.el ends here
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
