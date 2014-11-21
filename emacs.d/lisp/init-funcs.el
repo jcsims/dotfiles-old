@@ -61,9 +61,9 @@ Taken from what the emacs.d."
 ;; Taken from technomancy's emacs.d
 (global-set-key (kbd "C-c n")
                 (defun pnh-cleanup-buffer () (interactive)
-                  (delete-trailing-whitespace)
-                  (untabify (point-min) (point-max))
-                  (indent-region (point-min) (point-max))))
+                       (delete-trailing-whitespace)
+                       (untabify (point-min) (point-max))
+                       (indent-region (point-min) (point-max))))
 
 ;; A few taken from bodil
 (defun recompile-init ()
@@ -92,22 +92,9 @@ If no file is specified, use current buffer."
 
 ;; Set transparency of current frame
 (defun transparency (value)
-   "Set the transparency of the frame window.  VALUE: 0=transparent/100=opaque."
-   (interactive "nTransparency Value 0 - 100 opaque:")
-   (set-frame-parameter (selected-frame) 'alpha value))
-
-;; Taken from Steve Purcell's .emacs.d
-(defun install-package (package &optional min-version no-refresh)
-  "Install given PACKAGE, optionally requiring MIN-VERSION.
-If NO-REFRESH is non-nil, the available package lists will not be
-re-downloaded in order to locate PACKAGE."
-  (if (package-installed-p package min-version)
-      t
-    (if (or (assoc package package-archive-contents) no-refresh)
-        (package-install package)
-      (progn
-        (package-refresh-contents)
-        (install-package package min-version t)))))
+  "Set the transparency of the frame window.  VALUE: 0=transparent/100=opaque."
+  (interactive "nTransparency Value 0 - 100 opaque:")
+  (set-frame-parameter (selected-frame) 'alpha value))
 
 ;; Some functions carried over from the emacs starter kit
 (defun esk-local-column-number-mode ()

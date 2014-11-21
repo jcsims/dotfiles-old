@@ -27,9 +27,7 @@
 (add-to-list 'load-path (concat user-emacs-directory "lisp"))
 
 ;; Package Management
-(require 'cask "~/.cask/cask.el")
-(cask-initialize)
-(require 'pallet)
+(require 'init-packages)
 
 ;; Ensure that the PATH is set correctly
 (exec-path-from-shell-initialize)
