@@ -162,6 +162,22 @@
 ;; Show the git gutter everywhere
 (global-git-gutter-mode +1)
 
+;; Init elpy
+(elpy-enable)
+
+;;; Go config
+;; Clean up the modeline a bit
+(add-to-list 'sml/replacer-regexp-list '("^~/code/go/src/" ":GO:") t)
+;; Display eldoc for go code
+(add-hook 'go-mode-hook 'go-eldoc-setup)
+;; Make sure we're using gocode for completion
+(require 'company-go)
+(add-hook 'go-mode-hook (lambda () (add-to-list 'company-backends 'company-go)))
+(add-hook 'go-mode-hook (lambda () (local-set-key (kbd "M-.") #'godef-jump)))
+(add-hook 'go-mode-hook (lambda ()
+                          (local-set-key (kbd "C-c C-d") #'godoc-at-point)))
+(add-hook 'before-save-hook #'gofmt-before-save)
+
 ;;; init.el ends here
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
