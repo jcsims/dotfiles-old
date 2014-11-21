@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+#
+# blindly update all symlinks
+cd "$(dirname "$0")"
+DOTFILES_ROOT=$(pwd)
+
+set -e
+
+for src in $(ls)
+do
+  if ! [ "$src" = "License" ] && 
+    ! [ "$src" = "README.md" ] &&
+    ! [ "$src" = "bootstrap" ]
+then
+  dst="$HOME/.$src"
+  if [ -f "$dst" ] || [ -d "$dst" ]
+  then echo "Link already exists: $dst"
+  else
+    ln -s "$DOTFILES_ROOT/$src" "$dst"
+    echo "Linked $src to $dst"
+  fi
+fi
+done
+
+echo 'All installed!'

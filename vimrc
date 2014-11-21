@@ -119,7 +119,7 @@ nnoremap <silent> <leader>sv :so $MYVIMRC<CR>
 "Color scheme!
 set background=dark
 let base16colorspace=256  " Access colors present in 256 colorspace
-colorscheme base16-eighties
+colorscheme base16-monokai
 
 "Rainbow parens on all the time
 let g:rainbow_active = 1
