@@ -6,26 +6,24 @@
 ;;; Code:
 (eval-after-load 'latex '(latex/setup-keybinds))
 
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq-default TeX-master nil)
-;; I always use pdf
-(setq TeX-PDF-mode t)
+(setq-default TeX-auto-save t
+              TeX-parse-self t
+              TeX-master nil
+              TeX-PDF-mode t
+              reftex-plug-into-AUCTeX t)
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
 (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
 (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-
-(setq reftex-plug-into-AUCTeX t)
 
 ;; Use latex-extra package
 (add-hook 'LaTeX-mode-hook #'latex-extra-mode)
 
 (when (eq system-type 'darwin) ;; mac-specific settings
   (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-  (setq TeX-source-correlate-method 'synctex)
-  (setq TeX-view-program-list
+  (setq-default TeX-source-correlate-method 'synctex)
+  (setq-default TeX-view-program-list
         '(("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
-  (setq TeX-view-program-selection '((output-pdf "Skim"))))
+  (setq-default TeX-view-program-selection '((output-pdf "Skim"))))
 
 (add-hook 'TeX-mode-hook
           (lambda ()
