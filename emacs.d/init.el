@@ -16,36 +16,93 @@
  ;; If there is more than one, they won't work right.
  '(company-backends
    (quote
-    (company-elisp company-bbdb company-nxml company-css company-eclim company-semantic company-clang company-xcode company-ropemacs company-cmake company-capf
-                   (company-dabbrev-code company-gtags company-etags company-keywords)
-                   company-oddmuse company-files company-dabbrev company-ispell)))
+    (company-ess-backend company-elisp company-bbdb company-nxml company-css company-eclim company-semantic company-clang company-xcode company-cmake company-capf
+                         (company-dabbrev-code company-gtags company-etags company-keywords)
+                         company-oddmuse company-files company-dabbrev company-ispell)))
  '(custom-safe-themes
    (quote
-    ("d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" "3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default)))
+    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" "3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default)))
  '(paradox-github-token t))
 
 (add-to-list 'load-path (concat user-emacs-directory "lisp"))
 
+;; Don't show the splash screen
+(setq inhibit-splash-screen t)
+
+;; Turn off the toolbar and scroll bar
+(when (fboundp 'tool-bar-mode)
+  (tool-bar-mode -1))
+(when (fboundp 'scroll-bar-mode)
+  (scroll-bar-mode -1))
+
 ;; Package Management
-(require 'init-packages)
+(load "init-packages")
 
 ;; Ensure that the PATH is set correctly
 (exec-path-from-shell-initialize)
 
-(require 'paredit)
+ ;;; Aesthetics
+(load-theme 'zenburn t)
+(require 'rainbow-delimiters)
+(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+;; Clean up the modeline a bit
+(sml/setup)
+(when (memq window-system '(mac ns))
+  (set-frame-font "Menlo 12"))
+(global-prettify-symbols-mode 1)
+
+;; Smartparens config
+(require 'smartparens-config)
+(smartparens-global-strict-mode t)
+(smartparens-global-mode t)
+(show-smartparens-global-mode t)
+
+(define-key sp-keymap (kbd "C-M-f") 'sp-forward-sexp)
+(define-key sp-keymap (kbd "C-M-b") 'sp-backward-sexp)
+
+(define-key sp-keymap (kbd "C-M-d") 'sp-down-sexp)
+(define-key sp-keymap (kbd "C-M-a") 'sp-backward-down-sexp)
+(define-key sp-keymap (kbd "C-S-a") 'sp-beginning-of-sexp)
+(define-key sp-keymap (kbd "C-S-d") 'sp-end-of-sexp)
+
+(define-key sp-keymap (kbd "C-M-e") 'sp-up-sexp)
+(define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp)
+(define-key sp-keymap (kbd "C-M-u") 'sp-backward-up-sexp)
+(define-key sp-keymap (kbd "C-M-t") 'sp-transpose-sexp)
+
+(define-key sp-keymap (kbd "C-M-n") 'sp-next-sexp)
+(define-key sp-keymap (kbd "C-M-p") 'sp-previous-sexp)
+
+(define-key sp-keymap (kbd "C-M-k") 'sp-kill-sexp)
+(define-key sp-keymap (kbd "C-M-w") 'sp-copy-sexp)
+
+(define-key sp-keymap (kbd "M-<delete>") 'sp-unwrap-sexp)
+(define-key sp-keymap (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
+
+(define-key sp-keymap (kbd "C-<right>") 'sp-forward-slurp-sexp)
+(define-key sp-keymap (kbd "C-<left>") 'sp-forward-barf-sexp)
+(define-key sp-keymap (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
+(define-key sp-keymap (kbd "C-M-<right>") 'sp-backward-barf-sexp)
+
+(define-key sp-keymap (kbd "M-D") 'sp-splice-sexp)
+(define-key sp-keymap (kbd "C-M-<delete>") 'sp-splice-sexp-killing-forward)
+(define-key sp-keymap (kbd "C-M-<backspace>") 'sp-splice-sexp-killing-backward)
+(define-key sp-keymap (kbd "C-S-<backspace>") 'sp-splice-sexp-killing-around)
+
+(define-key sp-keymap (kbd "C-]") 'sp-select-next-thing-exchange)
+(define-key sp-keymap (kbd "C-<left_bracket>") 'sp-select-previous-thing)
+(define-key sp-keymap (kbd "C-M-]") 'sp-select-next-thing)
+
+(define-key sp-keymap (kbd "M-F") 'sp-forward-symbol)
+(define-key sp-keymap (kbd "M-B") 'sp-backward-symbol)
+
 
 ;; External user config
-(require 'init-funcs)
-(require 'init-auctex)
-(require 'init-org)
-(require 'init-helm)
-(require 'init-clojure)
-
-;; Use paredit until smartparens gets a bit more stable
-(add-hook 'emacs-lisp-mode-hook 'enable-paredit-mode)
-
-;;  a subset of paredit can be handy in other languages as well
-(add-hook 'prog-mode-hook 'paredit-everywhere-mode)
+(load "init-funcs")
+(load "init-auctex")
+(load "init-org")
+(load "init-helm")
+(load "init-clojure")
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -58,21 +115,13 @@
 ;; Ensure that when we go to a new line, it's indented properly
 (electric-indent-mode)
 
- ;;; Aesthetics
-(load-theme 'zenburn t)
-(require 'rainbow-delimiters)
-(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
-;; Clean up the modeline a bit
-(sml/setup)
-(when (memq window-system '(mac ns))
-  (set-frame-font "Menlo 12"))
-(global-prettify-symbols-mode 1)
-
 ;; The audible bell is obnoxious
 (setq visible-bell t)
 
 ;; Use company mode for completion
 (add-hook 'after-init-hook 'global-company-mode)
+;; Add tooltips for company completion candidates
+(company-quickhelp-mode 1)
 
 ;; Enable whitespace mode for programming languages, and highlight when
 ;; lines are over 80 characters long
@@ -125,11 +174,6 @@
 (add-to-list 'auto-mode-alist '("\\*.zsh*\\'" . sh-mode))
 (add-to-list 'auto-mode-alist '("\\zshrc\\'" . sh-mode))
 
-(when (fboundp 'tool-bar-mode)
-  (tool-bar-mode -1))
-(when (fboundp 'scroll-bar-mode)
-  (scroll-bar-mode -1))
-
 (require 'saveplace)
 (setq-default save-place t)
 
@@ -143,13 +187,13 @@
 
 ;; Never indent with tabs (unless set in the local buffer,
 ;; e.g. Makefiles)
-(setq-default indent-tabs-mode nil)
-(setq gui-select-enable-clipboard t
-      x-select-enable-primary t
-      save-interprogram-paste-before-kill t
-      apropos-do-all t
-      mouse-yank-at-point t
-      save-place-file (concat user-emacs-directory "places"))
+(setq-default indent-tabs-mode nil
+              gui-select-enable-clipboard t
+              x-select-enable-primary t
+              save-interprogram-paste-before-kill t
+              apropos-do-all t
+              mouse-yank-at-point t
+              save-place-file (concat user-emacs-directory "places"))
 
 ;; Ensure that a server is running for quicker start times
 (require 'server)
@@ -162,21 +206,31 @@
 ;; Show the git gutter everywhere
 (global-git-gutter-mode +1)
 
-;; Init elpy
-(elpy-enable)
+;;; elisp-slime-nav
+(dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
+  (add-hook hook 'turn-on-elisp-slime-nav-mode))
 
-;;; Go config
-;; Clean up the modeline a bit
-(add-to-list 'sml/replacer-regexp-list '("^~/code/go/src/" ":GO:") t)
-;; Display eldoc for go code
-(add-hook 'go-mode-hook 'go-eldoc-setup)
-;; Make sure we're using gocode for completion
-(require 'company-go)
-(add-hook 'go-mode-hook (lambda () (add-to-list 'company-backends 'company-go)))
-(add-hook 'go-mode-hook (lambda () (local-set-key (kbd "M-.") #'godef-jump)))
-(add-hook 'go-mode-hook (lambda ()
-                          (local-set-key (kbd "C-c C-d") #'godoc-at-point)))
-(add-hook 'before-save-hook #'gofmt-before-save)
+;; Asynchronous updating is nice
+(setq-default paradox-execute-asynchronously t)
+
+;; Emacs Speaks Statistics
+(require 'ess-site)
+(setq ess-R-font-lock-keywords '((ess-R-fl-keyword:modifiers . t)
+                                 (ess-R-fl-keyword:fun-defs . t)
+                                 (ess-R-fl-keyword:keywords . t)
+                                 (ess-R-fl-keyword:assign-ops . t)
+                                 (ess-R-fl-keyword:constants . t)
+                                 (ess-fl-keyword:fun-calls . t)
+                                 (ess-fl-keyword:numbers . t)
+                                 (ess-fl-keyword:operators . t)
+                                 (ess-fl-keyword:delimiters . t)
+                                 (ess-fl-keyword:= . t)
+                                 (ess-R-fl-keyword:F&T . t)))
+
+;; The fact that ess-mode doesn't inherit from prog-mode is a bit of a
+;; pain
+(setq ess-mode-hook (append ess-mode-hook prog-mode-hook))
+(setq ess-default-style 'GNU)
 
 ;;; init.el ends here
 (custom-set-faces
