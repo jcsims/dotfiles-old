@@ -187,6 +187,7 @@
 
 ;; Never indent with tabs (unless set in the local buffer,
 ;; e.g. Makefiles)
+
 (setq-default indent-tabs-mode nil
               gui-select-enable-clipboard t
               x-select-enable-primary t
@@ -231,6 +232,10 @@
 ;; pain
 (setq ess-mode-hook (append ess-mode-hook prog-mode-hook))
 (setq ess-default-style 'GNU)
+
+;; Switch the command and meta keys, just inside emacs
+(setq mac-command-modifier 'meta)
+(setq mac-option-modifier 'super)
 
 ;;; init.el ends here
 (custom-set-faces
