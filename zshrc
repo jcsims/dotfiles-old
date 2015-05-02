@@ -53,7 +53,7 @@ then
 fi
 
 ## Functions
-fpath=(~/.functions $fpath)
+fpath=($(brew --prefix)/share/zsh/site-functions ~/.functions $fpath)
 autoload -U ~/.functions/*(:t)
 
 
@@ -88,14 +88,6 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 
 # pasting with tabs doesn't perform completion
 zstyle ':completion:*' insert-tab pending
-
-completion='$(brew --prefix)/share/zsh/site-functions/_git'
-
-if test -f $completion
-then
-    source $completion
-fi
-
 
 ## Colors
 # Base16 Shell
