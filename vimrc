@@ -32,6 +32,7 @@ Plug 'tpope/vim-leiningen', {'for': 'clojure' }
 Plug 'kovisoft/paredit', {'for': 'clojure' }
 Plug 'guns/vim-clojure-static', {'for': 'clojure' }
 Plug 'guns/vim-slamhound', {'for': 'clojure' }
+Plug 'venantius/vim-cljfmt', {'for': 'clojure' }
 
 " Filetypes
 Plug 'tpope/vim-markdown'
@@ -40,6 +41,7 @@ Plug 'tpope/vim-markdown'
 Plug 'chriskempson/base16-vim'
 Plug 'luochen1990/rainbow'
 Plug 'bling/vim-airline'
+Plug 'jnurmine/Zenburn'
 
 call plug#end()
 
@@ -117,9 +119,9 @@ nnoremap <silent> <leader>sv :so $MYVIMRC<CR>
 "" Aesthetics
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 "Color scheme!
-set background=dark
-let base16colorspace=256  " Access colors present in 256 colorspace
-colorscheme base16-monokai
+"set background=dark
+"let base16colorspace=256  " Access colors present in 256 colorspace
+colorscheme zenburn
 
 "Rainbow parens on all the time
 let g:rainbow_active = 1
@@ -138,8 +140,8 @@ let g:airline_powerline_fonts=1
 "If there's only a single tab, show buffers instead
 let g:airline#extensions#tabline#enabled = 1
 
-"Remove the menubar
-set guioptions-=T
+"Remove the menubar and the right scrollbar
+set guioptions-=Tr
 
 "Move by screen lines instead of file lines, in case of screen wrap
 nnoremap j gj
