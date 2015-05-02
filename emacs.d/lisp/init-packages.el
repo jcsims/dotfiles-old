@@ -35,6 +35,7 @@
         clojure-mode
         company
         company-auctex
+	company-quickhelp
         csv-mode
         diminish
         elisp-slime-nav
