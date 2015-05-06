@@ -20,3 +20,6 @@ tramp
 .org-id-locations
 bookmarks
 projectile-bookmarks.eld
+/emacs.d/projectile.cache
+/emacs.d/recentf
+/vim/autoload/
