@@ -43,7 +43,7 @@ bindkey '^?' backward-delete-char
 
 
 # your project folder that we can `c [tab]` to
-export PROJECTS=~/code
+export PROJECTS=~/work/slabs
 
 # use .localrc for SUPER SECRET CRAP that you don't
 # want in your public, versioned repo.
@@ -251,3 +251,20 @@ PROMPT='$ctime on $mname in $cdir
 ${lambda}  '
 
 RPROMPT='%{$fg[white]%} $(git_dirty)$(need_push) %{$reset_color%}'
+
+## boot2docker setup
+typeset -U DOCKER_HOST=tcp://192.168.59.103:2376
+typeset -U DOCKER_CERT_PATH=/Users/jcsims/.boot2docker/certs/boot2docker-vm
+typeset -U DOCKER_TLS_VERIFY=1
+
+export PATH="$PATH:$HOME/.rvm/bin" # Add RVM to PATH for scripting
+JAVA_HOME="/Library/Java/JavaVirtualMachines/jdk1.7.0_79.jdk/Contents/Home"
+export JAVA_HOME
+HBASE_HOME="/Users/jcsims/work/slabs/hbase-0.94.6-cdh4.4.0"
+export HBASE_HOME
+
+DISABLE_AUTO_TITLE="true"
+PROTOBUF_HOME="/Users/jcsims/work/slabs/protobuf-2.5.0"
+export PROTOBUF_HOME
+PATH="/Users/jcsims/work/slabs/protobuf-2.5.0/src:/Users/jcsims/work/slabs/protobuf-2.5.0/src:/usr/local/heroku/bin:/Users/jcsims/Library/Haskell/bin:/Users/jcsims/bin:/Users/jcsims/.cabal/bin:/Users/jcsims/.cask/bin:/Applications/ghc-7.8.3.app/Contents/bin:/usr/local/bin:/usr/local/sbin:/usr/bin:/bin:/usr/sbin:/sbin:/Users/jcsims/.rvm/bin"
+export PATH

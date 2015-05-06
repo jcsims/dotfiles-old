@@ -13,7 +13,7 @@
 (setq nrepl-hide-special-buffers t)
 
 ;; Known endpoint for the workhorse machine
-(setq cider-known-endpoints '(("workhorse" "10.0.1.10" "31415")))
+;;(setq cider-known-endpoints '(("workhorse" "10.0.1.10" "31415")))
 
 ;; Add some goodies from Emacs Live
 (eval-after-load 'clojure-mode
@@ -36,14 +36,6 @@
                      (0 (progn (compose-region (match-beginning 1)
                                                (match-end 1) "∈")
                                nil))))))
-
-;; Set up powerful Clojure refactoring from magnars
-(require 'clj-refactor)
-(add-hook 'clojure-mode-hook (lambda ()
-                               (clj-refactor-mode 1)
-                               (cljr-add-keybindings-with-prefix "C-c r")))
-;; Sort Clojure namespaces with similar namespaces towards the top
-(setq cljr-sort-comparator 'cljr--semantic-comparator)
 
 ;; Set up proper indentation for a few compojure functions
 (eval-after-load 'clojure-mode

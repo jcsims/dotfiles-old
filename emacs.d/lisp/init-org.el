@@ -11,8 +11,7 @@
 (setq org-startup-indented t)
 (setq org-startup-folded t)
 
-(setq org-agenda-files (list "~/org/todo.org"
-                             "~/org/thesis.org"))
+(setq org-agenda-files (list (concat org-directory "/todo.org")))
 (setq org-default-notes-file
       (concat org-directory "/todo.org"))
 

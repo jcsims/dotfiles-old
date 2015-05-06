@@ -31,14 +31,14 @@
 (setq jcs-package-list
       '(auctex
         cider
-        clj-refactor
         clojure-mode
         company
         company-auctex
-	company-quickhelp
+        company-quickhelp
         csv-mode
         diminish
         elisp-slime-nav
+        ess
         exec-path-from-shell
         expand-region
         flycheck
