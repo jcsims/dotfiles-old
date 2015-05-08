@@ -31,6 +31,18 @@ point reaches the beginning or end of buffer, stop there."
 (global-set-key [remap move-beginning-of-line]
                 'smarter-move-beginning-of-line)
 
+;; Taken from the Emacs Wiki: http://www.emacswiki.org/emacs/InsertDate
+(defun insert-date (prefix)
+  "Insert the current date. With prefix-argument, use ISO
+  format."
+  (interactive "P")
+  (let ((format (cond
+                 ((not prefix) "%a %d %b %Y")
+                 ((equal prefix '(4)) "%Y-%m-%d"))))
+    (insert (format-time-string format))))
+
+(global-set-key (kbd "C-c d") 'insert-date)
+
 ;; Taken from http://whattheemacsd.com/editing-defuns.el-01.html
 (defun open-line-below ()
   "Anywhere on the line, open a new line below current line."
