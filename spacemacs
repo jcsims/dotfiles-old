@@ -25,6 +25,7 @@
       syntax-checking
       ess
       (clojure :variables clojure-enable-fancify-symbols t)
+      auctex
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
