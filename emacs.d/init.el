@@ -237,6 +237,9 @@
 ;; Magit
 (global-set-key (kbd "C-c g") 'magit-status)
 
+;; Scroll similar to vim
+(setq scroll-error-top-bottom t)
+
 ;;; init.el ends here
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
