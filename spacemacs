@@ -16,16 +16,16 @@
      ;; Example of useful layers you may want to use right away
      ;; Uncomment a layer name and press C-c C-c to install it
      ;; --------------------------------------------------------
-      auto-completion
-      better-defaults
-      (git :variables
-           git-gutter-use-fringe t)
-      markdown
-      org
-      syntax-checking
-      ess
-      (clojure :variables clojure-enable-fancify-symbols t)
-      auctex
+     auto-completion
+     better-defaults
+     (git :variables
+          git-gutter-use-fringe t)
+     markdown
+     org
+     syntax-checking
+     ess
+     (clojure :variables clojure-enable-fancify-symbols t)
+     auctex
      )
    ;; A list of packages and/or extensions that will not be install and loaded.
    dotspacemacs-excluded-packages '()
@@ -71,7 +71,7 @@ before layers configuration."
    ;; Default font. `powerline-scale' allows to quickly tweak the mode-line
    ;; size to make separators look not too crappy.
    dotspacemacs-default-font '("Source Code Pro"
-                               :size 13
+                               :size 12
                                :weight normal
                                :width normal
                                :powerline-scale 1.2)
@@ -140,9 +140,33 @@ before layers configuration."
 
 (defun dotspacemacs/config ()
   "Configuration function.
- This function is called at the very end of Spacemacs initialization after
+This function is called at the very end of Spacemacs initialization after
 layers configuration."
-)
+
+  ;; Stop asking about following symlinks to vc-controlled files. If it's
+  ;; symlinked to something in VC, I already know this >_>
+  (setq vc-follow-symlinks t)
+
+  ;; Taken from the Emacs Wiki: http://www.emacswiki.org/emacs/InsertDate
+  (defun insert-date (prefix)
+    "Insert the current date. With prefix-argument, use ISO
+  format."
+    (interactive "P")
+    (let ((format (cond
+                   ((not prefix) "%a %d %b %Y")
+                   ((equal prefix '(4)) "%Y-%m-%d"))))
+      (insert (format-time-string format))))
+
+  ;; Taken from technomancy's emacs.d
+  (defun pnh-cleanup-buffer () (interactive)
+         (delete-trailing-whitespace)
+         (untabify (point-min) (point-max))
+         (indent-region (point-min) (point-max)))
+
+  (evil-leader/set-key
+    "od" 'insert-date
+    "oc" 'pnh-cleanup-buffer)
+  )
 
 ;; Do not write anything past this comment. This is where Emacs will
 ;; auto-generate custom variable definitions.
