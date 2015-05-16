@@ -43,7 +43,7 @@
 (exec-path-from-shell-initialize)
 
  ;;; Aesthetics
-(load-theme 'zenburn t)
+(load-theme 'monokai t)
 (require 'rainbow-delimiters)
 (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
 ;; Clean up the modeline a bit
@@ -52,58 +52,16 @@
   (set-frame-font "Menlo 12"))
 (global-prettify-symbols-mode 1)
 
-;; Smartparens config
-(require 'smartparens-config)
-(smartparens-global-strict-mode t)
-(smartparens-global-mode t)
-(show-smartparens-global-mode t)
-
-(define-key sp-keymap (kbd "C-M-f") 'sp-forward-sexp)
-(define-key sp-keymap (kbd "C-M-b") 'sp-backward-sexp)
-
-(define-key sp-keymap (kbd "C-M-d") 'sp-down-sexp)
-(define-key sp-keymap (kbd "C-M-a") 'sp-backward-down-sexp)
-(define-key sp-keymap (kbd "C-S-a") 'sp-beginning-of-sexp)
-(define-key sp-keymap (kbd "C-S-d") 'sp-end-of-sexp)
-
-(define-key sp-keymap (kbd "C-M-e") 'sp-up-sexp)
-(define-key emacs-lisp-mode-map (kbd ")") 'sp-up-sexp)
-(define-key sp-keymap (kbd "C-M-u") 'sp-backward-up-sexp)
-(define-key sp-keymap (kbd "C-M-t") 'sp-transpose-sexp)
-
-(define-key sp-keymap (kbd "C-M-n") 'sp-next-sexp)
-(define-key sp-keymap (kbd "C-M-p") 'sp-previous-sexp)
-
-(define-key sp-keymap (kbd "C-M-k") 'sp-kill-sexp)
-(define-key sp-keymap (kbd "C-M-w") 'sp-copy-sexp)
-
-(define-key sp-keymap (kbd "M-<delete>") 'sp-unwrap-sexp)
-(define-key sp-keymap (kbd "M-<backspace>") 'sp-backward-unwrap-sexp)
-
-(define-key sp-keymap (kbd "C-<right>") 'sp-forward-slurp-sexp)
-(define-key sp-keymap (kbd "C-<left>") 'sp-forward-barf-sexp)
-(define-key sp-keymap (kbd "C-M-<left>") 'sp-backward-slurp-sexp)
-(define-key sp-keymap (kbd "C-M-<right>") 'sp-backward-barf-sexp)
-
-(define-key sp-keymap (kbd "M-D") 'sp-splice-sexp)
-(define-key sp-keymap (kbd "C-M-<delete>") 'sp-splice-sexp-killing-forward)
-(define-key sp-keymap (kbd "C-M-<backspace>") 'sp-splice-sexp-killing-backward)
-(define-key sp-keymap (kbd "C-S-<backspace>") 'sp-splice-sexp-killing-around)
-
-(define-key sp-keymap (kbd "C-]") 'sp-select-next-thing-exchange)
-(define-key sp-keymap (kbd "C-<left_bracket>") 'sp-select-previous-thing)
-(define-key sp-keymap (kbd "C-M-]") 'sp-select-next-thing)
-
-(define-key sp-keymap (kbd "M-F") 'sp-forward-symbol)
-(define-key sp-keymap (kbd "M-B") 'sp-backward-symbol)
-
-
 ;; External user config
 (load "init-funcs")
 (load "init-auctex")
 (load "init-org")
 (load "init-helm")
 (load "init-clojure")
+
+;; Work-specific code - not to be checked in
+(if (file-exists-p (concat user-emacs-directory "lisp/init-work.el"))
+    (load "init-work"))
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -239,6 +197,14 @@
 
 ;; Scroll similar to vim
 (setq scroll-error-top-bottom t)
+
+;; Make it easy to move between buffers
+(windmove-default-keybindings)
+
+(setq magit-last-seen-setup-instructions "1.4.0")
+
+(add-hook 'emacs-lisp-mode 'enable-paredit-mode)
+
 
 ;;; init.el ends here
 (custom-set-faces

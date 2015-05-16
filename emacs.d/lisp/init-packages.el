@@ -54,14 +54,14 @@
         latex-extra
         magit
         markdown-mode
+        monokai-theme
         nginx-mode
         paradox
-        smartparens
+        paredit
         projectile
         rainbow-delimiters
         slamhound
-        smart-mode-line
-        zenburn-theme))
+        smart-mode-line))
 
 (when (not package-archive-contents)
   (package-refresh-contents))
