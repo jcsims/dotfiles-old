@@ -7,13 +7,8 @@
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
-(add-hook 'cider-repl-mode-hook 'enable-paredit-mode)
-(add-hook 'clojure-mode-hook 'enable-paredit-mode)
 
 (setq nrepl-hide-special-buffers t)
-
-;; Known endpoint for the workhorse machine
-;;(setq cider-known-endpoints '(("workhorse" "10.0.1.10" "31415")))
 
 ;; Add some goodies from Emacs Live
 (eval-after-load 'clojure-mode

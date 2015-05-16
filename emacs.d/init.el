@@ -52,11 +52,17 @@
   (set-frame-font "Menlo 12"))
 (global-prettify-symbols-mode 1)
 
+;; ag config
+(setq-default ag-highlight-search t
+              ag-reuse-buffers t)
+
+
 ;; External user config
 (load "init-funcs")
 (load "init-auctex")
 (load "init-org")
 (load "init-helm")
+(load "init-smartparens")
 (load "init-clojure")
 
 ;; Work-specific code - not to be checked in
@@ -84,8 +90,8 @@
 
 ;; Enable whitespace mode for programming languages, and highlight when
 ;; lines are over 80 characters long
-(setq whitespace-line-column 80)
-(setq whitespace-style '(face lines-tail))
+(setq-default whitespace-line-column 80
+              whitespace-style '(face lines-tail))
 (add-hook 'prog-mode-hook 'whitespace-mode)
 
 ;; Save backups to a central location
@@ -117,11 +123,11 @@
 (global-set-key (kbd "C-=") 'er/expand-region)
 
 ;; Auto-refresh buffers
-(global-auto-revert-mode 1)
+(global-auto-revert-mode)
 
 ;; Also auto refresh dired buffers, but do it quietly
-(setq global-auto-revert-non-file-buffers t)
-(setq auto-revert-verbose nil)
+(setq-default global-auto-revert-non-file-buffers t
+              auto-revert-verbose nil)
 
 ;; Quick access to a few files
 (global-set-key (kbd "C-c e i")
@@ -146,7 +152,6 @@
 
 ;; Never indent with tabs (unless set in the local buffer,
 ;; e.g. Makefiles)
-
 (setq-default indent-tabs-mode nil
               gui-select-enable-clipboard t
               x-select-enable-primary t
@@ -201,10 +206,7 @@
 ;; Make it easy to move between buffers
 (windmove-default-keybindings)
 
-(setq magit-last-seen-setup-instructions "1.4.0")
-
-(add-hook 'emacs-lisp-mode 'enable-paredit-mode)
-
+(setq-default magit-last-seen-setup-instructions "1.4.0")
 
 ;;; init.el ends here
 (custom-set-faces

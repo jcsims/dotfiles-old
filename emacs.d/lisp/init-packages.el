@@ -29,11 +29,13 @@
 (defvar jcs-package-list '() "Packages that should be installed.")
 ;; Install packages, if they're not already installed
 (setq jcs-package-list
-      '(auctex
+      '(ag
+        auctex
         cider
         clojure-mode
         company
         company-auctex
+        company-ess
         company-quickhelp
         csv-mode
         diminish
@@ -57,11 +59,11 @@
         monokai-theme
         nginx-mode
         paradox
-        paredit
         projectile
         rainbow-delimiters
         slamhound
-        smart-mode-line))
+        smart-mode-line
+        smartparens))
 
 (when (not package-archive-contents)
   (package-refresh-contents))
