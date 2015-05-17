@@ -16,16 +16,16 @@
  ;; If there is more than one, they won't work right.
  '(company-backends
    (quote
-    (company-ess-backend company-elisp company-bbdb company-nxml company-css company-eclim company-semantic company-clang company-xcode company-cmake company-capf
+    (company-ess-backend company-elisp company-bbdb company-nxml company-css company-semantic company-clang company-xcode company-cmake company-capf
                          (company-dabbrev-code company-gtags company-etags company-keywords)
                          company-oddmuse company-files company-dabbrev company-ispell)))
  '(custom-safe-themes
    (quote
-    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "3b819bba57a676edf6e4881bd38c777f96d1aa3b3b5bc21d8266fa5b0d0f1ebf" "3a727bdc09a7a141e58925258b6e873c65ccf393b2240c51553098ca93957723" "756597b162f1be60a12dbd52bab71d40d6a2845a3e3c2584c6573ee9c332a66e" "6a37be365d1d95fad2f4d185e51928c789ef7a4ccf17e7ca13ad63a8bf5b922f" default)))
+    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(org-agenda-files (quote ("~/org/todo.org")))
  '(paradox-github-token t))
 
-(add-to-list 'load-path (concat user-emacs-directory "lisp"))
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 ;; Don't show the splash screen
 (setq inhibit-splash-screen t)
@@ -37,7 +37,7 @@
   (scroll-bar-mode -1))
 
 ;; Package Management
-(load "init-packages")
+(require 'init-packages)
 
 ;; Ensure that the PATH is set correctly
 (exec-path-from-shell-initialize)
@@ -56,14 +56,13 @@
 (setq-default ag-highlight-search t
               ag-reuse-buffers t)
 
-
 ;; External user config
-(load "init-funcs")
-(load "init-auctex")
-(load "init-org")
-(load "init-helm")
-(load "init-smartparens")
-(load "init-clojure")
+(require 'init-funcs)
+(require 'init-auctex)
+(require 'init-org)
+(require 'init-helm)
+(require 'init-smartparens)
+(require 'init-clojure)
 
 ;; Work-specific code - not to be checked in
 (if (file-exists-p (concat user-emacs-directory "lisp/init-work.el"))
@@ -207,6 +206,10 @@
 (windmove-default-keybindings)
 
 (setq-default magit-last-seen-setup-instructions "1.4.0")
+
+;; A little fun
+(require 'zone)
+(zone-when-idle 120)
 
 ;;; init.el ends here
 (custom-set-faces
