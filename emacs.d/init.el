@@ -100,7 +100,9 @@
                  (concat user-emacs-directory "backups")))))
 
 ;; Make backups of files, even when they're in version control
-(setq vc-make-backup-files t)
+(setq vc-make-backup-files t
+      vc-follow-symlinks t)
+
 
 ;; Fill mode is pretty handy
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
@@ -198,6 +200,7 @@
 
 ;; Magit
 (global-set-key (kbd "C-c g") 'magit-status)
+(setq-default magit-last-seen-setup-instructions "1.4.0")
 
 ;; Scroll similar to vim
 (setq scroll-error-top-bottom t)
@@ -205,11 +208,12 @@
 ;; Make it easy to move between buffers
 (windmove-default-keybindings)
 
-(setq-default magit-last-seen-setup-instructions "1.4.0")
-
 ;; A little fun
 (require 'zone)
 (zone-when-idle 120)
+
+;; When scrolling, make sure to come back to the same spot
+(setq scroll-preserve-screen-position 'always)
 
 ;;; init.el ends here
 (custom-set-faces
