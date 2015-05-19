@@ -9,6 +9,8 @@
 (global-set-key (kbd "C-x b") 'helm-mini)
 (global-set-key (kbd "M-y") 'helm-show-kill-ring)
 (global-set-key (kbd "C-x C-f") 'helm-find-files)
+(eval-after-load 'helm
+  '(helm-autoresize-mode 1))
 (setq-default helm-recentf-fuzzy-match t
               helm-buffers-fuzzy-matching t
               helm-M-x-fuzzy-match t
