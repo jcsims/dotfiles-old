@@ -66,7 +66,7 @@
 
 ;; Work-specific code - not to be checked in
 (if (file-exists-p (concat user-emacs-directory "lisp/init-work.el"))
-    (load "init-work"))
+    (require 'init-work))
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
