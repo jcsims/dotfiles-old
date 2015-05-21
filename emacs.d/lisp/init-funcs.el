@@ -83,13 +83,10 @@ Taken from what the emacs.d."
   (interactive)
   (byte-recompile-directory user-emacs-directory 0))
 
-(defun sudo-edit (&optional arg)
-  "Edit a file ARG using sudo.
-If no file is specified, use current buffer."
-  (interactive "p")
-  (if (or arg (not buffer-file-name))
-      (find-file (concat "/sudo:root@localhost:" (ido-read-file-name "File: ")))
-    (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name))))
+(defun sudo-edit ()
+  "Edit current buffer using sudo."
+  (interactive)
+  (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name)))
 
 (defun remove-elc-on-save ()
   "If you're saving an elisp file, likely the .elc is no longer valid."
@@ -107,6 +104,28 @@ If no file is specified, use current buffer."
   "Set the transparency of the frame window.  VALUE: 0=transparent/100=opaque."
   (interactive "nTransparency Value 0 - 100 opaque:")
   (set-frame-parameter (selected-frame) 'alpha value))
+
+;; Define a nice multi-purpose commenting command
+;; Taken from http://endlessparentheses.com/implementing-comment-line.html
+(defun endless/comment-line-or-region (n)
+  "Comment or uncomment current line and leave point after it.
+With positive prefix, apply to N lines including current one.
+With negative prefix, apply to -N lines above.
+If region is active, apply to active region instead."
+  (interactive "p")
+  (if (use-region-p)
+      (comment-or-uncomment-region
+       (region-beginning) (region-end))
+    (let ((range
+           (list (line-beginning-position)
+                 (goto-char (line-end-position n)))))
+      (comment-or-uncomment-region
+       (apply #'min range)
+       (apply #'max range)))
+    (forward-line 1)
+    (back-to-indentation)))
+
+(global-set-key (kbd "C-c ;") 'endless/comment-line-or-region)
 
 ;; Some functions carried over from the emacs starter kit
 (defun esk-local-column-number-mode ()

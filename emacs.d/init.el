@@ -209,10 +209,6 @@
 ;; Make it easy to move between buffers
 (windmove-default-keybindings)
 
-;; A little fun
-(require 'zone)
-(zone-when-idle 120)
-
 ;; When scrolling, make sure to come back to the same spot
 (setq scroll-preserve-screen-position 'always)
 
