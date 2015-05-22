@@ -209,6 +209,9 @@
 ;; Make it easy to move between buffers
 (windmove-default-keybindings)
 
+;; Also make it easy to get back to the last window configuration
+(winner-mode 1)
+
 ;; When scrolling, make sure to come back to the same spot
 (setq scroll-preserve-screen-position 'always)
 
