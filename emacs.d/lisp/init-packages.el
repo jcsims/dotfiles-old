@@ -32,10 +32,10 @@
       '(ag
         auctex
         cider
+        clj-refactor
         clojure-mode
         company
         company-auctex
-        company-ess
         company-quickhelp
         csv-mode
         diminish

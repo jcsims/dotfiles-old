@@ -8,6 +8,12 @@
 (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
 
+(require 'clj-refactor)
+(add-hook 'clojure-mode-hook (lambda ()
+                               (clj-refactor-mode 1)
+                               (cljr-add-keybindings-with-prefix "C-c r")))
+
+
 (setq nrepl-hide-special-buffers t)
 
 ;; Add some goodies from Emacs Live

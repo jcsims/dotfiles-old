@@ -16,7 +16,7 @@
  ;; If there is more than one, they won't work right.
  '(company-backends
    (quote
-    (company-ess-backend company-elisp company-bbdb company-nxml company-css company-semantic company-clang company-xcode company-cmake company-capf
+    (company-elisp company-bbdb company-nxml company-css company-semantic company-clang company-xcode company-cmake company-capf
                          (company-dabbrev-code company-gtags company-etags company-keywords)
                          company-oddmuse company-files company-dabbrev company-ispell)))
  '(custom-safe-themes
