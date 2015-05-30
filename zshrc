@@ -43,7 +43,7 @@ bindkey '^?' backward-delete-char
 
 
 # your project folder that we can `c [tab]` to
-export PROJECTS=~/work/slabs
+export PROJECTS=~/code
 
 # use .localrc for SUPER SECRET CRAP that you don't
 # want in your public, versioned repo.
@@ -257,5 +257,4 @@ typeset -U DOCKER_HOST=tcp://192.168.59.103:2376
 typeset -U DOCKER_CERT_PATH=/Users/jcsims/.boot2docker/certs/boot2docker-vm
 typeset -U DOCKER_TLS_VERIFY=1
 
-## Pull in any local config
-source ~/.local.zsh
+source /Users/jcsims/.iterm2_shell_integration.zsh
