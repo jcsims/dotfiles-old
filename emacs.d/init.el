@@ -17,8 +17,8 @@
  '(company-backends
    (quote
     (company-elisp company-bbdb company-nxml company-css company-semantic company-clang company-xcode company-cmake company-capf
-                         (company-dabbrev-code company-gtags company-etags company-keywords)
-                         company-oddmuse company-files company-dabbrev company-ispell)))
+                   (company-dabbrev-code company-gtags company-etags company-keywords)
+                   company-oddmuse company-files company-dabbrev company-ispell)))
  '(custom-safe-themes
    (quote
     ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
@@ -61,8 +61,8 @@
 (require 'init-funcs)
 (require 'init-auctex)
 (require 'init-org)
-(require 'init-helm)
-(require 'init-smartparens)
+;;(require 'init-helm)
+;;(require 'init-smartparens)
 (require 'init-clojure)
 
 ;; Work-specific code - not to be checked in
@@ -214,6 +214,28 @@
 
 ;; When scrolling, make sure to come back to the same spot
 (setq scroll-preserve-screen-position 'always)
+
+
+;; ido
+(require 'ido)
+(ido-mode t)
+(ido-everywhere t)
+(setq ido-enable-flex-matching t)
+(setq ido-use-filename-at-point nil)
+(setq ido-auto-merge-work-directories-length 0)
+(setq ido-use-virtual-buffers t)
+(ido-ubiquitous-mode t)
+(setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
+(global-set-key [remap execute-extended-command] 'smex)
+(setq ido-default-buffer-method 'selected-window)
+(add-hook 'ido-setup-hook (lambda () (define-key ido-completion-map [up]
+                                  'previous-history-element)))
+
+;; paredit
+(add-hook 'clojure-mode-hook 'paredit-mode)
+(add-hook 'emacs-lisp-mode-hook 'paredit-mode)
+(add-hook 'cider-repl-mode-hook 'paredit-mode)
+(add-hook 'prog-mode-hook 'paredit-everywhere-mode)
 
 ;;; init.el ends here
 (custom-set-faces

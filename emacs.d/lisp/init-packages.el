@@ -48,10 +48,12 @@
         git-commit-mode
         git-gutter
         git-rebase-mode
-        helm
-        helm-ag
-        helm-projectile
+        ;;helm
+        ;;helm-ag
+        ;;helm-projectile
         idle-highlight-mode
+        idomenu
+        ido-ubiquitous
         js2-mode
         latex-extra
         magit
@@ -59,11 +61,15 @@
         monokai-theme
         nginx-mode
         paradox
+        paredit
+        paredit-everywhere
         projectile
         rainbow-delimiters
         slamhound
         smart-mode-line
-        smartparens))
+        smex
+        ;;smartparens
+        ))
 
 (when (not package-archive-contents)
   (package-refresh-contents))
