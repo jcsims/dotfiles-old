@@ -23,12 +23,10 @@
         '((cider        . "melpa-stable")
           (clj-refactor . "melpa-stable")
           (clojure-mode . "melpa-stable")
-          (paradox      . "melpa-stable")
-          (smartparens  . "melpa-stable"))))
+          (paradox      . "melpa-stable"))))
 
-(defvar jcs-package-list '() "Packages that should be installed.")
 ;; Install packages, if they're not already installed
-(setq jcs-package-list
+(defvar jcs-package-list
       '(ag
         auctex
         cider
@@ -48,28 +46,21 @@
         git-commit-mode
         git-gutter
         git-rebase-mode
-        ;;helm
-        ;;helm-ag
-        ;;helm-projectile
         idle-highlight-mode
         idomenu
         ido-ubiquitous
-        js2-mode
         latex-extra
         magit
         markdown-mode
         monokai-theme
-        nginx-mode
         paradox
         paredit
         paredit-everywhere
         projectile
         rainbow-delimiters
-        slamhound
         smart-mode-line
-        smex
-        ;;smartparens
-        ))
+        smex)
+        "Packages that should be installed.")
 
 (when (not package-archive-contents)
   (package-refresh-contents))
