@@ -16,7 +16,7 @@
         branch = auto
         ui = true
 [core]
-	excludesfile = ~/.gitignore
+	excludesfile = /Users/jcsims/.gitignore
 [apply]
         whitespace = nowarn
 [mergetool]
@@ -39,3 +39,5 @@
 	required = true
 [psh]
 	default = simple
+[status]
+	submoduleSummary = true

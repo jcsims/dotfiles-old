@@ -90,7 +90,7 @@
 
 ;; Enable whitespace mode for programming languages, and highlight when
 ;; lines are over 80 characters long
-(setq-default whitespace-line-column 80
+(setq-default whitespace-line-column 100
               whitespace-style '(face lines-tail))
 (add-hook 'prog-mode-hook 'whitespace-mode)
 

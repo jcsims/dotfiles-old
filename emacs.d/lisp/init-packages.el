@@ -23,7 +23,8 @@
         '((cider        . "melpa-stable")
           (clj-refactor . "melpa-stable")
           (clojure-mode . "melpa-stable")
-          (paradox      . "melpa-stable"))))
+          (paradox      . "melpa-stable")
+          (magit        . "melpa-stable"))))
 
 ;; Install packages, if they're not already installed
 (defvar jcs-package-list
@@ -42,10 +43,7 @@
         exec-path-from-shell
         expand-region
         flycheck
-        git
-        git-commit-mode
         git-gutter
-        git-rebase-mode
         idle-highlight-mode
         idomenu
         ido-ubiquitous
@@ -59,8 +57,9 @@
         projectile
         rainbow-delimiters
         smart-mode-line
-        smex)
-        "Packages that should be installed.")
+        smex
+        sql-indent)
+      "Packages that should be installed.")
 
 (when (not package-archive-contents)
   (package-refresh-contents))
