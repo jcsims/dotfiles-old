@@ -163,7 +163,6 @@ If region is active, apply to active region instead."
 (add-hook 'prog-mode-hook 'esk-turn-on-save-place-mode)
 (add-hook 'prog-mode-hook 'esk-pretty-lambdas)
 (add-hook 'prog-mode-hook 'esk-add-watchwords)
-(add-hook 'prog-mode-hook 'idle-highlight-mode)
 
 (provide 'init-funcs)
 ;;; init-funcs.el ends here

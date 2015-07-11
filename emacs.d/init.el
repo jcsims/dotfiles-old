@@ -26,24 +26,12 @@
  '(paradox-automatically-star t)
  '(paradox-github-token t))
 
-
-(require 'package)
-
-(when (>= emacs-major-version 24)
-  (setq package-archives
-        '(("gnu" . "http://elpa.gnu.org/packages/")
-          ("melpa" . "http://melpa.org/packages/")
-          ("melpa-stable" . "http://stable.melpa.org/packages/"))))
-
-(package-initialize)
-
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-(when (not package-archive-contents)
-  (package-refresh-contents))
-(when (not (package-installed-p 'use-package))
-  (package-install 'use-package))
 
-(require 'use-package)
+(require 'init-packages)
+
+(load-theme 'monokai t)
+(sml/setup)
 
 ;;; Misc
 ;; Set some Emacs defaults
@@ -89,13 +77,10 @@
 ;; Ensure that when we go to a new line, it's indented properly
 (electric-indent-mode)
 
-(use-package whitespace-mode
-  :commands whitespace-mode
-  :init
-  ;; Highlight cols past 100 chars
-  (setq-default whitespace-line-column 100
-                whitespace-style '(face lines-tail))
-  (add-hook 'prog-mode-hook 'whitespace-mode))
+;; Highlight cols past 100 chars
+(setq-default whitespace-line-column 100
+              whitespace-style '(face lines-tail))
+(add-hook 'prog-mode-hook 'whitespace-mode)
 
 ;; Fill mode is pretty handy
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
@@ -116,22 +101,16 @@
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
-(use-package saveplace
-  :init (setq-default save-place t)
-  :demand t)
+(require 'saveplace)
+(setq-default save-place t)
 
 ;; Highlight matching parens
 (show-paren-mode 1)
 
 ;; Ensure that a server is running for quicker start times
-(use-package server
-  :demand t
-  :config
-  (unless (server-running-p)
-    (server-start)))
-
-;; Package Management
-(require 'init-packages)
+(require 'server)
+(unless (server-running-p)
+  (server-start))
 
 ;; External user config
 (require 'init-funcs)
@@ -144,72 +123,77 @@
 (if (file-exists-p (concat user-emacs-directory "lisp/init-work.el"))
     (require 'init-work))
 
-;; Use company mode for completion
-(add-hook 'after-init-hook 'global-company-mode)
-;; Add tooltips for company completion candidates
-(company-quickhelp-mode 1)
-
 ;; Flyspell mode
 (add-hook 'text-mode-hook 'flyspell-mode)
 (add-hook 'prog-mode-hook 'flyspell-prog-mode)
-
-(projectile-global-mode)
-
-(use-package expand-region
-  :ensure t
-  :bind ("C-=" . er/expand-region))
 
 ;; For some reason, zsh files are not opened in shell mode =/
 (add-to-list 'auto-mode-alist '("\\*.zsh*\\'" . sh-mode))
 (add-to-list 'auto-mode-alist '("\\zshrc\\'" . sh-mode))
 
-;; Use js2 mode
-(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+;;; Config other packages
+;; Company
+(add-hook 'after-init-hook 'global-company-mode)
 
-;; Show the git gutter everywhere
-(global-git-gutter-mode +1)
-
-;;; elisp-slime-nav
+;; Enable M-. and M-, along with C-c C-d {c,C-d} for elisp
 (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
   (add-hook hook 'turn-on-elisp-slime-nav-mode))
 
-;; Asynchronous updating is nice
+(add-hook 'prog-mode-hook 'idle-highlight-mode)
+
+;; Ag
+(setq-default ag-highlight-search t
+              ag-reuse-buffers t)
+
+;; Ensure that the PATH is set correctly
+(exec-path-from-shell-initialize)
+
+(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
+
+(add-hook 'after-init-hook #'global-flycheck-mode)
+
+;; ido
+(setq-default ido-enable-flex-matching t
+              ido-use-filename-at-point nil
+              ido-auto-merge-work-directories-length 0
+              ido-use-virtual-buffers t
+              ido-default-buffer-method 'selected-window
+              ido-use-faces nil)
+(ido-mode t)
+(ido-everywhere t)
+(ido-ubiquitous-mode t)
+(flx-ido-mode t)
+(add-hook 'ido-setup-hook (lambda () (define-key ido-completion-map [up]
+                                  'previous-history-element)))
+
+;; smex
+(setq-default smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
+(global-set-key (kbd "M-x") 'smex)
+(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+
+(add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
+
+(global-git-gutter-mode)
+
 (setq-default paradox-execute-asynchronously t)
 
-;; Emacs Speaks Statistics
-(require 'ess-site)
-(setq ess-R-font-lock-keywords '((ess-R-fl-keyword:modifiers . t)
-                                 (ess-R-fl-keyword:fun-defs . t)
-                                 (ess-R-fl-keyword:keywords . t)
-                                 (ess-R-fl-keyword:assign-ops . t)
-                                 (ess-R-fl-keyword:constants . t)
-                                 (ess-fl-keyword:fun-calls . t)
-                                 (ess-fl-keyword:numbers . t)
-                                 (ess-fl-keyword:operators . t)
-                                 (ess-fl-keyword:delimiters . t)
-                                 (ess-fl-keyword:= . t)
-                                 (ess-R-fl-keyword:F&T . t)))
-
-;; The fact that ess-mode doesn't inherit from prog-mode is a bit of a
-;; pain
-(setq ess-mode-hook (append ess-mode-hook prog-mode-hook))
-(setq ess-default-style 'GNU)
-
 ;; Magit
-(global-set-key (kbd "C-c g") 'magit-status)
 (setq-default magit-last-seen-setup-instructions "1.4.0")
+(global-set-key (kbd "C-c g") 'magit-status)
 
-;; Make it easy to move between buffers
+;; Easily move between windows
 (windmove-default-keybindings)
 
-;; Also make it easy to get back to the last window configuration
+;; Allow for easy undo/redo of window changes
 (winner-mode 1)
 
-;; paredit
-(add-hook 'clojure-mode-hook 'paredit-mode)
+;; Paredit
 (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
-(add-hook 'cider-repl-mode-hook 'paredit-mode)
 (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
+
+(projectile-global-mode)
+
+(global-set-key (kbd "C-=") 'er/expand-region)
 
 ;;; init.el ends here
 (custom-set-faces

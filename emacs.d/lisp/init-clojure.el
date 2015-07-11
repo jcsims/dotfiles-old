@@ -1,6 +1,7 @@
 ;;; Clojure --- Summary
 ;;; Commentary:
 ;;; Code:
+
 (rename-modeline "clojure-mode" clojure-mode "Clj")
 
 ;;; Cider
@@ -9,6 +10,8 @@
 (add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
 (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'clojure-mode-hook 'paredit-mode)
+(add-hook 'cider-repl-mode-hook 'paredit-mode)
 
 (require 'clj-refactor)
 (add-hook 'clojure-mode-hook (lambda ()
@@ -51,6 +54,7 @@
      (HEAD 2)
      (ANY 2)
      (context 2)))
+
 
 (provide 'init-clojure)
 ;;; init-clojure.el ends here
