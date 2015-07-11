@@ -42,11 +42,13 @@
         ess
         exec-path-from-shell
         expand-region
+        flx-ido
         flycheck
         git-gutter
         idle-highlight-mode
         idomenu
         ido-ubiquitous
+        js2-mode
         latex-extra
         magit
         markdown-mode

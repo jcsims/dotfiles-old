@@ -72,10 +72,11 @@ Taken from what the emacs.d."
 
 ;; Taken from technomancy's emacs.d
 (global-set-key (kbd "C-c n")
-                (defun pnh-cleanup-buffer () (interactive)
-                       (delete-trailing-whitespace)
-                       (untabify (point-min) (point-max))
-                       (indent-region (point-min) (point-max))))
+                (defun pnh-cleanup-buffer ()
+                  (interactive)
+                  (delete-trailing-whitespace)
+                  (untabify (point-min) (point-max))
+                  (indent-region (point-min) (point-max))))
 
 ;; A few taken from bodil
 (defun recompile-init ()
