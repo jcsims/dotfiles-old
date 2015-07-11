@@ -26,10 +26,47 @@
  '(paradox-automatically-star t)
  '(paradox-github-token t))
 
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
-;; Don't show the splash screen
-(setq inhibit-splash-screen t)
+(require 'package)
+
+(when (>= emacs-major-version 24)
+  (setq package-archives
+        '(("gnu" . "http://elpa.gnu.org/packages/")
+          ("melpa" . "http://melpa.org/packages/")
+          ("melpa-stable" . "http://stable.melpa.org/packages/"))))
+
+(package-initialize)
+
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(when (not package-archive-contents)
+  (package-refresh-contents))
+(when (not (package-installed-p 'use-package))
+  (package-install 'use-package))
+
+(require 'use-package)
+
+;;; Misc
+;; Set some Emacs defaults
+(setq-default inhibit-splash-screen t ; Don't show the splash screen
+              visible-bell t ; The audible bell is obnoxious
+              vc-make-backup-files t ; Make backups of files,
+              vc-follow-symlinks t   ; even when they're in version control
+              backup-directory-alist ; Save backups to a central location
+              `(("." . ,(expand-file-name
+                         (concat user-emacs-directory "backups"))))
+              global-auto-revert-non-file-buffers t ; Refresh dired buffers,
+              auto-revert-verbose nil               ; but do it quietly
+              indent-tabs-mode nil      ; Don't use tabs unless buffer-local
+              gui-select-enable-clipboard t
+              x-select-enable-primary t
+              save-interprogram-paste-before-kill t
+              apropos-do-all t
+              mouse-yank-at-point t
+              save-place-file (concat user-emacs-directory "places")
+              ;; When scrolling, make sure to come back to the same spot
+              scroll-preserve-screen-position 'always
+              scroll-error-top-bottom t ; Scroll similar to vim
+              )
 
 ;; Turn off the toolbar and scroll bar
 (when (fboundp 'tool-bar-mode)
@@ -37,37 +74,9 @@
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
 
-;; Package Management
-(require 'init-packages)
-
-;; Ensure that the PATH is set correctly
-(exec-path-from-shell-initialize)
-
- ;;; Aesthetics
-(load-theme 'monokai t)
-(require 'rainbow-delimiters)
-(add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode)
-;; Clean up the modeline a bit
-(sml/setup)
 (when (memq window-system '(mac ns))
   (set-frame-font "Menlo 12"))
 (global-prettify-symbols-mode 1)
-
-;; ag config
-(setq-default ag-highlight-search t
-              ag-reuse-buffers t)
-
-;; External user config
-(require 'init-funcs)
-(require 'init-auctex)
-(require 'init-org)
-;;(require 'init-helm)
-;;(require 'init-smartparens)
-(require 'init-clojure)
-
-;; Work-specific code - not to be checked in
-(if (file-exists-p (concat user-emacs-directory "lisp/init-work.el"))
-    (require 'init-work))
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -80,56 +89,21 @@
 ;; Ensure that when we go to a new line, it's indented properly
 (electric-indent-mode)
 
-;; The audible bell is obnoxious
-(setq visible-bell t)
-
-;; Use company mode for completion
-(add-hook 'after-init-hook 'global-company-mode)
-;; Add tooltips for company completion candidates
-(company-quickhelp-mode 1)
-
-;; Enable whitespace mode for programming languages, and highlight when
-;; lines are over 80 characters long
-(setq-default whitespace-line-column 100
-              whitespace-style '(face lines-tail))
-(add-hook 'prog-mode-hook 'whitespace-mode)
-
-;; Save backups to a central location
-;; Taken from http://whattheemacsd.com/init.el-02.html
-(setq backup-directory-alist
-      `(("." . ,(expand-file-name
-                 (concat user-emacs-directory "backups")))))
-
-;; Make backups of files, even when they're in version control
-(setq vc-make-backup-files t
-      vc-follow-symlinks t)
-
+(use-package whitespace-mode
+  :commands whitespace-mode
+  :init
+  ;; Highlight cols past 100 chars
+  (setq-default whitespace-line-column 100
+                whitespace-style '(face lines-tail))
+  (add-hook 'prog-mode-hook 'whitespace-mode))
 
 ;; Fill mode is pretty handy
 (add-hook 'text-mode-hook 'turn-on-auto-fill)
 (add-hook 'org-mode 'turn-on-auto-fill)
 (add-hook 'markdown-mode 'turn-on-auto-fill)
 
-;; Flycheck mode
-;; We shouldn't need this require, but it isn't loaded without it
-(require 'flycheck)
-(add-hook 'after-init-hook #'global-flycheck-mode)
-
-;; Flyspell mode
-(add-hook 'text-mode-hook 'flyspell-mode)
-(add-hook 'prog-mode-hook 'flyspell-prog-mode)
-
-(projectile-global-mode)
-
-(require 'expand-region)
-(global-set-key (kbd "C-=") 'er/expand-region)
-
 ;; Auto-refresh buffers
 (global-auto-revert-mode)
-
-;; Also auto refresh dired buffers, but do it quietly
-(setq-default global-auto-revert-non-file-buffers t
-              auto-revert-verbose nil)
 
 ;; Quick access to a few files
 (global-set-key (kbd "C-c e i")
@@ -137,35 +111,57 @@
 (global-set-key (kbd "C-c e t")
                 (lambda () (interactive) (find-file "~/org/todo.org")))
 
-;; For some reason, zsh files are not opened in shell mode =/
-(add-to-list 'auto-mode-alist '("\\*.zsh*\\'" . sh-mode))
-(add-to-list 'auto-mode-alist '("\\zshrc\\'" . sh-mode))
-
-(require 'saveplace)
-(setq-default save-place t)
-
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
 (global-set-key (kbd "C-M-s") 'isearch-forward)
 (global-set-key (kbd "C-M-r") 'isearch-backward)
 
+(use-package saveplace
+  :init (setq-default save-place t)
+  :demand t)
+
 ;; Highlight matching parens
 (show-paren-mode 1)
 
-;; Never indent with tabs (unless set in the local buffer,
-;; e.g. Makefiles)
-(setq-default indent-tabs-mode nil
-              gui-select-enable-clipboard t
-              x-select-enable-primary t
-              save-interprogram-paste-before-kill t
-              apropos-do-all t
-              mouse-yank-at-point t
-              save-place-file (concat user-emacs-directory "places"))
-
 ;; Ensure that a server is running for quicker start times
-(require 'server)
-(unless (server-running-p)
-  (server-start))
+(use-package server
+  :demand t
+  :config
+  (unless (server-running-p)
+    (server-start)))
+
+;; Package Management
+(require 'init-packages)
+
+;; External user config
+(require 'init-funcs)
+
+(require 'init-org)
+(require 'init-auctex)
+(require 'init-clojure)
+
+;; Work-specific code - not to be checked in
+(if (file-exists-p (concat user-emacs-directory "lisp/init-work.el"))
+    (require 'init-work))
+
+;; Use company mode for completion
+(add-hook 'after-init-hook 'global-company-mode)
+;; Add tooltips for company completion candidates
+(company-quickhelp-mode 1)
+
+;; Flyspell mode
+(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'prog-mode-hook 'flyspell-prog-mode)
+
+(projectile-global-mode)
+
+(use-package expand-region
+  :ensure t
+  :bind ("C-=" . er/expand-region))
+
+;; For some reason, zsh files are not opened in shell mode =/
+(add-to-list 'auto-mode-alist '("\\*.zsh*\\'" . sh-mode))
+(add-to-list 'auto-mode-alist '("\\zshrc\\'" . sh-mode))
 
 ;; Use js2 mode
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
@@ -203,33 +199,11 @@
 (global-set-key (kbd "C-c g") 'magit-status)
 (setq-default magit-last-seen-setup-instructions "1.4.0")
 
-;; Scroll similar to vim
-(setq scroll-error-top-bottom t)
-
 ;; Make it easy to move between buffers
 (windmove-default-keybindings)
 
 ;; Also make it easy to get back to the last window configuration
 (winner-mode 1)
-
-;; When scrolling, make sure to come back to the same spot
-(setq scroll-preserve-screen-position 'always)
-
-
-;; ido
-(require 'ido)
-(ido-mode t)
-(ido-everywhere t)
-(setq ido-enable-flex-matching t)
-(setq ido-use-filename-at-point nil)
-(setq ido-auto-merge-work-directories-length 0)
-(setq ido-use-virtual-buffers t)
-(ido-ubiquitous-mode t)
-(setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
-(global-set-key [remap execute-extended-command] 'smex)
-(setq ido-default-buffer-method 'selected-window)
-(add-hook 'ido-setup-hook (lambda () (define-key ido-completion-map [up]
-                                  'previous-history-element)))
 
 ;; paredit
 (add-hook 'clojure-mode-hook 'paredit-mode)
