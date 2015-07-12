@@ -31,6 +31,7 @@
 (defvar jcs-package-list
       '(ag
         auctex
+        browse-kill-ring
         cider
         clj-refactor
         clojure-mode

@@ -114,7 +114,6 @@
 
 ;; External user config
 (require 'init-funcs)
-
 (require 'init-org)
 (require 'init-auctex)
 (require 'init-clojure)
@@ -194,6 +193,9 @@
 (projectile-global-mode)
 
 (global-set-key (kbd "C-=") 'er/expand-region)
+
+;; Make the kill-ring a little more accessible
+(browse-kill-ring-default-keybindings)
 
 ;;; init.el ends here
 (custom-set-faces
