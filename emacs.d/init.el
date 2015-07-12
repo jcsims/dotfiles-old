@@ -27,7 +27,7 @@
  '(paradox-github-token t))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-
+(require 'init-benchmarking)
 (require 'init-packages)
 
 (load-theme 'monokai t)
