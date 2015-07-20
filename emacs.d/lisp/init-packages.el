@@ -25,45 +25,47 @@
           (clj-refactor . "melpa-stable")
           (clojure-mode . "melpa-stable")
           (paradox      . "melpa-stable")
+          (async        . "melpa-stable")
           (magit        . "melpa-stable"))))
 
 ;; Install packages, if they're not already installed
 (defvar jcs-package-list
-      '(ag
-        auctex
-        browse-kill-ring
-        cider
-        clj-refactor
-        clojure-mode
-        company
-        company-auctex
-        company-quickhelp
-        csv-mode
-        diminish
-        elisp-slime-nav
-        ess
-        exec-path-from-shell
-        expand-region
-        flx-ido
-        flycheck
-        git-gutter
-        idle-highlight-mode
-        idomenu
-        ido-ubiquitous
-        js2-mode
-        latex-extra
-        magit
-        markdown-mode
-        monokai-theme
-        paradox
-        paredit
-        paredit-everywhere
-        projectile
-        rainbow-delimiters
-        smart-mode-line
-        smex
-        sql-indent)
-      "Packages that should be installed.")
+  '(ag
+    async
+    auctex
+    browse-kill-ring
+    cider
+    clj-refactor
+    clojure-mode
+    company
+    company-auctex
+    company-quickhelp
+    csv-mode
+    diminish
+    elisp-slime-nav
+    ess
+    exec-path-from-shell
+    expand-region
+    flx-ido
+    flycheck
+    git-gutter
+    idle-highlight-mode
+    idomenu
+    ido-ubiquitous
+    js2-mode
+    latex-extra
+    magit
+    markdown-mode
+    monokai-theme
+    paradox
+    paredit
+    paredit-everywhere
+    projectile
+    rainbow-delimiters
+    smart-mode-line
+    smex
+    sql-indent)
+  "Packages that should be installed.")
 
 (when (not package-archive-contents)
   (package-refresh-contents))
