@@ -197,6 +197,9 @@
 ;; Make the kill-ring a little more accessible
 (browse-kill-ring-default-keybindings)
 
+;; Increase the GC threshold
+(setq gc-cons-threshold 20000000)
+
 ;;; init.el ends here
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
