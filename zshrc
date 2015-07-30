@@ -23,7 +23,7 @@ setopt IGNORE_EOF
 
 setopt APPEND_HISTORY # adds history
 # adds history incrementally and share it across sessions
-# setopt INC_APPEND_HISTORY SHARE_HISTORY
+setopt INC_APPEND_HISTORY SHARE_HISTORY
 setopt HIST_IGNORE_ALL_DUPS  # don't record dupes in history
 setopt HIST_REDUCE_BLANKS
 
@@ -258,3 +258,4 @@ typeset -U DOCKER_CERT_PATH=/Users/jcsims/.boot2docker/certs/boot2docker-vm
 typeset -U DOCKER_TLS_VERIFY=1
 
 source /Users/jcsims/.iterm2_shell_integration.zsh
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

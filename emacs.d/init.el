@@ -117,6 +117,7 @@
 (require 'init-org)
 (require 'init-auctex)
 (require 'init-clojure)
+(require 'init-helm)
 
 ;; Work-specific code - not to be checked in
 (if (file-exists-p (concat user-emacs-directory "lisp/init-work.el"))
@@ -152,23 +153,23 @@
 (add-hook 'after-init-hook #'global-flycheck-mode)
 
 ;; ido
-(setq-default ido-enable-flex-matching t
-              ido-use-filename-at-point nil
-              ido-auto-merge-work-directories-length 0
-              ido-use-virtual-buffers t
-              ido-default-buffer-method 'selected-window
-              ido-use-faces nil)
-(ido-mode t)
-(ido-everywhere t)
-(ido-ubiquitous-mode t)
-(flx-ido-mode t)
-(add-hook 'ido-setup-hook (lambda () (define-key ido-completion-map [up]
-                                  'previous-history-element)))
+;; (setq-default ido-enable-flex-matching t
+;;               ido-use-filename-at-point nil
+;;               ido-auto-merge-work-directories-length 0
+;;               ido-use-virtual-buffers t
+;;               ido-default-buffer-method 'selected-window
+;;               ido-use-faces nil)
+;; (ido-mode t)
+;; (ido-everywhere t)
+;; (ido-ubiquitous-mode t)
+;; (flx-ido-mode t)
+;; (add-hook 'ido-setup-hook (lambda () (define-key ido-completion-map [up]
+;;                                   'previous-history-element)))
 
 ;; smex
-(setq-default smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
-(global-set-key (kbd "M-x") 'smex)
-(global-set-key (kbd "M-X") 'smex-major-mode-commands)
+;; (setq-default smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
+;; (global-set-key (kbd "M-x") 'smex)
+;; (global-set-key (kbd "M-X") 'smex-major-mode-commands)
 
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
@@ -195,7 +196,7 @@
 (global-set-key (kbd "C-=") 'er/expand-region)
 
 ;; Make the kill-ring a little more accessible
-(browse-kill-ring-default-keybindings)
+;; (browse-kill-ring-default-keybindings)
 
 ;; Increase the GC threshold
 (setq gc-cons-threshold 20000000)

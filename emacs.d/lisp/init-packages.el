@@ -33,7 +33,7 @@
   '(ag
     async
     auctex
-    browse-kill-ring
+    ;;browse-kill-ring
     cider
     clj-refactor
     clojure-mode
@@ -43,15 +43,18 @@
     csv-mode
     diminish
     elisp-slime-nav
-    ess
+    ;;ess
     exec-path-from-shell
     expand-region
-    flx-ido
+    ;;flx-ido
     flycheck
     git-gutter
+    helm
+    helm-ag
+    helm-projectile
     idle-highlight-mode
-    idomenu
-    ido-ubiquitous
+    ;;idomenu
+    ;;ido-ubiquitous
     js2-mode
     latex-extra
     magit
@@ -63,7 +66,7 @@
     projectile
     rainbow-delimiters
     smart-mode-line
-    smex
+    ;;smex
     sql-indent)
   "Packages that should be installed.")
 
