@@ -16,7 +16,7 @@
         branch = auto
         ui = true
 [core]
-	excludesfile = /Users/jcsims/.gitignore
+	excludesfile = ~/.gitignore_global
 [apply]
         whitespace = nowarn
 [mergetool]

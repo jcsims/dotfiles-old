@@ -252,9 +252,8 @@ ${lambda}  '
 
 RPROMPT='%{$fg[white]%} $(git_dirty)$(need_push) %{$reset_color%}'
 
-## boot2docker setup
-typeset -U DOCKER_HOST=tcp://192.168.59.103:2376
-typeset -U DOCKER_CERT_PATH=/Users/jcsims/.boot2docker/certs/boot2docker-vm
-typeset -U DOCKER_TLS_VERIFY=1
-
-source /Users/jcsims/.iterm2_shell_integration.zsh
+HBASE_HOME="/${HOME}/code/hbase-0.94.6-cdh4.4.0"
+export HBASE_HOME
+PATH="${PATH}:${HOME}/bin"
+export PATH
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
