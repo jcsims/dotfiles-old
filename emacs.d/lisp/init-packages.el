@@ -25,6 +25,7 @@
           (clj-refactor . "melpa-stable")
           (clojure-mode . "melpa-stable")
           (paradox      . "melpa-stable")
+          (async        . "melpa-stable")
           (magit        . "melpa-stable"))))
 
 ;; Install packages, if they're not already installed
