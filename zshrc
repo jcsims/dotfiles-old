@@ -256,4 +256,5 @@ HBASE_HOME="/${HOME}/code/hbase-0.94.6-cdh4.4.0"
 export HBASE_HOME
 PATH="${PATH}:${HOME}/bin"
 export PATH
+
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
