@@ -89,12 +89,6 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 # pasting with tabs doesn't perform completion
 zstyle ':completion:*' insert-tab pending
 
-## Colors
-# Base16 Shell
-BASE16_SCHEME="eighties"
-BASE16_SHELL="$HOME/.config/base16-shell/base16-$BASE16_SCHEME.dark.sh"
-[[ -s $BASE16_SHELL ]] && . $BASE16_SHELL
-
 # GRC colorizes nifty unix tools all over the place
 GRC=`which grc`
 if [ "$TERM" != dumb ] && [ -n "$GRC" ]
@@ -198,7 +192,7 @@ then
 fi
 
 ## Prompt
-autoload colors && colors
+autoload -U colors && colors
 # cheers, @ehrenmurdick
 # http://github.com/ehrenmurdick/config/blob/master/zsh/prompt.zsh
 
