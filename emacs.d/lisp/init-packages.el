@@ -42,6 +42,7 @@
     csv-mode
     diminish
     elisp-slime-nav
+    eshell-z
     ;;ess
     exec-path-from-shell
     expand-region

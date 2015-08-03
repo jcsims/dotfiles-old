@@ -193,6 +193,9 @@
 
 (projectile-global-mode)
 
+;; Workaround for projectile's search
+(require 'grep)
+
 (global-set-key (kbd "C-=") 'er/expand-region)
 
 ;; Make the kill-ring a little more accessible
@@ -200,6 +203,8 @@
 
 ;; Increase the GC threshold
 (setq gc-cons-threshold 20000000)
+
+(require 'eshell-z)
 
 ;;; init.el ends here
 (custom-set-faces
