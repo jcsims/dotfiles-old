@@ -15,16 +15,17 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-characterize'
 Plug 'tpope/vim-unimpaired'
 Plug 'tommcdo/vim-lion'
-Plug 'ctrlpvim/ctrlp.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': 'yes \| ./install' }
 Plug 'scrooloose/syntastic'
 Plug 'Rykka/colorv.vim'
 Plug 'airblade/vim-gitgutter'
 Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 Plug 'tpope/vim-sensible'
-Plug 'Shougo/vimproc'
+Plug 'Shougo/vimproc', { 'do': 'make' }
 Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-dispatch'
 Plug 'tpope/vim-projectionist'
+Plug 'wakatime/vim-wakatime'
 
 "Clojure
 Plug 'tpope/vim-fireplace', {'for': 'clojure' }
@@ -38,10 +39,9 @@ Plug 'venantius/vim-cljfmt', {'for': 'clojure' }
 Plug 'tpope/vim-markdown'
 
 " Aesthetics
-Plug 'chriskempson/base16-vim'
 Plug 'luochen1990/rainbow'
 Plug 'bling/vim-airline'
-Plug 'jnurmine/Zenburn'
+Plug 'tomasr/molokai'
 
 call plug#end()
 
@@ -119,9 +119,8 @@ nnoremap <silent> <leader>sv :so $MYVIMRC<CR>
 "" Aesthetics
 """"""""""""""""""""""""""""""""""""""""""""""""""""""
 "Color scheme!
-"set background=dark
-"let base16colorspace=256  " Access colors present in 256 colorspace
-colorscheme zenburn
+let g:rehash256 = 1
+colorscheme molokai
 
 "Rainbow parens on all the time
 let g:rainbow_active = 1
