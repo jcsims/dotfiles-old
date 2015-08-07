@@ -33,6 +33,7 @@
   '(ag
     async
     auctex
+    browse-kill-ring
     cider
     clj-refactor
     clojure-mode
@@ -43,15 +44,11 @@
     diminish
     elisp-slime-nav
     eshell-z
-    ;;ess
     exec-path-from-shell
     expand-region
     flx-ido
     flycheck
     git-gutter
-    ;;helm
-    ;;helm-ag
-    ;;helm-projectile
     idle-highlight-mode
     idomenu
     ido-ubiquitous

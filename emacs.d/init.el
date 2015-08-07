@@ -199,7 +199,7 @@
 (global-set-key (kbd "C-=") 'er/expand-region)
 
 ;; Make the kill-ring a little more accessible
-;; (browse-kill-ring-default-keybindings)
+(browse-kill-ring-default-keybindings)
 
 ;; Increase the GC threshold
 (setq gc-cons-threshold 20000000)
