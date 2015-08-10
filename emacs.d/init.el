@@ -200,8 +200,6 @@
 ;; Increase the GC threshold
 (setq gc-cons-threshold 20000000)
 
-(require 'eshell-z)
-
 (global-wakatime-mode)
 
 ;;; init.el ends here

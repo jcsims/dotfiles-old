@@ -23,11 +23,7 @@
   (setq package-pinned-packages
         '((cider        . "melpa-stable")
           (clj-refactor . "melpa-stable")
-          (clojure-mode . "melpa-stable")
-          (paradox      . "melpa-stable")
-	  (async        . "melpa-stable")
-          (magit        . "melpa-stable")
-	  (with-editor  . "melpa-stable"))))
+          (clojure-mode . "melpa-stable"))))
 
 ;; Install packages, if they're not already installed
 (defvar jcs-package-list
@@ -44,7 +40,6 @@
     csv-mode
     diminish
     elisp-slime-nav
-    eshell-z
     exec-path-from-shell
     expand-region
     flx-ido
