@@ -25,8 +25,9 @@
           (clj-refactor . "melpa-stable")
           (clojure-mode . "melpa-stable")
           (paradox      . "melpa-stable")
-          (async        . "melpa-stable")
-          (magit        . "melpa-stable"))))
+	  (async        . "melpa-stable")
+          (magit        . "melpa-stable")
+	  (with-editor  . "melpa-stable"))))
 
 ;; Install packages, if they're not already installed
 (defvar jcs-package-list

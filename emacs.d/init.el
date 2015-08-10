@@ -23,8 +23,7 @@
    (quote
     ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
  '(org-agenda-files (quote ("~/org/todo.org")))
- '(paradox-automatically-star t)
- '(paradox-github-token t))
+ '(paradox-automatically-star t))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-benchmarking)
