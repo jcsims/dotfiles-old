@@ -3,41 +3,37 @@
 # You probably want to change the [user] section here since you are not me.
 
 [hub]
-	protocol = ssh
+  protocol = ssh
 [user]
-	name = Chris Sims
-	email = chris@jcsi.ms
+  name = Chris Sims
+  email = chris@jcsi.ms
 [alias]
-        co = checkout
-        count   = !git shortlog -sn
+  co = checkout
+  count   = shortlog -sn
+  standup = log --pretty=format:'%Cred%h%Creset - %C(yellow)%ae%Creset - %Cgreen%cd%Creset - %s%Creset' --abbrev-commit --date=local --author chris@jcsi.ms --since yesterday
+  timelog = log --pretty=format:'%Cred%h%Creset - %C(yellow)%ae%Creset - %Cgreen%cd%Creset - %s%Creset' --abbrev-commit --date=local
 [color]
-        diff = auto
-        status = auto
-        branch = auto
-        ui = true
+  diff = auto
+  status = auto
+  branch = auto
+  ui = true
 [core]
-	excludesfile = ~/.gitignore_global
+  excludesfile = ~/.gitignore
 [apply]
-        whitespace = nowarn
+  whitespace = nowarn
 [mergetool]
-	keepBackup = false
+  keepBackup = false
 [difftool]
-        prompt = false
+  prompt = false
 [help]
-        autocorrect = 1
+  autocorrect = 1
 [credential]
-	helper = osxkeychain
-[difftool "sourcetree"]
-	cmd = opendiff \"$LOCAL\" \"$REMOTE\"
-	path = 
-[mergetool "sourcetree"]
-	cmd = /Applications/SourceTree.app/Contents/Resources/opendiff-w.sh \"$LOCAL\" \"$REMOTE\" -ancestor \"$BASE\" -merge \"$MERGED\"
-	trustExitCode = true
+  helper = osxkeychain
 [filter "media"]
-	clean = git media clean %f
-	smudge = git media smudge %f
-	required = true
+  clean = git media clean %f
+  smudge = git media smudge %f
+  required = true
 [psh]
-	default = simple
+  default = simple
 [status]
-	submoduleSummary = true
+  submoduleSummary = true
