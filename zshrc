@@ -252,3 +252,5 @@ PATH="${PATH}:${HOME}/bin"
 export PATH
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export FRIENDLY_NAME="chris"
