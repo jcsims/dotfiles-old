@@ -62,8 +62,8 @@ autoload -U ~/.functions/*(:t)
 # https://scottlinux.com/2011/08/19/quick-intro-to-zsh-auto-complete/
 
 # Use modern completion system
-autoload -Uz compinit
-compinit
+autoload -Uz compinit && compinit
+autoload -Uz bashcompinit && bashcompinit
 
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete _correct _approximate
@@ -90,23 +90,10 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 zstyle ':completion:*' insert-tab pending
 
 # GRC colorizes nifty unix tools all over the place
-GRC=`which grc`
-if [ "$TERM" != dumb ] && [ -n "$GRC" ]
+if [ -f "`brew --prefix`/etc/grc.bashrc" ]
 then
-    alias colourify="$GRC -es --colour=auto"
-    alias configure='colourify ./configure'
-    alias diff='colourify diff'
-    alias make='colourify make'
-    alias gcc='colourify gcc'
-    alias g++='colourify g++'
-    alias as='colourify as'
-    alias gas='colourify gas'
-    alias ld='colourify ld'
-    alias netstat='colourify netstat'
-    alias ping='colourify ping'
-    alias traceroute='colourify /usr/sbin/traceroute'
+    source "`brew --prefix`/etc/grc.bashrc"
 fi
-
 
 ## Antigen
 source ~/.antigen/antigen.zsh
@@ -131,14 +118,16 @@ bindkey -M emacs '^N' history-substring-search-down
 
 ## Path
 typeset -U PATH=/usr/local/bin:/usr/local/sbin:$PATH
-# Add GHC and cabal-install installer to path
-typeset -U PATH=/Applications/ghc-7.8.3.app/Contents/bin:$PATH
-# Add cask to path
-typeset -U PATH=$HOME/.cask/bin:$PATH
-# Add any cabal-installed executables to the path
-typeset -U PATH=$HOME/.cabal/bin:$PATH
 typeset -U PATH=$HOME/bin:$PATH
-typeset -U PATH=$HOME/Library/Haskell/bin:$PATH
+# Add GHC 7.10.2 to the PATH, via https://ghcformacosx.github.io/
+export GHC_DOT_APP="/Applications/ghc-7.10.2.app"
+if [ -d "$GHC_DOT_APP" ]; then
+  typeset -U  PATH="${HOME}/.local/bin:${HOME}/.cabal/bin:${GHC_DOT_APP}/Contents/bin:${PATH}"
+  eval "$(stack --bash-completion-script "$(which stack)")"
+fi
+
+# Add any user-installed python binaries to the path
+typeset -U PATH=$HOME/Library/Python/2.7/bin:$PATH
 
 #Heroku toolbelt
 typeset -U PATH=/usr/local/heroku/bin:$PATH
@@ -186,16 +175,10 @@ alias grs='git reset'
 
 alias hclean="ghc-pkg check --simple-output | xargs -n 1 ghc-pkg unregister --force"
 
-if [[  $OSTYPE == darwin* ]]
-then
-    alias mvim='mvim --remote-silent'
-fi
-
 ## Prompt
 autoload -U colors && colors
 # cheers, @ehrenmurdick
 # http://github.com/ehrenmurdick/config/blob/master/zsh/prompt.zsh
-
 
 git=`which git`
 
