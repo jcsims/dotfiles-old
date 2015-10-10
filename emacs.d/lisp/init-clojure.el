@@ -57,6 +57,8 @@
      (ANY 2)
      (context 2)))
 
+(require 'clj-refactor)
+(setq-default cljr-suppress-middleware-warnings t)
 
 (provide 'init-clojure)
 ;;; init-clojure.el ends here
