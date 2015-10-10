@@ -116,7 +116,7 @@
 (require 'init-org)
 (require 'init-auctex)
 (require 'init-clojure)
-;;(require 'init-helm)
+(require 'init-haskell)
 
 ;; Work-specific code - not to be checked in
 (if (file-exists-p (concat user-emacs-directory "lisp/init-work.el"))
