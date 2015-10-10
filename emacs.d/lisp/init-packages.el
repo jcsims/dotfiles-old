@@ -21,17 +21,15 @@
 ;; Pin a few packages
 (when (boundp 'package-pinned-packages)
   (setq package-pinned-packages
-        '((cider        . "melpa-stable")
-          (clj-refactor . "melpa-stable")
-          (clojure-mode . "melpa-stable"))))
+        '()))
 
 ;; Install packages, if they're not already installed
 (defvar jcs-package-list
   '(ag
+    align-cljlet
     async
     auctex
     browse-kill-ring
-    cider
     clj-refactor
     clojure-mode
     company
@@ -48,6 +46,7 @@
     idle-highlight-mode
     idomenu
     ido-ubiquitous
+    inf-clojure
     js2-mode
     latex-extra
     magit
