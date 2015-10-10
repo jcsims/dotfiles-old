@@ -43,6 +43,8 @@
     flx-ido
     flycheck
     git-gutter
+    haskell-mode
+    hi2
     idle-highlight-mode
     idomenu
     ido-ubiquitous
@@ -52,6 +54,7 @@
     magit
     markdown-mode
     monokai-theme
+    page-break-lines
     paradox
     paredit
     paredit-everywhere
