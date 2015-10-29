@@ -4,6 +4,7 @@
 
 (rename-modeline "clojure-mode" clojure-mode "Clj")
 
+(require 'clojure-mode)
 ;;; Cider
 ;; Don't prompt for a symbol with `M-.`
 (setq-default cider-prompt-for-symbol nil)
@@ -14,11 +15,19 @@
 (add-hook 'clojure-mode-hook 'paredit-mode)
 (add-hook 'cider-repl-mode-hook 'paredit-mode)
 
+(require 'ggtags)
+
+(defun find-tag-without-ns ()
+  (interactive)
+  (ggtags-find-tag-dwim
+   (first (last (split-string (symbol-name (symbol-at-point)) "/")))))
+
 (require 'clj-refactor)
 (add-hook 'clojure-mode-hook (lambda ()
                                (clj-refactor-mode 1)
                                (yas-minor-mode 1)
-                               (cljr-add-keybindings-with-prefix "C-c r")))
+                               (cljr-add-keybindings-with-prefix "C-c r")
+                               (define-key clojure-mode-map (kbd "C-.") 'find-tag-without-ns)))
 
 
 (setq nrepl-hide-special-buffers t)
