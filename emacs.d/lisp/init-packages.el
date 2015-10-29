@@ -29,6 +29,7 @@
     align-cljlet
     async
     auctex
+    beacon
     browse-kill-ring
     clj-refactor
     clojure-mode

@@ -202,6 +202,8 @@
 
 (global-wakatime-mode)
 
+(beacon-mode 1)
+
 ;;; init.el ends here
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
