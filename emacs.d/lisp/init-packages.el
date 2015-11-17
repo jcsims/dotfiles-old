@@ -45,6 +45,7 @@
     expand-region
     flx-ido
     flycheck
+    ggtags
     git-gutter
     haskell-mode
     hi2
