@@ -234,6 +234,14 @@ export HBASE_HOME
 PATH="${PATH}:${HOME}/bin"
 export PATH
 
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+alias urldecode='python -c "import sys, urllib as ul; \
+   print ul.unquote_plus(sys.argv[1])"'
+
+alias urlencode='python -c "import sys, urllib as ul; \
+   print ul.quote_plus(sys.argv[1])"'
+
+#[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export FRIENDLY_NAME="chris"
+JAVA_HOME="/Library/Java/JavaVirtualMachines/zulu-8.jdk/Contents/Home"
+export JAVA_HOME
