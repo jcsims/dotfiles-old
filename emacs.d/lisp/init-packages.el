@@ -10,27 +10,25 @@
 
 (require 'package)
 
-(when (>= emacs-major-version 24)
-  (setq package-archives
-        '(("gnu" . "http://elpa.gnu.org/packages/")
-          ("melpa" . "https://melpa.org/packages/")
-          ("melpa-stable" . "https://stable.melpa.org/packages/"))))
-
-(package-initialize)
+(setq package-archives
+      '(("gnu" . "https://elpa.gnu.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")))
 
 ;; Pin a few packages
-(when (boundp 'package-pinned-packages)
-  (setq package-pinned-packages
-        '((cider        . "melpa-stable")
-          (clj-refactor . "melpa-stable")
-          (clojure-mode . "melpa-stable"))))
+(setq package-pinned-packages
+      '((cider        . "melpa-stable")
+        (clj-refactor . "melpa-stable")
+        (clojure-mode . "melpa-stable")
+        (super-save   . "melpa-stable")))
+
+(package-initialize)
 
 ;; Install packages, if they're not already installed
 (defvar jcs-package-list
   '(ag
     async
     auctex
-    beacon
     browse-kill-ring
     cider
     clj-refactor
@@ -40,12 +38,13 @@
     company-quickhelp
     csv-mode
     diminish
+    dockerfile-mode
+    dumb-jump
     elisp-slime-nav
     exec-path-from-shell
     expand-region
     flx-ido
     flycheck
-    ggtags
     git-gutter
     haskell-mode
     hi2
@@ -67,7 +66,9 @@
     smart-mode-line
     smex
     sql-indent
-    wakatime-mode)
+    super-save
+    wakatime-mode
+    yaml-mode)
   "Packages that should be installed.")
 
 (when (not package-archive-contents)

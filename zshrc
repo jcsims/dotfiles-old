@@ -175,6 +175,8 @@ alias grs='git reset'
 
 alias hclean="ghc-pkg check --simple-output | xargs -n 1 ghc-pkg unregister --force"
 
+alias update-sudo="sudo sed -i '' 's/timeout=0/timeout=300/' /etc/sudoers"
+
 ## Prompt
 autoload -U colors && colors
 # cheers, @ehrenmurdick
@@ -229,9 +231,7 @@ ${lambda}  '
 
 RPROMPT='%{$fg[white]%} $(git_dirty)$(need_push) %{$reset_color%}'
 
-HBASE_HOME="/${HOME}/code/hbase-0.94.6-cdh4.4.0"
+HBASE_HOME="${HOME}/code/hbase-0.94.6-cdh4.4.0"
 export HBASE_HOME
 PATH="${PATH}:${HOME}/bin"
 export PATH
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

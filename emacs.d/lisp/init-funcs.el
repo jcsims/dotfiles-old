@@ -128,6 +128,18 @@ If region is active, apply to active region instead."
 
 (global-set-key (kbd "C-c ;") 'endless/comment-line-or-region)
 
+;; Clear buffer in eshell
+(defun eshell-clear-buffer ()
+  "Clear eshell buffer."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
+
+(add-hook 'eshell-mode-hook
+      '(lambda()
+          (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
+
 ;; Some functions carried over from the emacs starter kit
 (defun esk-local-column-number-mode ()
   (make-local-variable 'column-number-mode)
@@ -159,7 +171,7 @@ If region is active, apply to active region instead."
 
 (add-hook 'prog-mode-hook 'esk-local-column-number-mode)
 (add-hook 'prog-mode-hook 'esk-local-comment-auto-fill)
-(add-hook 'prog-mode-hook 'esk-turn-on-hl-line-mode)
+;; (add-hook 'prog-mode-hook 'esk-turn-on-hl-line-mode)
 (add-hook 'prog-mode-hook 'esk-turn-on-save-place-mode)
 (add-hook 'prog-mode-hook 'esk-pretty-lambdas)
 (add-hook 'prog-mode-hook 'esk-add-watchwords)

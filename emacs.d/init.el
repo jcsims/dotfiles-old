@@ -22,6 +22,7 @@
  '(custom-safe-themes
    (quote
     ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
+ '(js2-basic-offset 2)
  '(org-agenda-files (quote ("~/org/todo.org")))
  '(paradox-automatically-star t))
 
@@ -35,7 +36,7 @@
 ;;; Misc
 ;; Set some Emacs defaults
 (setq-default inhibit-splash-screen t ; Don't show the splash screen
-              visible-bell t ; The audible bell is obnoxious
+              ring-bell-function 'ignore ; Just ignore error notifications
               vc-make-backup-files t ; Make backups of files,
               vc-follow-symlinks t   ; even when they're in version control
               backup-directory-alist ; Save backups to a central location
@@ -94,6 +95,8 @@
                 (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 (global-set-key (kbd "C-c e t")
                 (lambda () (interactive) (find-file "~/org/todo.org")))
+(global-set-key (kbd "C-c e d")
+                (lambda () (interactive) (find-file "~/org/dev.org")))
 
 (global-set-key (kbd "C-s") 'isearch-forward-regexp)
 (global-set-key (kbd "C-r") 'isearch-backward-regexp)
@@ -178,6 +181,8 @@
 ;; Magit
 (setq-default magit-last-seen-setup-instructions "1.4.0")
 (global-set-key (kbd "C-c g") 'magit-status)
+;; Gravatars are messed up in OSX
+(setq-default magit-revision-use-gravatar-kludge t)
 
 ;; Easily move between windows
 (windmove-default-keybindings)
@@ -201,7 +206,17 @@
 
 (global-wakatime-mode)
 
-(beacon-mode 1)
+(require 'dockerfile-mode)
+(add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
+
+;; Save all the time
+(super-save-mode +1)
+(setq super-save-auto-save-when-idle t)
+
+(put 'erase-buffer 'disabled nil)
+(put 'upcase-region 'disabled nil)
+
+(dumb-jump-mode)
 
 ;;; init.el ends here
 (custom-set-faces

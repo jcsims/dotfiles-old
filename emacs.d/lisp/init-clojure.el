@@ -8,15 +8,13 @@
 ;;; Cider
 ;; Don't prompt for a symbol with `M-.`
 (setq-default cider-prompt-for-symbol nil)
-(add-hook 'cider-mode-hook 'cider-turn-on-eldoc-mode)
+(add-hook 'cider-mode-hook #'eldoc-mode)
 (add-hook 'clojure-mode-hook 'cider-mode)
 (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
 (add-hook 'clojure-mode-hook 'paredit-mode)
 (add-hook 'cider-repl-mode-hook 'paredit-mode)
-
-;; Align keys in maps when aligning other code as well
-(setq-default clojure-align-forms-automatically t)
+(add-hook 'cider-repl-mode-hook #'eldoc-mode)
 
 ;;(require 'ggtags)
 

@@ -37,3 +37,7 @@
   default = simple
 [status]
   submoduleSummary = true
+[diff]
+  submodule = log
+[rebase]
+  autostash = true
