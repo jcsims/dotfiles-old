@@ -235,3 +235,11 @@ HBASE_HOME="${HOME}/code/hbase-0.94.6-cdh4.4.0"
 export HBASE_HOME
 PATH="${PATH}:${HOME}/bin"
 export PATH
+
+alias urldecode='python -c "import sys, urllib as ul; \
+   print ul.unquote_plus(sys.argv[1])"'
+
+alias urlencode='python -c "import sys, urllib as ul; \
+   print ul.quote_plus(sys.argv[1])"'
+
+export FRIENDLY_NAME="chris"
