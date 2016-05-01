@@ -140,6 +140,19 @@ If region is active, apply to active region instead."
       '(lambda()
           (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
+(defun dired-do-ispell (&optional arg)
+  "Check all marked files ARG with ispell.  Borrowed from the
+Emacswiki."
+  (interactive "P")
+  (dolist (file (dired-get-marked-files
+                 nil arg
+                 #'(lambda (f)
+                     (not (file-directory-p f)))))
+    (save-window-excursion
+      (with-current-buffer (find-file file)
+        (ispell-buffer)))
+    (message nil)))
+
 ;; Some functions carried over from the emacs starter kit
 (defun esk-local-column-number-mode ()
   (make-local-variable 'column-number-mode)
