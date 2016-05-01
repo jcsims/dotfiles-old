@@ -24,6 +24,19 @@
 ;;   (ggtags-find-tag-dwim
 ;;    (first (last (split-string (symbol-name (symbol-at-point)) "/")))))
 
+(defun tdd-test ()
+  "Thin wrapper around `cider-test-run-tests', borrowed from
+  http://endlessparentheses.com/test-driven-development-in-cider-and-emacs.html"
+  (when (cider-connected-p)
+    (cider-test-run-tests)))
+
+(define-minor-mode tdd-mode
+  "Run all Clojure tests whenever a file is saved"
+  nil " TDD" nil
+  (if tdd-mode
+      (add-hook 'after-save-hook #'tdd-test nil 'local)
+    (remove-hook 'after-save-hook #'tdd-test 'local)))
+
 (require 'clj-refactor)
 (add-hook 'clojure-mode-hook (lambda ()
                                (clj-refactor-mode 1)
