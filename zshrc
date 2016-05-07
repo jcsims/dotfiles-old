@@ -119,15 +119,14 @@ bindkey -M emacs '^N' history-substring-search-down
 ## Path
 typeset -U PATH=/usr/local/bin:/usr/local/sbin:$PATH
 typeset -U PATH=$HOME/bin:$PATH
-# Add GHC 7.10.2 to the PATH, via https://ghcformacosx.github.io/
-export GHC_DOT_APP="/Applications/ghc-7.10.2.app"
-if [ -d "$GHC_DOT_APP" ]; then
-  typeset -U  PATH="${HOME}/.local/bin:${HOME}/.cabal/bin:${GHC_DOT_APP}/Contents/bin:${PATH}"
-  eval "$(stack --bash-completion-script "$(which stack)")"
-fi
 
 # Add any user-installed python binaries to the path
 typeset -U PATH=$HOME/Library/Python/2.7/bin:$PATH
+
+# Add GOROOT bin path to PATH
+typeset -U PATH=/usr/local/opt/go/libexec/bin:$PATH
+
+typeset -U GOPATH=$HOME/code/go
 
 #Heroku toolbelt
 typeset -U PATH=/usr/local/heroku/bin:$PATH

@@ -191,6 +191,19 @@ max splits of at least 90 chars wide."
 
 (global-set-key (kbd "C-x 3") 'emc-working-split)
 
+(defun dired-do-ispell (&optional arg)
+  "Check all marked files ARG with ispell.  Borrowed from the
+Emacswiki."
+  (interactive "P")
+  (dolist (file (dired-get-marked-files
+                 nil arg
+                 #'(lambda (f)
+                     (not (file-directory-p f)))))
+    (save-window-excursion
+      (with-current-buffer (find-file file)
+        (ispell-buffer)))
+    (message nil)))
+
 ;; Some functions carried over from the emacs starter kit
 (defun esk-local-column-number-mode ()
   (make-local-variable 'column-number-mode)
