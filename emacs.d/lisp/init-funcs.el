@@ -140,6 +140,57 @@ If region is active, apply to active region instead."
       '(lambda()
           (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
+;; Stolen from Reddit:
+;; https://www.reddit.com/r/emacs/comments/3uu1iw/setting_and_using_emacs_in_three_columns/
+(defun emc/projectile-project-buffers ()
+  "Get a list of project buffers - the default function includes
+sub-module buffers, this does not."
+  (let* ((project-root (projectile-project-root))
+         (all-buffers (-filter (lambda (buffer)
+                                 (string-equal
+                                  project-root
+                                  (with-current-buffer buffer
+                                    (condition-case nil
+                                        (projectile-project-root)
+                                      (error "")))))
+                               (buffer-list))))
+    (if projectile-buffers-filter-function
+        (funcall projectile-buffers-filter-function all-buffers)
+      all-buffers)))
+
+(defun emc-working-split (window-count)
+  "Make vertical splits for working window setup, and populate
+them with appropriate buffers.  Buffers are the most recently
+used from (projectile-project-buffers), falling back
+to (buffer-list) when not in a project.
+
+If optional argument WINDOW-COUNT is omitted or nil, default to
+max splits of at least 90 chars wide."
+  (interactive "P")
+  (recentf-mode t) ; Make sure recentf mode is on - won't work without it
+  (let* ((window-count (if window-count window-count (/ (frame-width) 104)))
+         (show-buffers (cond
+                        ((projectile-project-p)
+                         (dotimes (i window-count) ;; ensure enough
+                           ;; buffers open
+                           (let ((num-files (length (projectile-recentf-files))))
+                             (unless (>= i num-files)
+                               (find-file-noselect (concat (projectile-project-root)
+                                                           (nth i (projectile-recentf-files)))))))
+                         (emc/projectile-project-buffers))
+                        (t
+                         (remove-if 'minibufferp (buffer-list))))))
+    (delete-other-windows)
+    ;; split window appropriate count - make 2nd window current
+    (dotimes (i (- window-count 1))
+      (split-window-horizontally)
+      (if (= i 0) (other-window 1)))
+    (balance-windows)
+    ;; set window buffer from show-buffers list
+    (mapcar* 'set-window-buffer (window-list nil "no-minibuf") show-buffers)))
+
+(global-set-key (kbd "C-x 3") 'emc-working-split)
+
 ;; Some functions carried over from the emacs starter kit
 (defun esk-local-column-number-mode ()
   (make-local-variable 'column-number-mode)
