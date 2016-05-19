@@ -63,8 +63,11 @@
   (scroll-bar-mode -1))
 
 (when (memq window-system '(mac ns))
-  (set-frame-font "Menlo 12"))
+  (set-frame-font "-*-Input Mono-normal-normal-normal-*-11-*-*-*-m-0-iso10646-1"))
 (global-prettify-symbols-mode 1)
+;; (insert "\n(set-frame-font \"" (cdr (assoc 'font (frame-parameters))) "\")\n")
+
+
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
