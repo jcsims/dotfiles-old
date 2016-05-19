@@ -142,22 +142,6 @@ If region is active, apply to active region instead."
 
 ;; Stolen from Reddit:
 ;; https://www.reddit.com/r/emacs/comments/3uu1iw/setting_and_using_emacs_in_three_columns/
-(defun emc/projectile-project-buffers ()
-  "Get a list of project buffers - the default function includes
-sub-module buffers, this does not."
-  (let* ((project-root (projectile-project-root))
-         (all-buffers (-filter (lambda (buffer)
-                                 (string-equal
-                                  project-root
-                                  (with-current-buffer buffer
-                                    (condition-case nil
-                                        (projectile-project-root)
-                                      (error "")))))
-                               (buffer-list))))
-    (if projectile-buffers-filter-function
-        (funcall projectile-buffers-filter-function all-buffers)
-      all-buffers)))
-
 (defun emc-working-split (window-count)
   "Make vertical splits for working window setup, and populate
 them with appropriate buffers.  Buffers are the most recently
@@ -177,7 +161,7 @@ max splits of at least 90 chars wide."
                              (unless (>= i num-files)
                                (find-file-noselect (concat (projectile-project-root)
                                                            (nth i (projectile-recentf-files)))))))
-                         (emc/projectile-project-buffers))
+                         (projectile-project-buffers))
                         (t
                          (remove-if 'minibufferp (buffer-list))))))
     (delete-other-windows)
