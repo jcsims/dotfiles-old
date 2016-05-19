@@ -110,7 +110,7 @@
 (setq-default save-place t)
 
 ;; Highlight matching parens
-(show-paren-mode 1)
+(show-paren-mode t)
 
 ;; Ensure that a server is running for quicker start times
 (require 'server)
