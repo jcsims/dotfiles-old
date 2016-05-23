@@ -16,14 +16,6 @@
 (add-hook 'cider-repl-mode-hook 'paredit-mode)
 (add-hook 'cider-repl-mode-hook #'eldoc-mode)
 
-;;(require 'ggtags)
-
-;; (defun find-tag-without-ns ()
-;;   "Un-namspace vars if needed, before trying to find them."
-;;   (interactive)
-;;   (ggtags-find-tag-dwim
-;;    (first (last (split-string (symbol-name (symbol-at-point)) "/")))))
-
 (defun tdd-test ()
   "Thin wrapper around `cider-test-run-tests', borrowed from
   http://endlessparentheses.com/test-driven-development-in-cider-and-emacs.html"
@@ -41,10 +33,7 @@
 (add-hook 'clojure-mode-hook (lambda ()
                                (clj-refactor-mode 1)
                                (yas-minor-mode 1)
-                               (cljr-add-keybindings-with-prefix "C-c r")
-                               ;(define-key clojure-mode-map (kbd
-                               ;"C-.") 'find-tag-without-ns)
-                               ))
+                               (cljr-add-keybindings-with-prefix "C-c r")))
 
 
 (setq nrepl-hide-special-buffers t)
@@ -85,6 +74,8 @@
 
 (require 'clj-refactor)
 (setq-default cljr-suppress-middleware-warnings t)
+
+(add-to-list 'auto-mode-alist '("\\.clj.*\\'" . clojure-mode))
 
 (provide 'init-clojure)
 ;;; init-clojure.el ends here
