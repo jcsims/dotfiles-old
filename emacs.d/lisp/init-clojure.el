@@ -76,6 +76,7 @@
 (setq-default cljr-suppress-middleware-warnings t)
 
 (add-to-list 'auto-mode-alist '("\\.clj.*\\'" . clojure-mode))
+(add-to-list 'auto-mode-alist '("\\.edn.*\\'" . clojure-mode))
 
 (provide 'init-clojure)
 ;;; init-clojure.el ends here
