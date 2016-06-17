@@ -6,6 +6,10 @@ DOTFILES_ROOT=$(pwd)
 
 set -e
 
+echo "Making sure antigen submodule is synced..."
+
+git submodule sync && git submodule update --init
+
 for src in $(ls)
 do
   if ! [ "$src" = "License" ] && 
