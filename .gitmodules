@@ -1,3 +1,6 @@
 [submodule "antigen"]
 	path = antigen
 	url = git@github.com:zsh-users/antigen.git
+[submodule "git-flow-completion"]
+	path = git-flow-completion
+	url = git@github.com:petervanderdoes/git-flow-completion.git
