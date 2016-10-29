@@ -25,14 +25,14 @@
 (package-initialize)
 
 ;; Install packages, if they're not already installed
-(defvar jcs-package-list
+(setq package-selected-packages
   '(ag
-    async
     auctex
     browse-kill-ring
     cider
     clj-refactor
     clojure-mode
+    color-theme-sanityinc-tomorrow
     company
     company-auctex
     company-quickhelp
@@ -63,19 +63,18 @@
     projectile
     protobuf-mode
     rainbow-delimiters
+    solarized-theme
     smart-mode-line
     smex
     sql-indent
     super-save
     wakatime-mode
-    yaml-mode)
-  "Packages that should be installed.")
+    which-key
+    yaml-mode))
 
 (when (not package-archive-contents)
   (package-refresh-contents))
-(dolist (package jcs-package-list)
-  (when (not (package-installed-p package))
-    (package-install package)))
+(package-install-selected-packages)
 
 (provide 'init-packages)
 ;;; init-packages.el ends here

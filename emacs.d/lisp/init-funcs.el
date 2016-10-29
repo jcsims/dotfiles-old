@@ -173,7 +173,7 @@ max splits of at least 90 chars wide."
     ;; set window buffer from show-buffers list
     (mapcar* 'set-window-buffer (window-list nil "no-minibuf") show-buffers)))
 
-(global-set-key (kbd "C-x 3") 'emc-working-split)
+(global-set-key (kbd "C-c 3") 'emc-working-split)
 
 (defun dired-do-ispell (&optional arg)
   "Check all marked files ARG with ispell.  Borrowed from the

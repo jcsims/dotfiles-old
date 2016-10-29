@@ -4,6 +4,36 @@ export CLICOLOR=true
 export EDITOR='emacsclient'
 export TERM=xterm-256color
 
+# your project folder that we can `c [tab]` to
+export PROJECTS=~/code
+
+# use .localrc for SUPER SECRET CRAP that you don't
+# want in your public, versioned repo.
+if [[ -a ~/.localrc ]]
+then
+    source ~/.localrc
+fi
+
+## Path
+typeset -U PATH=/usr/local/bin:/usr/local/sbin:$PATH
+typeset -U PATH=$HOME/bin:$PATH
+
+# Add any user-installed python binaries to the path
+typeset -U PATH=$HOME/Library/Python/2.7/bin:$PATH
+
+# Add GOROOT bin path to PATH
+typeset -U PATH=/usr/local/opt/go/libexec/bin:$PATH
+
+typeset -U GOPATH=$HOME/code/go
+
+#Heroku toolbelt
+typeset -U PATH=/usr/local/heroku/bin:$PATH
+
+## Perlbrew
+source ~/perl5/perlbrew/etc/bashrc
+
+export FRIENDLY_NAME="chris"
+
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
 SAVEHIST=10000
@@ -41,21 +71,9 @@ bindkey '^[[3~' delete-char
 bindkey '^[^N' newtab
 bindkey '^?' backward-delete-char
 
-
-# your project folder that we can `c [tab]` to
-export PROJECTS=~/code
-
-# use .localrc for SUPER SECRET CRAP that you don't
-# want in your public, versioned repo.
-if [[ -a ~/.localrc ]]
-then
-    source ~/.localrc
-fi
-
 ## Functions
 fpath=($(brew --prefix)/share/zsh/site-functions ~/.functions $fpath)
 autoload -U ~/.functions/*(:t)
-
 
 ## Completion
 # Details taken from:
@@ -115,22 +133,6 @@ bindkey '^[[B' history-substring-search-down
 bindkey -M emacs '^P' history-substring-search-up
 bindkey -M emacs '^N' history-substring-search-down
 
-
-## Path
-typeset -U PATH=/usr/local/bin:/usr/local/sbin:$PATH
-typeset -U PATH=$HOME/bin:$PATH
-
-# Add any user-installed python binaries to the path
-typeset -U PATH=$HOME/Library/Python/2.7/bin:$PATH
-
-# Add GOROOT bin path to PATH
-typeset -U PATH=/usr/local/opt/go/libexec/bin:$PATH
-
-typeset -U GOPATH=$HOME/code/go
-
-#Heroku toolbelt
-typeset -U PATH=/usr/local/heroku/bin:$PATH
-
 #rbenv
 if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
@@ -158,6 +160,8 @@ alias upgrade='sudo apt-get update && sudo apt-get upgrade'
 alias e='emacsclient -t -a ""'
 alias ec='emacsclient -c -a ""'
 
+alias clean-sockets="rm -r ~/.ssh/socket/*"
+
 ## Git aliases
 alias gl="git log --graph --abbrev-commit --date=relative --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 alias gp='git push origin HEAD'
@@ -171,6 +175,23 @@ alias gs='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
 alias grm="git status | grep deleted | awk '{print \$3}' | xargs git rm"
 alias ga='git add'
 alias grs='git reset'
+
+## Set up git-flow-completion
+## Install git-flow (updated version) with `brew install git-flow-avh`
+source ~/.git-flow-completion/git-flow-completion.zsh
+
+## Colorized man pages!
+## http://boredzo.org/blog/archives/2016-08-15/colorized-man-pages-understood-and-customized
+man() {
+    env \
+    LESS_TERMCAP_md=$'\e[1;36m' \
+    LESS_TERMCAP_me=$'\e[0m' \
+    LESS_TERMCAP_se=$'\e[0m' \
+    LESS_TERMCAP_so=$'\e[1;40;92m' \
+    LESS_TERMCAP_ue=$'\e[0m' \
+    LESS_TERMCAP_us=$'\e[1;32m' \
+    man "$@"
+}
 
 alias hclean="ghc-pkg check --simple-output | xargs -n 1 ghc-pkg unregister --force"
 
@@ -228,12 +249,7 @@ local lambda="%(?,%{$fg[green]%}λ%{$reset_color%},%{$fg[red]%}λ%{$reset_color%
 PROMPT='$ctime on $mname in $cdir
 ${lambda}  '
 
-RPROMPT='%{$fg[white]%} $(git_dirty)$(need_push) %{$reset_color%}'
-
-HBASE_HOME="${HOME}/code/hbase-0.94.6-cdh4.4.0"
-export HBASE_HOME
-PATH="${PATH}:${HOME}/bin"
-export PATH
+RPROMPT='%{$fg[black]%} $(git_dirty)$(need_push) %{$reset_color%}'
 
 alias urldecode='python -c "import sys, urllib as ul; \
    print ul.unquote_plus(sys.argv[1])"'
@@ -241,4 +257,44 @@ alias urldecode='python -c "import sys, urllib as ul; \
 alias urlencode='python -c "import sys, urllib as ul; \
    print ul.quote_plus(sys.argv[1])"'
 
-export FRIENDLY_NAME="chris"
+test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+PROTOBUF_HOME="/Users/jcsims/code/protobuf-2.5.0"
+export PROTOBUF_HOME
+PATH="/Users/jcsims/code/protobuf-2.5.0/src:/Users/jcsims/code/protobuf-2.5.0/src:/Users/jcsims/perl5/perlbrew/bin:/Users/jcsims/perl5/perlbrew/perls/perl-5.24.0/bin:/usr/local/heroku/bin:/usr/local/opt/go/libexec/bin:/Users/jcsims/Library/Python/2.7/bin:/Users/jcsims/bin:/usr/local/bin:/usr/local/sbin:/Users/jcsims/code/protobuf-2.5.0/src:/usr/bin:/bin:/usr/sbin:/sbin:/Users/jcsims/.rvm/bin:/Users/jcsims/code/go/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH
+PATH="${PATH}:${HOME}/bin"
+export PATH

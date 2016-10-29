@@ -9,28 +9,43 @@
 
 ;; Add custom to the start of the file in an attempt to avoid emacs
 ;; asking about smart-mode-line's theme every time on startup
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(company-backends
-   (quote
-    (company-elisp company-bbdb company-nxml company-css company-semantic company-clang company-xcode company-cmake company-capf
-                   (company-dabbrev-code company-gtags company-etags company-keywords)
-                   company-oddmuse company-files company-dabbrev company-ispell)))
  '(custom-safe-themes
    (quote
-    ("3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
- '(js2-basic-offset 2)
- '(org-agenda-files (quote ("~/org/todo.org")))
- '(paradox-automatically-star t))
+    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "70b51a849b665f50a97a028c44cec36b398398357d8f7c19d558fe832b91980f" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
+ '(js-bounce-indent-p t)
+ '(js-indent-level 2)
+ '(package-selected-packages
+   (quote
+    (yaml-mode which-key wakatime-mode super-save sql-indent solarized-theme smex smart-mode-line scala-mode rainbow-delimiters protobuf-mode paredit-everywhere paradox page-break-lines org-trello monokai-theme markdown-mode magit latex-extra js2-mode idomenu ido-ubiquitous idle-highlight-mode hi2 haskell-mode git-gutter flycheck flx-ido expand-region exec-path-from-shell elisp-slime-nav dumb-jump dockerfile-mode diminish csv-mode company-quickhelp company-auctex color-theme-solarized color-theme-sanityinc-tomorrow clj-refactor browse-kill-ring ag)))
+ '(paradox-automatically-star t)
+ '(wakatime-cli-path "/usr/local/bin/wakatime"))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-benchmarking)
 (require 'init-packages)
 
-(load-theme 'monokai t)
+(load-theme 'solarized-light t)
+(setq active-theme 'solarized-light)
+(defun toggle-dark-light-theme ()
+  "Toggle the current solarized theme between light and dark."
+  (interactive)
+  (if (eq active-theme 'solarized-light)
+      (setq active-theme 'solarized-dark)
+    (setq active-theme 'solarized-light))
+  (load-theme active-theme))
+
 (sml/setup)
 
 ;;; Misc
@@ -121,6 +136,7 @@
 (require 'init-auctex)
 (require 'init-clojure)
 (require 'init-haskell)
+;;(require 'init-helm)
 
 ;; Work-specific code - not to be checked in
 (if (file-exists-p (concat user-emacs-directory "lisp/init-work.el"))
@@ -216,8 +232,13 @@
 
 (put 'erase-buffer 'disabled nil)
 (put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
 
 (dumb-jump-mode)
+
+(add-to-list 'auto-mode-alist '("\\.yml.*\\'" . yaml-mode))
+
+(which-key-mode)
 
 ;;; init.el ends here
 (custom-set-faces
