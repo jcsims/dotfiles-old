@@ -26,12 +26,6 @@ typeset -U PATH=/usr/local/opt/go/libexec/bin:$PATH
 
 typeset -U GOPATH=$HOME/code/go
 
-#Heroku toolbelt
-typeset -U PATH=/usr/local/heroku/bin:$PATH
-
-## Perlbrew
-source ~/perl5/perlbrew/etc/bashrc
-
 export FRIENDLY_NAME="chris"
 
 HISTFILE=~/.zsh_history
@@ -123,7 +117,7 @@ antigen apply
 
 ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
 
-#setup history substring search
+# setup history substring search
 # bind UP and DOWN arrow keys
 zmodload zsh/terminfo
 bindkey '^[[A' history-substring-search-up
@@ -195,8 +189,6 @@ man() {
 
 alias hclean="ghc-pkg check --simple-output | xargs -n 1 ghc-pkg unregister --force"
 
-alias update-sudo="sudo sed -i '' 's/timeout=0/timeout=300/' /etc/sudoers"
-
 ## Prompt
 autoload -U colors && colors
 # cheers, @ehrenmurdick
@@ -245,7 +237,6 @@ local mname="%{$fg[green]%}%m%{$reset_color%}"
 local cdir="%{$fg[cyan]%}%~ %{$reset_color%}"
 local lambda="%(?,%{$fg[green]%}λ%{$reset_color%},%{$fg[red]%}λ%{$reset_color%})"
 
-
 PROMPT='$ctime on $mname in $cdir
 ${lambda}  '
 
@@ -261,40 +252,4 @@ test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell
 PROTOBUF_HOME="/Users/jcsims/code/protobuf-2.5.0"
 export PROTOBUF_HOME
 PATH="/Users/jcsims/code/protobuf-2.5.0/src:/Users/jcsims/code/protobuf-2.5.0/src:/Users/jcsims/perl5/perlbrew/bin:/Users/jcsims/perl5/perlbrew/perls/perl-5.24.0/bin:/usr/local/heroku/bin:/usr/local/opt/go/libexec/bin:/Users/jcsims/Library/Python/2.7/bin:/Users/jcsims/bin:/usr/local/bin:/usr/local/sbin:/Users/jcsims/code/protobuf-2.5.0/src:/usr/bin:/bin:/usr/sbin:/sbin:/Users/jcsims/.rvm/bin:/Users/jcsims/code/go/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
-export PATH
-PATH="${PATH}:${HOME}/bin"
 export PATH
