@@ -26,6 +26,11 @@ typeset -U PATH=/usr/local/opt/go/libexec/bin:$PATH
 
 typeset -U GOPATH=$HOME/code/go
 
+# Setup paths for pkgsrc
+typeset -U PATH=/opt/pkg/sbin:/opt/pkg/bin:$PATH
+typeset -U MANPATH=/opt/pkg/man:$MANPATH
+
+
 export FRIENDLY_NAME="chris"
 
 HISTFILE=~/.zsh_history
@@ -66,7 +71,7 @@ bindkey '^[^N' newtab
 bindkey '^?' backward-delete-char
 
 ## Functions
-fpath=($(brew --prefix)/share/zsh/site-functions ~/.functions $fpath)
+fpath=(/opt/pkg/share/zsh/5.2/functions ~/.functions $fpath)
 autoload -U ~/.functions/*(:t)
 
 ## Completion
@@ -101,12 +106,6 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 # pasting with tabs doesn't perform completion
 zstyle ':completion:*' insert-tab pending
 
-# GRC colorizes nifty unix tools all over the place
-if [ -f "`brew --prefix`/etc/grc.bashrc" ]
-then
-    source "`brew --prefix`/etc/grc.bashrc"
-fi
-
 ## Antigen
 source ~/.antigen/antigen.zsh
 
@@ -133,7 +132,7 @@ if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 ## Aliases
 # grc overides for ls
 #   Made possible through contributions from generous benefactors like
-#   `brew install coreutils`
+#   `sudo pkgin install coreutils`
 if $(gls &>/dev/null)
 then
     lscom="gls"
@@ -147,7 +146,7 @@ alias la='$lscom -A --color'
 alias grep='grep --color=auto'
 
 alias reload!='. ~/.zshrc'
-alias fact="elinks -dump randomfunfacts.com | sed -n '/^| /p' | tr -d \|"
+alias fact="links -dump randomfunfacts.com | sed -n '/^| /p' | tr -d \|"
 alias tree='tree -C'
 alias upgrade='sudo apt-get update && sudo apt-get upgrade'
 
@@ -171,7 +170,7 @@ alias ga='git add'
 alias grs='git reset'
 
 ## Set up git-flow-completion
-## Install git-flow (updated version) with `brew install git-flow-avh`
+## Clone from https://github.com/petervanderdoes/git-flow-completion.git
 source ~/.git-flow-completion/git-flow-completion.zsh
 
 ## Colorized man pages!
@@ -249,7 +248,3 @@ alias urlencode='python -c "import sys, urllib as ul; \
    print ul.quote_plus(sys.argv[1])"'
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-PROTOBUF_HOME="/Users/jcsims/code/protobuf-2.5.0"
-export PROTOBUF_HOME
-PATH="/Users/jcsims/code/protobuf-2.5.0/src:/Users/jcsims/code/protobuf-2.5.0/src:/Users/jcsims/perl5/perlbrew/bin:/Users/jcsims/perl5/perlbrew/perls/perl-5.24.0/bin:/usr/local/heroku/bin:/usr/local/opt/go/libexec/bin:/Users/jcsims/Library/Python/2.7/bin:/Users/jcsims/bin:/usr/local/bin:/usr/local/sbin:/Users/jcsims/code/protobuf-2.5.0/src:/usr/bin:/bin:/usr/sbin:/sbin:/Users/jcsims/.rvm/bin:/Users/jcsims/code/go/bin"
-export PATH

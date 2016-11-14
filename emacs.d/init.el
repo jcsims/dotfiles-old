@@ -30,7 +30,7 @@
    (quote
     (yaml-mode which-key wakatime-mode super-save sql-indent solarized-theme smex smart-mode-line scala-mode rainbow-delimiters protobuf-mode paredit-everywhere paradox page-break-lines org-trello monokai-theme markdown-mode magit latex-extra js2-mode idomenu ido-ubiquitous idle-highlight-mode hi2 haskell-mode git-gutter flycheck flx-ido expand-region exec-path-from-shell elisp-slime-nav dumb-jump dockerfile-mode diminish csv-mode company-quickhelp company-auctex color-theme-solarized color-theme-sanityinc-tomorrow clj-refactor browse-kill-ring ag)))
  '(paradox-automatically-star t)
- '(wakatime-cli-path "/usr/local/bin/wakatime"))
+ '(wakatime-cli-path "/opt/pkg/bin/wakatime"))
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-benchmarking)
