@@ -27,6 +27,7 @@
 ;; Install packages, if they're not already installed
 (setq package-selected-packages
   '(ag
+    alchemist
     auctex
     browse-kill-ring
     cider
