@@ -7,30 +7,12 @@
 
 ;;; Code:
 
-;; Add custom to the start of the file in an attempt to avoid emacs
-;; asking about smart-mode-line's theme every time on startup
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
 (package-initialize)
 
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   (quote
-    ("8aebf25556399b58091e533e455dd50a6a9cba958cc4ebb0aab175863c25b9a4" "d677ef584c6dfc0697901a44b885cc18e206f05114c8a3b7fde674fce6180879" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "70b51a849b665f50a97a028c44cec36b398398357d8f7c19d558fe832b91980f" "3c83b3676d796422704082049fc38b6966bcad960f896669dfc21a7a37a748fa" default)))
- '(js-bounce-indent-p t)
- '(js-indent-level 2)
- '(package-selected-packages
-   (quote
-    (yaml-mode which-key wakatime-mode super-save sql-indent solarized-theme smex smart-mode-line scala-mode rainbow-delimiters protobuf-mode paredit-everywhere paradox page-break-lines org-trello monokai-theme markdown-mode magit latex-extra js2-mode idomenu ido-ubiquitous idle-highlight-mode hi2 haskell-mode git-gutter flycheck flx-ido expand-region exec-path-from-shell elisp-slime-nav dumb-jump dockerfile-mode diminish csv-mode company-quickhelp company-auctex color-theme-solarized color-theme-sanityinc-tomorrow clj-refactor browse-kill-ring ag)))
- '(paradox-automatically-star t)
- '(wakatime-cli-path "/opt/pkg/bin/wakatime"))
+;; Add custom to the start of the file in an attempt to avoid emacs
+;; asking about smart-mode-line's theme every time on startup
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-benchmarking)
@@ -95,7 +77,7 @@
 
 ;; Highlight cols past 100 chars
 (setq-default whitespace-line-column 100
-              whitespace-style '(face lines-tail))
+              whitespace-style '(face trailing lines-tail))
 (add-hook 'prog-mode-hook 'whitespace-mode)
 
 ;; Fill mode is pretty handy
@@ -198,7 +180,8 @@
 (setq-default magit-last-seen-setup-instructions "1.4.0")
 (global-set-key (kbd "C-c g") 'magit-status)
 ;; Gravatars are messed up in OSX
-(setq-default magit-revision-use-gravatar-kludge t)
+(setq-default magit-revision-use-gravatar-kludge t
+              magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-")))
 
 ;; Easily move between windows
 (windmove-default-keybindings)
@@ -210,7 +193,7 @@
 (add-hook 'emacs-lisp-mode-hook 'paredit-mode)
 (add-hook 'prog-mode-hook 'paredit-everywhere-mode)
 
-(projectile-global-mode)
+(projectile-mode)
 
 (global-set-key (kbd "C-=") 'er/expand-region)
 
@@ -220,14 +203,8 @@
 ;; Increase the GC threshold
 (setq gc-cons-threshold 20000000)
 
-(global-wakatime-mode)
-
 (require 'dockerfile-mode)
 (add-to-list 'auto-mode-alist '("Dockerfile\\'" . dockerfile-mode))
-
-;; Save all the time
-(super-save-mode +1)
-(setq super-save-auto-save-when-idle t)
 
 (put 'erase-buffer 'disabled nil)
 (put 'upcase-region 'disabled nil)
@@ -238,6 +215,11 @@
 (add-to-list 'auto-mode-alist '("\\.yml.*\\'" . yaml-mode))
 
 (which-key-mode)
+
+(persistent-scratch-setup-default)
+
+(require 'multiple-cursors)
+(global-set-key (kbd "C-+") 'mc/mark-next-like-this)
 
 ;;; init.el ends here
 (custom-set-faces

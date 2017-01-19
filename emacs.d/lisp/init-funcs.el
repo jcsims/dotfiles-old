@@ -224,5 +224,16 @@ Emacswiki."
 (add-hook 'prog-mode-hook 'esk-pretty-lambdas)
 (add-hook 'prog-mode-hook 'esk-add-watchwords)
 
+(defun toggle-pair-mode ()
+  "Turn on/off some modes that are friendlier to pairing."
+  (interactive)
+  (if global-linum-mode
+    (progn
+      (global-linum-mode 0)
+      (git-gutter-mode))
+    (progn
+        (git-gutter-mode 0)
+        (global-linum-mode))))
+
 (provide 'init-funcs)
 ;;; init-funcs.el ends here

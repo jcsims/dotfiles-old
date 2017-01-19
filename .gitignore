@@ -25,3 +25,4 @@ projectile-bookmarks.eld
 /vim/autoload/
 /emacs.d/lisp/init-work.el
 ido.last
+/emacs.d/.persistent-scratch
