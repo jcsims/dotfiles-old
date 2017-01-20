@@ -222,6 +222,9 @@
 (require 'multiple-cursors)
 (global-set-key (kbd "C-+") 'mc/mark-next-like-this)
 
+(require 're-builder)
+(setq reb-re-syntax 'string)
+
 ;;; init.el ends here
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
