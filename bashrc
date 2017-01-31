@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 ## Basic bash config
 export LSCOLORS="exfxcxdxbxegedabagacad"
 export CLICOLOR=true
@@ -93,6 +95,8 @@ bind '"\e[A": history-search-backward'
 bind '"\e[B": history-search-forward'
 bind '"\e[C": forward-char'
 bind '"\e[D": backward-char'
+bind '"\e\e[D": backward-word'
+bind '"\e\e[C": forward-word'
 
 # Prepend cd to directory names automatically
 shopt -s autocd 2> /dev/null
@@ -104,10 +108,10 @@ shopt -s cdspell 2> /dev/null
 # This defines where cd looks for targets
 # Add the directories you want to have fast access to, separated by colon
 # Ex: CDPATH=".:~:~/projects" will look for targets in the current working directory, in home and in the ~/projects folder
-CDPATH=".:~/code"
+CDPATH=".:~:~/code"
 
-#rbenv
-# if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+# Dynamically set JAVA_HOME
+export JAVA_HOME=$(/usr/libexec/java_home)
 
 ## Aliases
 # grc overides for ls
@@ -119,15 +123,14 @@ then
 else
     lscom="ls"
 fi
-alias ls="$lscom -F --color"
-alias l="$lscom -lAh --color"
-alias ll="$lscom -l --color"
+alias ls='$lscom -F --color'
+alias l='$lscom -lAh --color'
+alias ll='$lscom -l --color'
 alias la='$lscom -A --color'
 alias grep='grep --color=auto'
 
 alias reload!='. ~/.bashrc'
 alias tree='tree -C'
-alias upgrade='sudo apt-get update && sudo apt-get upgrade'
 
 alias e='emacsclient -t -a ""'
 alias ec='emacsclient -c -a ""'
@@ -163,3 +166,8 @@ alias quiet!='osascript -e "set Volume 0.01"'
 
 ## Prompt
 source ~/.functions/powerline-prompt
+
+## Tmux completion
+source ~/.functions/_tmux
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
