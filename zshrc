@@ -1,3 +1,5 @@
+#!/usr/bin/env zsh
+
 ## Basic zsh config
 export LSCOLORS="exfxcxdxbxegedabagacad"
 export CLICOLOR=true
@@ -29,9 +31,6 @@ typeset -U GOPATH=$HOME/code/go
 # Setup paths for pkgsrc
 typeset -U PATH=/opt/pkg/sbin:/opt/pkg/bin:$PATH
 typeset -U MANPATH=/opt/pkg/man:$MANPATH
-
-
-export FRIENDLY_NAME="chris"
 
 HISTFILE=~/.zsh_history
 HISTSIZE=10000
@@ -71,7 +70,12 @@ bindkey '^[^N' newtab
 bindkey '^?' backward-delete-char
 
 ## Functions
-fpath=(/opt/pkg/share/zsh/5.2/functions ~/.functions $fpath)
+fpath=(~/.functions $fpath)
+if [[ -d /usr/local/share/zsh/site-functions ]]
+then
+    fpath=(/usr/local/share/zsh/site-functions $fpath)
+fi
+
 autoload -U ~/.functions/*(:t)
 
 ## Completion
@@ -111,6 +115,7 @@ source ~/.antigen/antigen.zsh
 
 antigen bundle zsh-users/zsh-syntax-highlighting
 antigen bundle zsh-users/zsh-history-substring-search
+antigen bundle zsh-users/zsh-autosuggestions
 
 antigen apply
 
@@ -127,7 +132,10 @@ bindkey -M emacs '^P' history-substring-search-up
 bindkey -M emacs '^N' history-substring-search-down
 
 #rbenv
-if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+# if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
+
+# Dynamically set JAVA_HOME
+typeset -U JAVA_HOME=$(/usr/libexec/java_home)
 
 ## Aliases
 # grc overides for ls
@@ -139,6 +147,7 @@ then
 else
     lscom="ls"
 fi
+
 alias ls="$lscom -F --color"
 alias l="$lscom -lAh --color"
 alias ll="$lscom -l --color"
@@ -146,19 +155,16 @@ alias la='$lscom -A --color'
 alias grep='grep --color=auto'
 
 alias reload!='. ~/.zshrc'
-alias fact="links -dump randomfunfacts.com | sed -n '/^| /p' | tr -d \|"
 alias tree='tree -C'
 alias upgrade='sudo apt-get update && sudo apt-get upgrade'
 
 alias e='emacsclient -t -a ""'
 alias ec='emacsclient -c -a ""'
 
-alias clean-sockets="rm -r ~/.ssh/socket/*"
-
 ## Git aliases
 alias gl="git log --graph --abbrev-commit --date=relative --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 alias gp='git push origin HEAD'
-alias gpl='fact && git pull --rebase --prune'
+alias gpl='git pull --rebase --prune'
 alias gd='git diff'
 alias gc='git commit'
 alias gca='git commit -a'
@@ -186,40 +192,41 @@ man() {
     man "$@"
 }
 
-alias hclean="ghc-pkg check --simple-output | xargs -n 1 ghc-pkg unregister --force"
+#alias hclean="ghc-pkg check --simple-output | xargs -n 1 ghc-pkg
+#unregister --force"
+
+alias quiet!='osascript -e "set Volume 0.01"'
 
 ## Prompt
 autoload -U colors && colors
 # cheers, @ehrenmurdick
 # http://github.com/ehrenmurdick/config/blob/master/zsh/prompt.zsh
 
-git=`which git`
-
 git_branch() {
-    echo $($git symbolic-ref HEAD 2>/dev/null | awk -F/ {'print $NF'})
+    echo $(git symbolic-ref HEAD 2>/dev/null | awk -F/ {'print $NF'})
 }
 
 git_dirty() {
-    if $(! $git status -s &> /dev/null)
+    if $(! git status -s &> /dev/null)
     then
         echo ""
     else
-        if [[ $($git status --porcelain) == "" ]]
+        if [[ $(git status --porcelain) == "" ]]
         then
-            echo "on %{$fg[green]%}$(git_prompt_info)%{$reset_color%}"
+            echo "%{$fg[green]%}$(git_prompt_info)%{$reset_color%}"
         else
-            echo "on %{$fg[red]%}$(git_prompt_info)%{$reset_color%}"
+            echo "%{$fg[red]%}$(git_prompt_info)%{$reset_color%}"
         fi
     fi
 }
 
 git_prompt_info () {
-    ref=$($git symbolic-ref HEAD 2>/dev/null) || return
+    ref=$(git symbolic-ref HEAD 2>/dev/null) || return
     echo "${ref#refs/heads/}"
 }
 
 unpushed () {
-    $git cherry -v @{upstream} 2>/dev/null
+    git cherry -v @{upstream} 2>/dev/null
 }
 
 need_push () {
@@ -231,20 +238,11 @@ need_push () {
     fi
 }
 
-local ctime="%{$fg[magenta]%}%T%{$reset_color%}"
-local mname="%{$fg[green]%}%m%{$reset_color%}"
 local cdir="%{$fg[cyan]%}%~ %{$reset_color%}"
-local lambda="%(?,%{$fg[green]%}λ%{$reset_color%},%{$fg[red]%}λ%{$reset_color%})"
+local lambda="%(?,%{$fg[green]%}λ%{$reset_color%},%{$fg[red]%}λ%{$reset_color%}) "
 
-PROMPT='$ctime on $mname in $cdir
-${lambda}  '
-
-RPROMPT='%{$fg[black]%} $(git_dirty)$(need_push) %{$reset_color%}'
-
-alias urldecode='python -c "import sys, urllib as ul; \
-   print ul.unquote_plus(sys.argv[1])"'
-
-alias urlencode='python -c "import sys, urllib as ul; \
-   print ul.quote_plus(sys.argv[1])"'
+PROMPT='$cdir%{$fg[black]%}$(git_dirty)$(need_push)%{$reset_color%}${lambda}'
 
 test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

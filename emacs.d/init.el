@@ -16,6 +16,12 @@
 
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 (require 'init-benchmarking)
+
+(use-package paradox
+  :ensure t
+  :commands paradox-list-packages
+  :init (setq-default paradox-execute-asynchronously t))
+
 (require 'init-packages)
 
 (load-theme 'solarized-light t)
@@ -63,6 +69,7 @@
   (set-frame-font "-*-Menlo-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
 (global-prettify-symbols-mode 1)
 ;; (insert "\n(set-frame-font \"" (cdr (assoc 'font (frame-parameters))) "\")")
+
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -120,9 +127,14 @@
 (require 'init-haskell)
 (require 'init-elixir)
 
-;; Work-specific code - not to be checked in
-(if (file-exists-p (concat user-emacs-directory "lisp/init-work.el"))
-    (require 'init-work))
+;; Allow for seamless gpg interaction
+(require 'epa-file)
+(epa-file-enable)
+
+;; Work-specific code - should be encrypted!
+;; (setq work-init (concat user-emacs-directory "lisp/init-work.el.gpg"))
+;; (if (file-exists-p work-init)
+;;     (load work-init))
 
 ;; Flyspell mode
 (add-hook 'text-mode-hook 'flyspell-mode)
@@ -130,6 +142,8 @@
 ;; For some reason, zsh files are not opened in shell mode =/
 (add-to-list 'auto-mode-alist '("\\*.zsh*\\'" . sh-mode))
 (add-to-list 'auto-mode-alist '("\\zshrc\\'" . sh-mode))
+
+(add-to-list 'auto-mode-alist '("\\bashrc\\'" . sh-mode))
 
 ;;; Config other packages
 ;; Company
@@ -174,8 +188,6 @@
 (add-to-list 'auto-mode-alist '("\\.js\\'" . js2-mode))
 
 (global-git-gutter-mode)
-
-(setq-default paradox-execute-asynchronously t)
 
 ;; Magit
 (setq-default magit-last-seen-setup-instructions "1.4.0")

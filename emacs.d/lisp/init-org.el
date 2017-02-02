@@ -10,11 +10,13 @@
       org-startup-indented t
       org-startup-folded t
       org-agenda-files (list (concat org-directory "/todo.org")
+                             (concat org-directory "/dev.org")
                              (concat org-directory "/todo.org_archive"))
       org-default-notes-file (concat org-directory "/todo.org")
       org-src-fontify-natively t
       org-outline-path-complete-in-steps nil
-      org-refile-use-outline-path t)
+      org-refile-use-outline-path t
+      org-use-fast-todo-selection t)
 
 ;; Ensure that we can refile to headings a few levels down. This
 ;; should help with organizing.
@@ -32,9 +34,14 @@
   (other-window 1)
   (org-agenda-list))
 
-(define-key global-map "\C-cl" 'org-store-link)
-(define-key global-map "\C-ca" 'jcs-agenda)
-(define-key global-map "\C-cc" 'org-capture)
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-cm" 'jcs-agenda)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cc" 'org-capture)
+
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEXT(n)" "DOING(o)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
 
 ;; Taken from the org-mode manual - Automatically mark a parent task
 ;; as DONE when all child nodes are marked DONE
@@ -87,7 +94,14 @@
         ("dc" "Docs: Clojure" entry (file+olp (concat org-directory "/dev.org")
                                                 "Clojure"))
         ("q" "Alex Question" entry (file (concat org-directory "/questions.org")
-                                         "Questions"))))
+                                         "Questions"))
+        ("t" "Templates for TODOs")
+        ("ta" "TODO: Admin" entry (file+olp (concat org-directory "/todo.org")
+                                            "Admin"))
+        ("ti" "TODO: Issues" entry (file+olp (concat org-directory "/todo.org")
+                                            "Issues"))
+        ("tt" "TODO: Tasks" entry (file+olp (concat org-directory "/todo.org")
+                                            "Tasks"))))
 
 (provide 'init-org)
 ;;; init-org.el ends here
