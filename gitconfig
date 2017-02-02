@@ -3,7 +3,7 @@
 # You probably want to change the [user] section here since you are not me.
 
 [hub]
-  protocol = ssh
+  protocol = https
 [user]
   name = Chris Sims
   email = chris@jcsi.ms
@@ -47,4 +47,4 @@
   show = diff-highlight | less
   diff = diff-highlight | less
 [interactive]
-	diffFilter = diff-highlight
+  diffFilter = diff-highlight
