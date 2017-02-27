@@ -77,5 +77,7 @@
 (add-to-list 'auto-mode-alist '("\\.clj.*\\'" . clojure-mode))
 (add-to-list 'auto-mode-alist '("\\.edn.*\\'" . clojure-mode))
 
+;; Try out a linter...
+(require 'flycheck-joker)
 (provide 'init-clojure)
 ;;; init-clojure.el ends here
