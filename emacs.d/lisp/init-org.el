@@ -58,7 +58,7 @@
   (erase-buffer)
   (insert
    "#+OPTIONS: toc:nil
-* jcsims
+* Chris
 ** Did
 ** Doing
 ** Blockers

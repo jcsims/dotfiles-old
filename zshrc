@@ -154,6 +154,9 @@ alias ll="$lscom -l --color"
 alias la='$lscom -A --color'
 alias grep='grep --color=auto'
 
+# I think this is the only thing that needs reattach-to-user-namespace anymore..
+alias terminal-notifier='reattach-to-user-namespace terminal-notifier'
+
 alias reload!='. ~/.zshrc'
 alias tree='tree -C'
 alias upgrade='sudo apt-get update && sudo apt-get upgrade'
@@ -242,7 +245,3 @@ local cdir="%{$fg[cyan]%}%~ %{$reset_color%}"
 local lambda="%(?,%{$fg[green]%}λ%{$reset_color%},%{$fg[red]%}λ%{$reset_color%}) "
 
 PROMPT='$cdir%{$fg[black]%}$(git_dirty)$(need_push)%{$reset_color%}${lambda}'
-
-test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
