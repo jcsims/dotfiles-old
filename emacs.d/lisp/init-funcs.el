@@ -189,10 +189,6 @@ Emacswiki."
     (message nil)))
 
 ;; Some functions carried over from the emacs starter kit
-(defun esk-local-column-number-mode ()
-  (make-local-variable 'column-number-mode)
-  (column-number-mode t))
-
 (defun esk-local-comment-auto-fill ()
   (set (make-local-variable 'comment-auto-fill-only-comments) t)
   (auto-fill-mode t))
@@ -217,7 +213,6 @@ Emacswiki."
    nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\)"
           1 font-lock-warning-face t))))
 
-(add-hook 'prog-mode-hook 'esk-local-column-number-mode)
 (add-hook 'prog-mode-hook 'esk-local-comment-auto-fill)
 ;; (add-hook 'prog-mode-hook 'esk-turn-on-hl-line-mode)
 (add-hook 'prog-mode-hook 'esk-turn-on-save-place-mode)
@@ -234,6 +229,21 @@ Emacswiki."
     (progn
         (git-gutter-mode 0)
         (global-linum-mode))))
+
+(defun jcs-magit-commit-template (&rest _)
+  "Ensures that commits on an issue- branch have the issue name
+  in the commit as well."
+  (let ((prefix (magit-get-current-branch)))
+    (if (string-prefix-p "issue-" prefix)
+        (progn
+          (goto-char (point-min))
+          (if (not (search-forward prefix (line-end-position) t))
+              (progn
+                (goto-char (point-min))
+                (insert prefix ": "))
+            (goto-char (point-min)))))))
+
+(add-hook 'git-commit-mode-hook 'jcs-magit-commit-template)
 
 (provide 'init-funcs)
 ;;; init-funcs.el ends here
