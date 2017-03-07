@@ -1,20 +1,47 @@
 #+TITLE: Emacs configuration
 
+Most of what is found in these files has been pulled from the
+dotfiles of others.  Take what you want, but be prepared to
+troubleshoot yourself!
+
+* Benchmarking startup
+Sometimes it's nice to see how long packages take to start up. I don't
+use it often though.
+
 #+BEGIN_SRC emacs-lisp
+(defun sanityinc/time-subtract-millis (b a)
+  "Sanely get the difference between B and A."
+  (* 1000.0 (float-time (time-subtract b a))))
 
-;;; Commentary:
-;; Most of what is found in these files has been pulled from the
-;; dotfiles of others.  Take what you want, but be prepared to
-;; troubleshoot yourself!
+(defvar sanityinc/require-times nil
+  "A list of (FEATURE . LOAD-DURATION).
+LOAD-DURATION is the time taken in milliseconds to load FEATURE.")
 
+(defadvice require
+  (around build-require-times (feature &optional filename noerror) activate)
+  "Note in `sanityinc/require-times' the time taken to require each feature."
+  (let* ((already-loaded (memq feature features))
+         (require-start-time (and (not already-loaded) (current-time))))
+    (prog1
+        ad-do-it
+      (when (and (not already-loaded) (memq feature features))
+        (add-to-list 'sanityinc/require-times
+                     (cons feature
+                           (sanityinc/time-subtract-millis (current-time)
+                                                           require-start-time))
+                     t)))))
+
+;; Measure overall startup time
+(add-hook 'after-init-hook
+          (lambda ()
+            (message "init completed in %.2fms"
+                     (sanityinc/time-subtract-millis after-init-time before-init-time))))
+
+#+END_SRC
+
+* Init.el
+#+BEGIN_SRC emacs-lisp
 ;;; Code:
-
-(setq package-archives
-      '(("gnu"          . "https://elpa.gnu.org/packages/")
-        ("melpa"        . "https://melpa.org/packages/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")))
-
-(package-initialize)
 
 ;; Add custom to the start of the file in an attempt to avoid emacs
 ;; asking about smart-mode-line's theme every time on startup
@@ -118,7 +145,7 @@
 
 ;; Quick access to a few files
 (global-set-key (kbd "C-c e i")
-                (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
+                (lambda () (interactive) (find-file "~/.emacs.d/config.org")))
 (global-set-key (kbd "C-c e t")
                 (lambda () (interactive) (find-file "~/org/todo.org")))
 (global-set-key (kbd "C-c e d")
@@ -141,14 +168,6 @@
 (require 'server)
 (unless (server-running-p)
   (server-start))
-
-;; External user config
-(require 'init-funcs)
-(require 'init-org)
-(require 'init-auctex)
-(require 'init-clojure)
-(require 'init-haskell)
-(require 'init-elixir)
 
 ;; Allow for seamless gpg interaction
 (use-package epa-file
@@ -290,3 +309,478 @@
  ;; If there is more than one, they won't work right.
  )
 #+END_SRC
+* Functions
+#+BEGIN_SRC emacs-lisp
+
+
+;; Originally taken from:
+;; http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
+(defun smarter-move-beginning-of-line (arg)
+  "Move point back to indentation of beginning of line.
+
+Move point to the first non-whitespace character on this line.
+If point is already there, move to the beginning of the line.
+Effectively toggle between the first non-whitespace character and
+the beginning of the line.
+
+If ARG is not nil or 1, move forward ARG - 1 lines first.  If
+point reaches the beginning or end of buffer, stop there."
+  (interactive "^p")
+  (setq arg (or arg 1))
+
+  ;; Move lines first
+  (when (/= arg 1)
+    (let ((line-move-visual nil))
+      (forward-line (1- arg))))
+  (let ((orig-point (point)))
+    (back-to-indentation)
+    (when (= orig-point (point))
+      (move-beginning-of-line 1))))
+
+;; remap C-a to `smarter-move-beginning-of-line'
+(global-set-key [remap move-beginning-of-line]
+                'smarter-move-beginning-of-line)
+
+;; Taken from the Emacs Wiki: http://www.emacswiki.org/emacs/InsertDate
+(defun insert-date (prefix)
+  "Insert the current date. With prefix-argument, use ISO
+  format."
+  (interactive "P")
+  (let ((format (cond
+                 ((not prefix) "%a %d %b %Y")
+                 ((equal prefix '(4)) "%Y-%m-%d"))))
+    (insert (format-time-string format))))
+
+(global-set-key (kbd "C-c d") 'insert-date)
+
+;; Taken from http://whattheemacsd.com/editing-defuns.el-01.html
+(defun open-line-below ()
+  "Anywhere on the line, open a new line below current line."
+  (interactive)
+  (end-of-line)
+  (newline)
+  (indent-for-tab-command))
+
+(defun open-line-above ()
+  "Anywhere on the line, open a new line above current line."
+  (interactive)
+  (beginning-of-line)
+  (newline)
+  (forward-line -1)
+  (indent-for-tab-command))
+
+(global-set-key (kbd "<C-return>") 'open-line-below)
+(global-set-key (kbd "<C-S-return>") 'open-line-above)
+
+(defmacro rename-modeline (package-name mode new-name)
+  "Change the name of a mode on the mode-line.
+In PACKAGE-NAME, change MODE from PACKAGE-NAME to NEW-NAME.
+Taken from what the emacs.d."
+  `(eval-after-load ,package-name
+     '(defadvice ,mode (after rename-modeline activate)
+        (setq mode-name ,new-name))))
+
+;; Taken from technomancy's emacs.d
+(global-set-key (kbd "C-c n")
+                (defun pnh-cleanup-buffer ()
+                  (interactive)
+                  (delete-trailing-whitespace)
+                  (untabify (point-min) (point-max))
+                  (indent-region (point-min) (point-max))))
+
+;; A few taken from bodil
+(defun recompile-init ()
+  "Byte-compile all your dotfiles again."
+  (interactive)
+  (byte-recompile-directory user-emacs-directory 0))
+
+(defun sudo-edit ()
+  "Edit current buffer using sudo."
+  (interactive)
+  (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name)))
+
+(defun remove-elc-on-save ()
+  "If you're saving an elisp file, likely the .elc is no longer valid."
+  (make-local-variable 'after-save-hook)
+  (add-hook 'after-save-hook
+            (lambda ()
+              (if (file-exists-p (concat buffer-file-name "c"))
+                  (delete-file (concat buffer-file-name "c"))))))
+
+(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
+(add-hook 'emacs-lisp-mode-hook 'remove-elc-on-save)
+
+;; Set transparency of current frame
+(defun transparency (value)
+  "Set the transparency of the frame window.  VALUE: 0=transparent/100=opaque."
+  (interactive "nTransparency Value 0 - 100 opaque:")
+  (set-frame-parameter (selected-frame) 'alpha value))
+
+;; Define a nice multi-purpose commenting command
+;; Taken from http://endlessparentheses.com/implementing-comment-line.html
+(defun endless/comment-line-or-region (n)
+  "Comment or uncomment current line and leave point after it.
+With positive prefix, apply to N lines including current one.
+With negative prefix, apply to -N lines above.
+If region is active, apply to active region instead."
+  (interactive "p")
+  (if (use-region-p)
+      (comment-or-uncomment-region
+       (region-beginning) (region-end))
+    (let ((range
+           (list (line-beginning-position)
+                 (goto-char (line-end-position n)))))
+      (comment-or-uncomment-region
+       (apply #'min range)
+       (apply #'max range)))
+    (forward-line 1)
+    (back-to-indentation)))
+
+(global-set-key (kbd "C-c ;") 'endless/comment-line-or-region)
+
+;; Clear buffer in eshell
+(defun eshell-clear-buffer ()
+  "Clear eshell buffer."
+  (interactive)
+  (let ((inhibit-read-only t))
+    (erase-buffer)
+    (eshell-send-input)))
+
+(add-hook 'eshell-mode-hook
+      '(lambda()
+          (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
+
+;; Stolen from Reddit:
+;; https://www.reddit.com/r/emacs/comments/3uu1iw/setting_and_using_emacs_in_three_columns/
+(defun emc-working-split (window-count)
+  "Make vertical splits for working window setup, and populate
+them with appropriate buffers.  Buffers are the most recently
+used from (projectile-project-buffers), falling back
+to (buffer-list) when not in a project.
+
+If optional argument WINDOW-COUNT is omitted or nil, default to
+max splits of at least 90 chars wide."
+  (interactive "P")
+  (recentf-mode t) ; Make sure recentf mode is on - won't work without it
+  (let* ((window-count (if window-count window-count (/ (frame-width) 104)))
+         (show-buffers (cond
+                        ((projectile-project-p)
+                         (dotimes (i window-count) ;; ensure enough
+                           ;; buffers open
+                           (let ((num-files (length (projectile-recentf-files))))
+                             (unless (>= i num-files)
+                               (find-file-noselect (concat (projectile-project-root)
+                                                           (nth i (projectile-recentf-files)))))))
+                         (projectile-project-buffers))
+                        (t
+                         (remove-if 'minibufferp (buffer-list))))))
+    (delete-other-windows)
+    ;; split window appropriate count - make 2nd window current
+    (dotimes (i (- window-count 1))
+      (split-window-horizontally)
+      (if (= i 0) (other-window 1)))
+    (balance-windows)
+    ;; set window buffer from show-buffers list
+    (mapcar* 'set-window-buffer (window-list nil "no-minibuf") show-buffers)))
+
+(global-set-key (kbd "C-c 3") 'emc-working-split)
+
+(defun dired-do-ispell (&optional arg)
+  "Check all marked files ARG with ispell.  Borrowed from the
+Emacswiki."
+  (interactive "P")
+  (dolist (file (dired-get-marked-files
+                 nil arg
+                 #'(lambda (f)
+                     (not (file-directory-p f)))))
+    (save-window-excursion
+      (with-current-buffer (find-file file)
+        (ispell-buffer)))
+    (message nil)))
+
+;; Some functions carried over from the emacs starter kit
+(defun esk-local-comment-auto-fill ()
+  (set (make-local-variable 'comment-auto-fill-only-comments) t)
+  (auto-fill-mode t))
+
+(defun esk-turn-on-hl-line-mode ()
+  (when (> (display-color-cells) 8)
+    (hl-line-mode t)))
+
+(defun esk-turn-on-save-place-mode ()
+  (require 'saveplace)
+  (setq save-place t))
+
+(defun esk-pretty-lambdas ()
+  (font-lock-add-keywords
+   nil `(("(?\\(lambda\\>\\)"
+          (0 (progn (compose-region (match-beginning 1) (match-end 1)
+                                    ,(make-char 'greek-iso8859-7 107))
+                    nil))))))
+
+(defun esk-add-watchwords ()
+  (font-lock-add-keywords
+   nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\)"
+          1 font-lock-warning-face t))))
+
+(add-hook 'prog-mode-hook 'esk-local-comment-auto-fill)
+;; (add-hook 'prog-mode-hook 'esk-turn-on-hl-line-mode)
+(add-hook 'prog-mode-hook 'esk-turn-on-save-place-mode)
+(add-hook 'prog-mode-hook 'esk-pretty-lambdas)
+(add-hook 'prog-mode-hook 'esk-add-watchwords)
+
+(defun toggle-pair-mode ()
+  "Turn on/off some modes that are friendlier to pairing."
+  (interactive)
+  (if global-linum-mode
+    (progn
+      (global-linum-mode 0)
+      (git-gutter-mode))
+    (progn
+        (git-gutter-mode 0)
+        (global-linum-mode))))
+
+(defun jcs-magit-commit-template (&rest _)
+  "Ensures that commits on an issue- branch have the issue name
+  in the commit as well."
+  (let ((prefix (magit-get-current-branch)))
+    (if (string-prefix-p "issue-" prefix)
+        (progn
+          (goto-char (point-min))
+          (if (not (search-forward prefix (line-end-position) t))
+              (progn
+                (goto-char (point-min))
+                (insert prefix ": "))
+            (goto-char (point-min)))))))
+
+(add-hook 'git-commit-mode-hook 'jcs-magit-commit-template)
+
+#+END_SRC
+
+* AUCTeX
+#+BEGIN_SRC emacs-lisp
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+(add-hook 'LaTeX-mode-hook 'auto-fill-mode)
+(add-hook 'LaTeX-mode-hook 'flyspell-mode)
+(setq-default TeX-auto-save t
+              TeX-parse-self t
+              TeX-master nil
+              TeX-PDF-mode t
+              reftex-plug-into-AUCTeX t)
+(when (eq system-type 'darwin) ;; mac-specific settings
+  (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
+  (setq-default TeX-source-correlate-method 'synctex)
+  (setq-default TeX-view-program-list
+                '(("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+  (setq-default TeX-view-program-selection '((output-pdf "Skim"))))
+(add-hook 'TeX-mode-hook
+          (lambda ()
+            (add-to-list
+             'TeX-output-view-style
+             '("^pdf$" "."
+               "/Applications/Skim.app/Contents/SharedSupport/displayline -b %n %o %b"))))
+
+;; Use latex-extra package
+(add-hook 'LaTeX-mode-hook #'latex-extra-mode)
+#+END_SRC
+* Clojure
+#+BEGIN_SRC emacs-lisp
+(rename-modeline "clojure-mode" clojure-mode "Clj")
+
+(require 'clojure-mode)
+;;; Cider
+;; Don't prompt for a symbol with `M-.`
+(setq-default cider-prompt-for-symbol nil
+              cljr-favor-prefix-notation nil
+              cider-repl-display-help-banner nil)
+(add-hook 'cider-mode-hook #'eldoc-mode)
+(add-hook 'clojure-mode-hook 'cider-mode)
+(add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
+(add-hook 'clojure-mode-hook 'paredit-mode)
+(add-hook 'cider-repl-mode-hook 'paredit-mode)
+(add-hook 'cider-repl-mode-hook #'eldoc-mode)
+
+(defun tdd-test ()
+  "Thin wrapper around `cider-test-run-project-tests', borrowed from
+  http://endlessparentheses.com/test-driven-development-in-cider-and-emacs.html"
+  (when (cider-connected-p)
+    (cider-test-run-project-tests)))
+
+(define-minor-mode tdd-mode
+  "Run all Clojure tests whenever a file is saved"
+  nil " TDD" nil
+  (if tdd-mode
+      (add-hook 'after-save-hook #'tdd-test nil 'local)
+    (remove-hook 'after-save-hook #'tdd-test 'local)))
+
+(require 'clj-refactor)
+(add-hook 'clojure-mode-hook (lambda ()
+                               (clj-refactor-mode 1)
+                               (yas-minor-mode 1)
+                               (cljr-add-keybindings-with-prefix "C-c r")))
+
+
+(setq nrepl-hide-special-buffers t)
+
+;; Add some goodies from Emacs Live
+(eval-after-load 'clojure-mode
+  '(font-lock-add-keywords
+    'clojure-mode `(("\\(#\\)("
+                     (0 (progn (compose-region (match-beginning 1)
+                                               (match-end 1) "ƒ")
+                               nil))))))
+
+(eval-after-load 'clojure-mode
+  '(font-lock-add-keywords
+    'clojure-mode `(("\\(#\\){"
+                     (0 (progn (compose-region (match-beginning 1)
+                                               (match-end 1) "∈")
+                               nil))))))
+
+;; Set up proper indentation for a few compojure functions
+(eval-after-load 'clojure-mode
+  '(define-clojure-indent
+     (defroutes 'defun)
+     (GET 2)
+     (POST 2)
+     (PUT 2)
+     (DELETE 2)
+     (HEAD 2)
+     (ANY 2)
+     (context 2)))
+
+(require 'clj-refactor)
+(setq-default cljr-suppress-middleware-warnings t)
+
+;; Lazily build ASTs, instead of immediately on REPL connect
+(setq cljr-warn-on-eval t)
+(setq cljr-eagerly-build-asts-on-startup nil)
+
+(add-to-list 'auto-mode-alist '("\\.clj.*\\'" . clojure-mode))
+(add-to-list 'auto-mode-alist '("\\.edn.*\\'" . clojure-mode))
+
+;; Try out a linter...
+(require 'flycheck-joker)
+#+END_SRC
+* Elixir
+#+BEGIN_SRC emacs-lisp
+(require 'alchemist)
+
+
+;; Run the whole test suite with alchemist-mix-test after saving a buffer.
+;; (setq alchemist-hooks-test-on-save t)
+
+
+;; Compile your project with alchemist-mix-compile after saving a buffer.
+;; (setq alchemist-hooks-compile-on-save t)
+#+END_SRC
+* Haskell
+#+BEGIN_SRC emacs-lisp
+(add-hook 'haskell-mode-hook 'turn-on-haskell-indentation)
+(add-hook 'haskell-mode-hook 'turn-on-hi2)
+(add-hook 'haskell-mode-hook #'hindent-mode)
+
+(setq-default haskell-tags-on-save t
+              haskell-process-suggest-remove-import-lines t
+              haskell-process-auto-import-loaded-modules t
+              haskell-process-log t)
+#+END_SRC
+* Org-Mode
+#+BEGIN_SRC emacs-lisp
+(require 'org)
+(require 'ox-md)
+
+(setq org-directory "~/org"
+      org-log-done t
+      org-startup-indented t
+      org-startup-folded t
+      org-agenda-files (list (concat org-directory "/todo.org")
+                             (concat org-directory "/dev.org")
+                             (concat org-directory "/todo.org_archive"))
+      org-default-notes-file (concat org-directory "/todo.org")
+      org-src-fontify-natively t
+      org-outline-path-complete-in-steps nil
+      org-refile-use-outline-path t
+      org-use-fast-todo-selection t)
+
+;; Ensure that we can refile to headings a few levels down. This
+;; should help with organizing.
+(setq org-refile-targets '((nil . (:maxlevel . 4))))
+
+;; Use the current window to open the agenda
+(setq-default org-agenda-window-setup 'current-window)
+
+(defun jcs-agenda ()
+  "Open TODO list and Org agenda side-by-side."
+  (interactive)
+  (delete-other-windows)
+  (find-file (concat org-directory "/todo.org"))
+  (split-window-horizontally)
+  (other-window 1)
+  (org-agenda-list))
+
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-cm" 'jcs-agenda)
+(global-set-key "\C-ca" 'org-agenda)
+(global-set-key "\C-cc" 'org-capture)
+
+(setq org-todo-keywords
+      (quote ((sequence "TODO(t)" "NEXT(n)" "DOING(o)" "|" "DONE(d)")
+              (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
+
+;; Taken from the org-mode manual - Automatically mark a parent task
+;; as DONE when all child nodes are marked DONE
+(defun org-summary-todo (n-done n-not-done)
+  "Switch entry to DONE when all subentries are done, to TODO otherwise."
+  (let (org-log-done org-log-states)   ; turn off logging
+    (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
+
+(add-hook 'org-after-todo-statistics-hook 'org-summary-todo)
+
+(defun reset-weekly-summary ()
+  (interactive)
+  (find-file (concat org-directory "/weekly-summary.org"))
+  (erase-buffer)
+  (insert-file-contents (concat org-directory "/weekly-summary-template.org")))
+
+;; Add a few languages for execution in org source blocks
+(org-babel-do-load-languages 'org-babel-load-languages
+                             '((clojure . t)
+                               (sh . t)
+                               (emacs-lisp . t)))
+
+;; Add capture templates for questions to ask
+(setq org-capture-templates
+      '(("s" "Templates for the Weekly Summary")
+        ("sd" "Summary: Did" item (file+olp (concat org-directory "/weekly-summary.org")
+                                            "jcsims" "Did"))
+        ("so" "Summary: Doing" item (file+olp (concat org-directory "/weekly-summary.org")
+                                              "jcsims" "Doing"))
+        ("sb" "Summary: Blockers" item (file+olp (concat org-directory "/weekly-summary.org")
+                                                 "jcsims" "Blockers"))
+        ("sq" "Summary: Quesions" item (file+olp (concat org-directory "/weekly-summary.org")
+                                                 "jcsims" "Questions"))
+        ("d" "Templates for docs")
+        ("dm" "Docs: Misc" entry (file+olp (concat org-directory "/dev.org")
+                                          "Misc"))
+        ("de" "Docs: Emacs" entry (file+olp (concat org-directory "/dev.org")
+                                           "Emacs"))
+        ("dg" "Docs: Git" entry (file+olp (concat org-directory "/dev.org")
+                                         "Git"))
+        ("dt" "Docs: ThreatGRID" entry (file+olp (concat org-directory "/dev.org")
+                                                "TG"))
+        ("dc" "Docs: Clojure" entry (file+olp (concat org-directory "/dev.org")
+                                                "Clojure"))
+        ("q" "Alex Question" entry (file (concat org-directory "/questions.org")
+                                         "Questions"))
+        ("t" "Templates for TODOs")
+        ("ta" "TODO: Admin" entry (file+olp (concat org-directory "/todo.org")
+                                            "Admin"))
+        ("ti" "TODO: Issues" entry (file+olp (concat org-directory "/todo.org")
+                                            "Issues"))
+        ("tt" "TODO: Tasks" entry (file+olp (concat org-directory "/todo.org")
+                                            "Tasks"))))
+
+#+END_SRC
+
