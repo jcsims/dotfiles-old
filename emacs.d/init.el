@@ -40,6 +40,10 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
+;; Now that the custom file has been loaded, go ahead and install any
+;; missing packages
+(package-install-selected-packages)
+
 (custom-set-faces)
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
