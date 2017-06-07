@@ -27,7 +27,7 @@
       '(("c" "Agenda and all action items"
          ((agenda "")
           (todo "WAITING")
-          (todo "NEXT|TODO"
+          (todo "DOING|NEXT|TODO"
                 ((org-agenda-sorting-strategy '(todo-state-down))))))
         ("h" todo "HOLD")))
 
