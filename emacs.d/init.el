@@ -239,5 +239,5 @@
 (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
 
 (sml/setup)
-(global-linum-mode)
+(global-nlinum-mode)
 ;;; init.el ends here

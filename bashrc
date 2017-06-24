@@ -6,6 +6,11 @@ export CLICOLOR=true
 export EDITOR='emacsclient'
 export TERM=xterm-256color
 
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
 # use .localrc for SUPER SECRET CRAP that you don't
 # want in your public, versioned repo.
 if [[ -a ~/.localrc ]]
@@ -19,24 +24,16 @@ fi
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 export PATH=$HOME/bin:$PATH
 
-# Add any user-installed python binaries to the path
-export PATH=$HOME/Library/Python/2.7/bin:$PATH
-
 # Add GOROOT bin path to PATH
-export PATH=/usr/local/opt/go/libexec/bin:$PATH
+export PATH=/usr/local/go/bin:$PATH
 
 export GOPATH=$HOME/code/go:$HOME/code/sandcastle:$HOME/code/ops
 
-# Setup paths for pkgsrc
-export PATH=/opt/pkg/sbin:/opt/pkg/bin:$PATH
-export MANPATH=/opt/pkg/man:$MANPATH
+# Add postgres tools
+export PATH=/usr/pgsql-9.6/bin:$PATH
 
 # Sensible options, borrowed from
 # https://github.com/mrzool/bash-sensible
-# Prevent file overwrite on stdout redirection
-# Use `>|` to force redirection to an existing file
-set -o noclobber
-
 # Update window size after every command
 shopt -s checkwinsize
 
@@ -110,14 +107,11 @@ shopt -s cdspell 2> /dev/null
 # Ex: CDPATH=".:~:~/projects" will look for targets in the current working directory, in home and in the ~/projects folder
 CDPATH=".:~:~/code"
 
-# Dynamically set JAVA_HOME
-export JAVA_HOME=$(/usr/libexec/java_home)
-
 ## Aliases
 # grc overides for ls
 #   Made possible through contributions from generous benefactors like
 #   `sudo pkgin install coreutils`
-if $(gls &>/dev/null)
+if $(which gls &>/dev/null)
 then
     lscom="gls"
 else
@@ -162,12 +156,7 @@ man() {
     man "$@"
 }
 
-alias quiet!='osascript -e "set Volume 0.01"'
+
 
 ## Prompt
-source ~/.functions/powerline-prompt
-
-## Tmux completion
-source ~/.functions/_tmux
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
+PS1="[\u@\h \W]\$ " # Default prompt
