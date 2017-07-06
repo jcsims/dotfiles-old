@@ -77,6 +77,8 @@
 (add-to-list 'auto-mode-alist '("\\.clj.*\\'" . clojure-mode))
 (add-to-list 'auto-mode-alist '("\\.edn.*\\'" . clojure-mode))
 
+(define-key clojure-mode-map (kbd "C-c i") 'cider-inspect-last-result)
+
 ;; Try out a linter...
 (require 'flycheck-joker)
 (provide 'init-clojure)

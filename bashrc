@@ -69,7 +69,7 @@ shopt -s histappend
 shopt -s cmdhist
 
 # Record each line as it gets issued
-PROMPT_COMMAND='history -a'
+PROMPT_COMMAND="$PROMPT_COMMAND; history -a"
 
 # Huge history. Doesn't appear to slow things down, so why not?
 HISTSIZE=500000
@@ -105,7 +105,7 @@ shopt -s cdspell 2> /dev/null
 # This defines where cd looks for targets
 # Add the directories you want to have fast access to, separated by colon
 # Ex: CDPATH=".:~:~/projects" will look for targets in the current working directory, in home and in the ~/projects folder
-CDPATH=".:~:~/code"
+CDPATH=".:~/code"
 
 ## Aliases
 # grc overides for ls
@@ -143,6 +143,9 @@ alias grm="git status | grep deleted | awk '{print \$3}' | xargs git rm"
 alias ga='git add'
 alias grs='git reset'
 
+
+for f in $HOME/.functions/*; do source "$f"; done
+
 ## Colorized man pages!
 ## http://boredzo.org/blog/archives/2016-08-15/colorized-man-pages-understood-and-customized
 man() {
@@ -156,7 +159,11 @@ man() {
     man "$@"
 }
 
-
-
 ## Prompt
-PS1="[\u@\h \W]\$ " # Default prompt
+#PS1="[\u@\h \W]\$ " # Default prompt
+function nonzero_return() {
+    RETVAL=$?
+    [ $RETVAL -ne 0 ] && echo " $RETVAL"
+}
+
+PS1="[\u@\h \w$RED\`nonzero_return\`$NO_COLOR]\$ "
