@@ -7,19 +7,22 @@
 
 ;;; Code:
 
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (setq package-archives
       '(("gnu"          . "https://elpa.gnu.org/packages/")
         ("melpa"        . "https://melpa.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")))
-(package-initialize)
 
-;; Personal info
-(setq user-full-name "Chris Sims"
-      user-mail-address "chris@jcsi.ms"
-      calendar-latitude 47.4
-      calendar-longitude -122.2
-      calendar-location-name "Kent, WA")
-
+;; (setq package-pinned-packages
+;;       '((cider . "melpa-stable")
+;;         (clojure-mode . "melpa-stable")
+;;         (clj-refactor . "melpa-stable")))
 (setq-default paradox-execute-asynchronously t)
 
 (setq active-theme 'solarized-light)
@@ -51,7 +54,7 @@
 
 (setq-default inhibit-splash-screen t   ; Don't show the splash screen
               ring-bell-function 'ignore ; Just ignore error notifications
-              vc-make-backup-files t     ; Make backups of files,
+              ;;vc-make-backup-files t     ; Make backups of files,
               vc-follow-symlinks t ; even when they're in version control
               backup-directory-alist ; Save backups to a central location
               `(("." . ,(expand-file-name
@@ -81,7 +84,7 @@
 (require 'init-haskell)
 (require 'init-elixir)
 
-(setq-default whitespace-line-column 80
+(setq-default whitespace-line-column 100
               whitespace-style '(face trailing lines-tail))
 
 (column-number-mode)
@@ -196,6 +199,9 @@
               magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-")))
 (global-set-key (kbd "C-c g") 'magit-status)
 
+;;(require 'magithub)
+;;(magithub-feature-autoinject t)
+
 (windmove-default-keybindings)
 
 (winner-mode 1)
@@ -237,6 +243,24 @@
 (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
 (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
 
+;; Save all the time. It's rare that I want to leave a buffer unsaved.
+(super-save-mode +1)
+(setq super-save-auto-save-when-idle t)
+;; Then, turn off Emacs' built-in auto-save
+(setq auto-save-default nil)
+
+;; Set up the fancy mode-line
 (sml/setup)
-(global-linum-mode)
+
+;; Turn on line numbers everywhere
+(global-nlinum-mode)
+
+;; Use es-mode for ElasticSearch buffers
+(add-to-list 'auto-mode-alist '("\\.es$" . es-mode))
+
+(require 'multiple-cursors)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
 ;;; init.el ends here

@@ -2,6 +2,9 @@
 ;;; Commentary:
 
 ;;; Code:
+(require 'org)
+(require 'org-agenda)
+(require 'ox-md)
 
 (setq-default org-directory "~/org"
               org-log-done t
@@ -11,10 +14,14 @@
               org-agenda-files (list org-directory)
               org-default-notes-file (concat org-directory "/tg-inbox.org")
               org-src-fontify-natively t
-              org-use-fast-todo-selection t)
-(require 'org)
-(require 'org-agenda)
-(require 'ox-md)
+              org-use-fast-todo-selection t
+              refile-targets (mapcar (lambda (org-file)
+                                      (concat org-directory "/" org-file))
+                                    '("tg-dev.org" "tg-ops.org" "tg-design.org"))
+              org-refile-targets '((refile-targets . (:level . 0)))
+              org-refile-allow-creating-parent-nodes t
+              org-refile-use-outline-path 'file
+              org-completion-use-ido t)
 
 ;; Use the current window to open the agenda
 (setq-default org-agenda-window-setup 'current-window)
