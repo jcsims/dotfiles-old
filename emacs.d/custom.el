@@ -10,7 +10,7 @@
  '(js-indent-level 2)
  '(package-selected-packages
    (quote
-    (diff-hl ob-restclient magithub alchemist go-mode multiple-cursors robe git-timemachine restclient projectile persistent-scratch yaml-mode which-key sql-indent solarized-theme smex smart-mode-line rainbow-delimiters paredit-everywhere page-break-lines monokai-theme markdown-mode magit latex-extra js2-mode idomenu ido-ubiquitous idle-highlight-mode hi2 git-gutter flycheck flx-ido expand-region exec-path-from-shell elisp-slime-nav dumb-jump dockerfile-mode diminish csv-mode company-quickhelp company-auctex color-theme-sanityinc-tomorrow clj-refactor browse-kill-ring ag)))
+    (salt-mode nlinum flycheck-joker paradox diff-hl ob-restclient alchemist go-mode multiple-cursors robe git-timemachine restclient projectile yaml-mode which-key sql-indent solarized-theme smex smart-mode-line rainbow-delimiters paredit-everywhere page-break-lines monokai-theme markdown-mode magit latex-extra js2-mode idomenu ido-ubiquitous idle-highlight-mode hi2 git-gutter flycheck flx-ido expand-region exec-path-from-shell elisp-slime-nav dumb-jump dockerfile-mode diminish csv-mode company-quickhelp company-auctex color-theme-sanityinc-tomorrow clj-refactor browse-kill-ring ag)))
  '(paradox-automatically-star t)
  '(paradox-github-token t))
 

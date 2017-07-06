@@ -119,7 +119,7 @@ antigen bundle zsh-users/zsh-autosuggestions
 
 antigen apply
 
-ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern cursor)
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets pattern)
 
 # setup history substring search
 # bind UP and DOWN arrow keys
@@ -135,7 +135,10 @@ bindkey -M emacs '^N' history-substring-search-down
 # if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
 
 # Dynamically set JAVA_HOME
-typeset -U JAVA_HOME=$(/usr/libexec/java_home)
+if [[ -f /usr/libexec/java_home ]]
+then
+    typeset -U JAVA_HOME=$(/usr/libexec/java_home)
+fi
 
 ## Aliases
 # grc overides for ls
@@ -177,10 +180,6 @@ alias gs='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
 alias grm="git status | grep deleted | awk '{print \$3}' | xargs git rm"
 alias ga='git add'
 alias grs='git reset'
-
-## Set up git-flow-completion
-## Clone from https://github.com/petervanderdoes/git-flow-completion.git
-source ~/.git-flow-completion/git-flow-completion.zsh
 
 ## Colorized man pages!
 ## http://boredzo.org/blog/archives/2016-08-15/colorized-man-pages-understood-and-customized

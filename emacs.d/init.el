@@ -7,17 +7,25 @@
 
 ;;; Code:
 
-
-;; Added by Package.el.  This must come before configurations of
-;; installed packages.  Don't delete this line.  If you don't want it,
-;; just comment it out by adding a semicolon to the start of the line.
-;; You may delete these explanatory comments.
-(package-initialize)
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
 
 (setq package-archives
       '(("gnu"          . "https://elpa.gnu.org/packages/")
         ("melpa"        . "https://melpa.org/packages/")
         ("melpa-stable" . "https://stable.melpa.org/packages/")))
+(package-initialize)
+
+;; Personal info
+(setq user-full-name "Chris Sims"
+      user-mail-address "chris@jcsi.ms")
+
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
+(require 'init-benchmarking)
+
+;; Now that the custom file has been loaded, go ahead and install any
+;; missing packages
+(package-install-selected-packages)
 
 ;; (setq package-pinned-packages
 ;;       '((cider . "melpa-stable")
@@ -25,8 +33,8 @@
 ;;         (clj-refactor . "melpa-stable")))
 (setq-default paradox-execute-asynchronously t)
 
-(setq active-theme 'solarized-light)
-(load-theme 'solarized-light t)
+(setq active-theme 'solarized-dark)
+(load-theme 'solarized-dark t)
 (defun toggle-dark-light-theme ()
   "Toggle the current solarized theme between light and dark."
   (interactive)
@@ -34,18 +42,6 @@
       (setq active-theme 'solarized-dark)
     (setq active-theme 'solarized-light))
   (load-theme active-theme))
-
-(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
-(require 'init-benchmarking)
-
-;; Add custom to the start of the file in an attempt to avoid emacs
-;; asking about smart-mode-line's theme every time on startup
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
-
-;; Now that the custom file has been loaded, go ahead and install any
-;; missing packages
-(package-install-selected-packages)
 
 (custom-set-faces)
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -95,10 +91,14 @@
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
 
-(when (memq window-system '(mac ns))
-  (set-frame-font "-*-Menlo-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
-(global-prettify-symbols-mode 1)
+;; Handy to get the current font/size that you've got:
 ;; (insert "\n(set-frame-font \"" (cdr (assoc 'font (frame-parameters))) "\")")
+(when (memq window-system '(mac ns))
+  (set-frame-font "-*-Menlo-normal-normal-normal-*-11-*-*-*-m-0-iso10646-1"))
+(when (memq window-system '(x))
+  (set-frame-font "-PfEd-DejaVu Sans Mono-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
+(global-prettify-symbols-mode 1)
+
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -183,7 +183,9 @@
 (add-hook 'ido-setup-hook (lambda () (define-key ido-completion-map [up]
                                   'previous-history-element)))
 
+(setq-default ido-ubiquitous-auto-update-overrides t)
 (ido-ubiquitous-mode t)
+
 (flx-ido-mode t)
 
 (setq-default smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
