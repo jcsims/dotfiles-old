@@ -6,10 +6,12 @@
 (setq mc/cmds-to-run-for-all
       '(
         dabbrev-expand
+        describe-key
         org-cycle
         org-metaright
         org-self-insert-command
         org-shiftright
+        paredit-forward-delete
         smex
         ))
 
