@@ -240,10 +240,24 @@ Emacswiki."
           (if (not (search-forward prefix (line-end-position) t))
               (progn
                 (goto-char (point-min))
-                (insert prefix ": "))
+                (insert prefix ": ")
+                (insert "\n")
+                (beginning-of-buffer)
+                (move-end-of-line nil))
             (goto-char (point-min)))))))
 
 (add-hook 'git-commit-mode-hook 'jcs-magit-commit-template)
+
+(defun urldecode ()
+  "Call `url-unhex-string` on the active region."
+  (interactive)
+  (if (not (use-region-p))
+      (message "`urldecode` only works with an active region!")
+    (let ((unhexed (url-unhex-string
+                    (buffer-substring-no-properties
+                     (region-beginning) (region-end)))))
+      (kill-new unhexed)
+      (message unhexed))))
 
 (provide 'init-funcs)
 ;;; init-funcs.el ends here

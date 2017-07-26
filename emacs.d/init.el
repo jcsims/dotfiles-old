@@ -27,6 +27,10 @@
 ;; missing packages
 (package-install-selected-packages)
 
+;; (setq package-pinned-packages
+;;       '((cider . "melpa-stable")
+;;         (clojure-mode . "melpa-stable")
+;;         (clj-refactor . "melpa-stable")))
 (setq-default paradox-execute-asynchronously t)
 
 ;; (setq active-theme 'solarized-dark)
@@ -49,7 +53,7 @@
 
 (setq-default inhibit-splash-screen t   ; Don't show the splash screen
               ring-bell-function 'ignore ; Just ignore error notifications
-              vc-make-backup-files t     ; Make backups of files,
+              ;;vc-make-backup-files t     ; Make backups of files,
               vc-follow-symlinks t ; even when they're in version control
               backup-directory-alist ; Save backups to a central location
               `(("." . ,(expand-file-name
@@ -200,6 +204,9 @@
               magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-")))
 (global-set-key (kbd "C-c g") 'magit-status)
 
+;;(require 'magithub)
+;;(magithub-feature-autoinject t)
+
 (windmove-default-keybindings)
 
 (winner-mode 1)
@@ -241,10 +248,28 @@
 (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
 (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode)
 
+;; Save all the time. It's rare that I want to leave a buffer unsaved.
+(super-save-mode +1)
+(setq super-save-auto-save-when-idle t)
+;; Then, turn off Emacs' built-in auto-save
+(setq auto-save-default nil)
+
+;; Set up the fancy mode-line
 (sml/setup)
+
+;; Turn on line numbers everywhere
 (global-nlinum-mode)
 
 ; Get rid of the insert key. I never use it, and I turn it on
                                         ; accidentally all the time
 (global-set-key (kbd "<insert>") nil)
+
+;; Use es-mode for ElasticSearch buffers
+(add-to-list 'auto-mode-alist '("\\.es$" . es-mode))
+
+(require 'multiple-cursors)
+(global-set-key (kbd "C->") 'mc/mark-next-like-this)
+(global-set-key (kbd "C-<") 'mc/mark-previous-like-this)
+(global-set-key (kbd "C-c C-<") 'mc/mark-all-like-this)
+
 ;;; init.el ends here
