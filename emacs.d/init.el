@@ -29,15 +29,18 @@
 
 (setq-default paradox-execute-asynchronously t)
 
-(setq active-theme 'solarized-dark)
-(load-theme 'solarized-dark t)
-(defun toggle-dark-light-theme ()
-  "Toggle the current solarized theme between light and dark."
-  (interactive)
-  (if (eq active-theme 'solarized-light)
-      (setq active-theme 'solarized-dark)
-    (setq active-theme 'solarized-light))
-  (load-theme active-theme))
+;; (setq active-theme 'solarized-dark)
+;; (load-theme 'solarized-dark t)
+;; (defun toggle-dark-light-theme ()
+;;   "Toggle the current solarized theme between light and dark."
+;;   (interactive)
+;;   (if (eq active-theme 'solarized-light)
+;;       (setq active-theme 'solarized-dark)
+;;     (setq active-theme 'solarized-light))
+;;   (load-theme active-theme))
+
+;;(load-theme 'base16-monokai t)
+(load-theme 'monokai t)
 
 (custom-set-faces)
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
@@ -240,4 +243,8 @@
 
 (sml/setup)
 (global-nlinum-mode)
+
+; Get rid of the insert key. I never use it, and I turn it on
+                                        ; accidentally all the time
+(global-set-key (kbd "<insert>") nil)
 ;;; init.el ends here

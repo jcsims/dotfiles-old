@@ -107,20 +107,6 @@ shopt -s cdspell 2> /dev/null
 # Ex: CDPATH=".:~:~/projects" will look for targets in the current working directory, in home and in the ~/projects folder
 CDPATH=".:~/code"
 
-## Aliases
-# grc overides for ls
-#   Made possible through contributions from generous benefactors like
-#   `sudo pkgin install coreutils`
-if $(which gls &>/dev/null)
-then
-    lscom="gls"
-else
-    lscom="ls"
-fi
-alias ls='$lscom -F --color'
-alias l='$lscom -lAh --color'
-alias ll='$lscom -l --color'
-alias la='$lscom -A --color'
 alias grep='grep --color=auto'
 
 alias reload!='. ~/.bashrc'
@@ -135,13 +121,8 @@ alias gp='git push origin HEAD'
 alias gpl='git pull --rebase --prune'
 alias gd='git diff'
 alias gc='git commit'
-alias gca='git commit -a'
 alias gco='git checkout'
-alias gb='git branch'
 alias gs='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
-alias grm="git status | grep deleted | awk '{print \$3}' | xargs git rm"
-alias ga='git add'
-alias grs='git reset'
 
 
 for f in $HOME/.functions/*; do source "$f"; done
@@ -166,4 +147,4 @@ function nonzero_return() {
     [ $RETVAL -ne 0 ] && echo " $RETVAL"
 }
 
-PS1="[\u@\h \w$RED\`nonzero_return\`$NO_COLOR]\$ "
+PS1="[\u@\h \w]\$ "
