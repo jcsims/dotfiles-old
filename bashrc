@@ -69,7 +69,11 @@ shopt -s histappend
 shopt -s cmdhist
 
 # Record each line as it gets issued
-PROMPT_COMMAND="$PROMPT_COMMAND; history -a"
+if [ "$(uname)" == "Darwin" ]; then
+    PROMPT_COMMAND="history -a"
+else
+    PROMPT_COMMAND="PROMPT_COMMAND;history -a"
+fi
 
 # Huge history. Doesn't appear to slow things down, so why not?
 HISTSIZE=500000
@@ -142,9 +146,5 @@ man() {
 
 ## Prompt
 #PS1="[\u@\h \W]\$ " # Default prompt
-function nonzero_return() {
-    RETVAL=$?
-    [ $RETVAL -ne 0 ] && echo " $RETVAL"
-}
 
 PS1="[\u@\h \w]\$ "
