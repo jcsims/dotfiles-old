@@ -72,7 +72,7 @@ shopt -s cmdhist
 if [ "$(uname)" == "Darwin" ]; then
     PROMPT_COMMAND="history -a"
 else
-    PROMPT_COMMAND="PROMPT_COMMAND;history -a"
+    PROMPT_COMMAND="$PROMPT_COMMAND;history -a"
 fi
 
 # Huge history. Doesn't appear to slow things down, so why not?
