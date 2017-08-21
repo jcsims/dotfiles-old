@@ -142,10 +142,12 @@
         whitespace-style '(face trailing lines-tail))
   (add-hook 'prog-mode-hook 'whitespace-mode))
 
-(use-package markdown-mode)
+(use-package markdown-mode
+  :config (setq markdown-fontify-code-blocks-natively t))
 
 (use-package simple
   :ensure f
+  :delight auto-fill-function
   :defer 2
   :config
   (column-number-mode)
@@ -160,6 +162,7 @@
   :config (electric-indent-mode))
 
 (use-package autorevert
+  :delight auto-revert-mode
   :defer 2
   :config
   ;; Auto-refresh buffers
@@ -282,10 +285,10 @@
   :config (add-hook 'emacs-lisp-mode-hook 'paredit-mode))
 
 (use-package paredit-everywhere
+  :delight
   :config (add-hook 'prog-mode-hook 'paredit-everywhere-mode))
 
 (use-package projectile
-  :delight
   :config (projectile-mode))
 
 (use-package expand-region
@@ -299,9 +302,9 @@
 (use-package dockerfile-mode
   :mode "Dockerfile")
 
-(use-package dumb-jump-mode
-  :ensure dumb-jump
+(use-package dumb-jump
   :defer 2
+  :bind ("C-M-g" . dumb-jump-go)
   :config (dumb-jump-mode))
 
 (use-package yaml-mode
@@ -454,6 +457,7 @@
 (use-package go-mode)
 (use-package csv-mode)
 (use-package sql-indent)
+(use-package eldoc :delight :ensure f)
 
 (use-package clojure-mode
   :defer 2
@@ -517,6 +521,7 @@
 
 (use-package clj-refactor
   :defer 2
+  :delight
   :config
   (setq cljr-suppress-middleware-warnings t
         ;; Lazily build ASTs, instead of immediately on REPL connect
@@ -526,6 +531,8 @@
                                  (clj-refactor-mode 1)
                                  (yas-minor-mode 1)
                                  (cljr-add-keybindings-with-prefix "C-c r"))))
+
+(use-package yasnippet :delight)
 
 ;; Try out a linter...
 (use-package flycheck-joker :defer 2)
