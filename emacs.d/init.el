@@ -93,8 +93,11 @@
 (global-prettify-symbols-mode 1)
 
 ;; Quick access to a few files
-(global-set-key (kbd "C-c e i")
-                (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
+(defun find-init-file ()
+  "Open the init file for editing."
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
+(global-set-key (kbd "C-c e i") 'find-init-file)
 
 
 ;;; Packages
@@ -398,27 +401,40 @@
 
 (use-package org
   :init
-  (setq-default org-directory "~/org"
+  (setq-default org-directory "~/Dropbox/org/"
                 org-log-done t
                 org-startup-indented t
                 org-startup-folded t
-                org-agenda-file-regexp "tg-.*\\.org\.*"
                 org-agenda-files (list org-directory)
-                org-default-notes-file (concat org-directory "/tg-inbox.org")
+                org-default-notes-file (concat org-directory "inbox.org")
                 org-src-fontify-natively t
                 org-use-fast-todo-selection t
-                refile-targets (mapcar (lambda (org-file)
-                                         (concat org-directory "/" org-file))
-                                       '("tg-dev.org" "tg-ops.org" "tg-design.org"))
-                org-refile-targets '((refile-targets . (:level . 0)))
+                gtd-file (concat org-directory "gtd.org")
+                someday-file (concat org-directory "someday.org")
+                tickler-file (concat org-directory "tickler.org")
+                inbox-file (concat org-directory "inbox.org")
+                org-refile-targets '((gtd-file :maxlevel . 3)
+                                     (someday-file :level . 1)
+                                     (tickler-file :maxlevel . 2))
+                org-todo-keywords
+                (quote ((sequence "TODO(t)" "DOING(o)" "|" "DONE(d)")
+                        (sequence "WAITING(w@/!)" "|" "CANCELLED(c@/!)")))
                 org-refile-allow-creating-parent-nodes t
                 org-refile-use-outline-path 'file
                 org-completion-use-ido t
                 ;; Don't ask every time before evaluating an org source block
                 org-confirm-babel-evaluate nil)
-  :bind (("\C-cl" . org-store-link)
-         ("\C-ca" . org-agenda)
-         ("\C-cc" . org-capture))
+  (defun find-gtd-file () (interactive) (find-file gtd-file))
+  (defun find-someday-file () (interactive) (find-file someday-file))
+  (defun find-inbox-file () (interactive) (find-file inbox-file))
+  (defun find-tickler-file () (interactive) (find-file tickler-file))
+  :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c c" . org-capture)
+         ("C-c e g" . find-gtd-file)
+         ("C-c e s" . find-someday-file)
+         ("C-c e n" . find-inbox-file)
+         ("C-c e t" . find-tickler-file))
   :config
   ;; Add a few languages for execution in org source blocks
   (org-babel-do-load-languages 'org-babel-load-languages
@@ -427,11 +443,18 @@
                                  (emacs-lisp . t)
                                  (restclient . t)))
 
+  (setq org-capture-templates '(("t" "Todo [inbox]" entry
+                                 (file (concat org-directory "inbox.org"))
+                                 "* TODO %i%?")
+                                ("T" "Tickler" entry
+                                 (file+headline (concat org-directory "tickler.org") "Tickler")
+                                 "* %i%? \n %U")))
+
   ;; Taken from the org-mode manual - Automatically mark a parent task
   ;; as DONE when all child nodes are marked DONE
   (defun org-summary-todo (n-done n-not-done)
     "Switch entry to DONE when all subentries are done, to TODO otherwise."
-    (let (org-log-done org-log-states)    ; turn off logging
+    (let (org-log-done org-log-states)  ; turn off logging
       (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
   (add-hook 'org-after-todo-statistics-hook 'org-summary-todo))
 
@@ -444,12 +467,30 @@
         '(("c" "Agenda and all action items"
            ((agenda "")
             (todo "WAITING")
-            (todo "DOING|NEXT|TODO"
+            (todo "DOING|TODO"
                   ((org-agenda-sorting-strategy '(todo-state-down))))))
+          ("o" "At the office" tags-todo "@office"
+           ((org-agenda-overriding-header "Office")
+            (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))
           ("h" todo "HOLD")))
-  (setq org-todo-keywords
-        (quote ((sequence "TODO(t)" "NEXT(n)" "DOING(o)" "|" "DONE(d)")
-                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)")))))
+  :config
+  ;; Borrowed from https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
+  (defun my-org-agenda-skip-all-siblings-but-first ()
+    "Skip all but the first non-done entry."
+    (let (should-skip-entry)
+      (unless (org-current-is-todo)
+        (setq should-skip-entry t))
+      (save-excursion
+        (while (and (not should-skip-entry) (org-goto-sibling t))
+          (when (org-current-is-todo)
+            (setq should-skip-entry t))))
+      (when should-skip-entry
+        (or (outline-next-heading)
+            (goto-char (point-max))))))
+
+  (defun org-current-is-todo ()
+    "Is the current org heading a TODO?"
+    (string= "TODO" (org-get-todo-state))))
 
 (use-package ox-md :ensure f)
 (use-package restclient)
