@@ -401,7 +401,7 @@
 
 (use-package org
   :init
-  (setq-default org-directory "~/Dropbox/org/"
+  (setq-default org-directory "~/org/"
                 org-log-done t
                 org-startup-indented t
                 org-startup-folded t
