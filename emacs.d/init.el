@@ -413,9 +413,11 @@
                 someday-file (concat org-directory "someday.org")
                 tickler-file (concat org-directory "tickler.org")
                 inbox-file (concat org-directory "inbox.org")
-                org-refile-targets '((gtd-file :maxlevel . 3)
-                                     (someday-file :level . 1)
-                                     (tickler-file :maxlevel . 2))
+                reference-file (concat org-directory "reference.org")
+                org-refile-targets '((gtd-file . (:maxlevel . 2))
+                                     (someday-file . (:level . 1))
+                                     (tickler-file . (:level . 1))
+                                     (reference-file . (:level . 1)))
                 org-todo-keywords
                 (quote ((sequence "TODO(t)" "DOING(o)" "|" "DONE(d)")
                         (sequence "WAITING(w@/!)" "|" "CANCELLED(c@/!)")))
@@ -428,13 +430,15 @@
   (defun find-someday-file () (interactive) (find-file someday-file))
   (defun find-inbox-file () (interactive) (find-file inbox-file))
   (defun find-tickler-file () (interactive) (find-file tickler-file))
+  (defun find-reference-file () (interactive) (find-file reference-file))
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c e g" . find-gtd-file)
          ("C-c e s" . find-someday-file)
-         ("C-c e n" . find-inbox-file)
-         ("C-c e t" . find-tickler-file))
+         ("C-c e I" . find-inbox-file)
+         ("C-c e t" . find-tickler-file)
+         ("C-c e r" . find-reference-file))
   :config
   ;; Add a few languages for execution in org source blocks
   (org-babel-do-load-languages 'org-babel-load-languages
@@ -448,6 +452,9 @@
                                  "* TODO %i%?")
                                 ("T" "Tickler" entry
                                  (file+headline (concat org-directory "tickler.org") "Tickler")
+                                 "* %i%? \n %U")
+                                ("r" "Reference" entry
+                                 (file (concat org-directory "reference.org"))
                                  "* %i%? \n %U")))
 
   ;; Taken from the org-mode manual - Automatically mark a parent task
@@ -469,9 +476,9 @@
             (todo "WAITING")
             (todo "DOING|TODO"
                   ((org-agenda-sorting-strategy '(todo-state-down))))))
-          ("o" "At the office" tags-todo "@office"
-           ((org-agenda-overriding-header "Office")
-            (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))
+          ("w" "Work tasks" tags-todo "@work"
+           ((org-agenda-overriding-header "Work")
+            (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first))) 
           ("h" todo "HOLD")))
   :config
   ;; Borrowed from https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
