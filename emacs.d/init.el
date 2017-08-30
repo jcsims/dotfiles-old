@@ -436,7 +436,7 @@
          ("C-c c" . org-capture)
          ("C-c e g" . find-gtd-file)
          ("C-c e s" . find-someday-file)
-         ("C-c e I" . find-inbox-file)
+         ("C-c e n" . find-inbox-file)
          ("C-c e t" . find-tickler-file)
          ("C-c e r" . find-reference-file))
   :config
