@@ -401,7 +401,7 @@
 
 (use-package org
   :init
-  (setq-default org-directory "~/org/"
+  (setq-default org-directory "~/Dropbox/org/"
                 org-log-done t
                 org-startup-indented t
                 org-startup-folded t
@@ -455,15 +455,7 @@
                                  "* %i%? \n %U")
                                 ("r" "Reference" entry
                                  (file (concat org-directory "reference.org"))
-                                 "* %i%? \n %U")))
-
-  ;; Taken from the org-mode manual - Automatically mark a parent task
-  ;; as DONE when all child nodes are marked DONE
-  (defun org-summary-todo (n-done n-not-done)
-    "Switch entry to DONE when all subentries are done, to TODO otherwise."
-    (let (org-log-done org-log-states)  ; turn off logging
-      (org-todo (if (= n-not-done 0) "DONE" "TODO"))))
-  (add-hook 'org-after-todo-statistics-hook 'org-summary-todo))
+                                 "* %i%? \n %U"))))
 
 (use-package org-agenda
   :ensure f
@@ -478,7 +470,7 @@
                   ((org-agenda-sorting-strategy '(todo-state-down))))))
           ("w" "Work tasks" tags-todo "@work"
            ((org-agenda-overriding-header "Work")
-            (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first))) 
+            (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))
           ("h" todo "HOLD")))
   :config
   ;; Borrowed from https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
