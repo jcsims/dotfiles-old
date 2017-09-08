@@ -468,9 +468,13 @@
             (todo "WAITING")
             (todo "DOING|TODO"
                   ((org-agenda-sorting-strategy '(todo-state-down))))))
-          ("w" "Work tasks" tags-todo "@work"
-           ((org-agenda-overriding-header "Work")
-            (org-agenda-skip-function #'my-org-agenda-skip-all-siblings-but-first)))
+          ("w" "Work tasks"
+           ((agenda ""
+                    ((org-agenda-overriding-header "Work")))
+            (todo "WAITING")
+            (todo "DOING|TODO"
+                  ((org-agenda-sorting-strategy '(todo-state-down)))))
+           ((org-agenda-tag-filter-preset '("@work"))))
           ("h" todo "HOLD")))
   :config
   ;; Borrowed from https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
