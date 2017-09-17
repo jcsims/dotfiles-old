@@ -259,5 +259,9 @@ Emacswiki."
       (kill-new unhexed)
       (message unhexed))))
 
+(defun random-lowercase-char ()
+  "Return a random lowercase character, from a-z."
+  (format "%c" (+ 97 (random 26))))
+
 (provide 'init-funcs)
 ;;; init-funcs.el ends here

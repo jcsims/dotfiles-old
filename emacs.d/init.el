@@ -401,7 +401,7 @@
 
 (use-package org
   :init
-  (setq-default org-directory "~/Dropbox/org/"
+  (setq-default org-directory "~/org/"
                 org-log-done t
                 org-startup-indented t
                 org-startup-folded t
@@ -498,6 +498,7 @@
 (use-package ox-md :ensure f)
 (use-package restclient)
 (use-package ob-restclient)
+(use-package ob-sql-mode)
 (use-package go-mode)
 (use-package csv-mode)
 (use-package sql-indent)
@@ -580,5 +581,8 @@
 
 ;; Try out a linter...
 (use-package flycheck-joker :defer 2)
+
+;; Seed the PRNG anew, from the system's entropy pool
+(random t)
 
 ;;; init.el ends here

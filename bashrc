@@ -20,6 +20,17 @@ fi
 
 [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
 
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if ! shopt -oq posix; then
+  if [ -f /usr/share/bash-completion/bash_completion ]; then
+    . /usr/share/bash-completion/bash_completion
+  elif [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+  fi
+fi
+
 ## Path
 export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 export PATH=$HOME/bin:$PATH
@@ -28,6 +39,7 @@ export PATH=$HOME/bin:$PATH
 export PATH=/usr/local/go/bin:$PATH
 
 export GOPATH=$HOME/code/go:$HOME/code/sandcastle:$HOME/code/ops
+export GOBIN=$HOME/bin
 
 # Add postgres tools
 export PATH=/usr/pgsql-9.6/bin:$PATH
@@ -68,12 +80,8 @@ shopt -s histappend
 # Save multi-line commands as one command
 shopt -s cmdhist
 
-# Record each line as it gets issued
-if [ "$(uname)" == "Darwin" ]; then
-    PROMPT_COMMAND="history -a"
-else
-    PROMPT_COMMAND="$PROMPT_COMMAND;history -a"
-fi
+PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'history -a'
+PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
 
 # Huge history. Doesn't appear to slow things down, so why not?
 HISTSIZE=500000
@@ -112,12 +120,17 @@ shopt -s cdspell 2> /dev/null
 # CDPATH=".:~/code"
 
 alias grep='grep --color=auto'
+alias ls='ls --color=auto'
 
 alias reload!='. ~/.bashrc'
 alias tree='tree -C'
 
 alias e='emacsclient -t -a ""'
 alias ec='emacsclient -c -a ""'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
 ## Git aliases
 alias gl="git log --graph --abbrev-commit --date=relative --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
@@ -127,7 +140,6 @@ alias gd='git diff'
 alias gc='git commit'
 alias gco='git checkout'
 alias gs='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
-
 
 for f in $HOME/.functions/*; do source "$f"; done
 
