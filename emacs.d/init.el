@@ -347,7 +347,9 @@
   :config (global-nlinum-mode))
 
 (use-package dired-collapse :defer 2)
-(use-package salt-mode :defer 2)
+(use-package salt-mode
+  :defer 2
+  :mode "\\.sls\\'")
 
 ;; Use es-mode for ElasticSearch buffers
 (use-package es-mode
@@ -445,6 +447,7 @@
                                '((clojure . t)
                                  (sh . t)
                                  (emacs-lisp . t)
+                                 (elasticsearch . t)
                                  (restclient . t)))
 
   (setq org-capture-templates '(("t" "Todo [inbox]" entry
