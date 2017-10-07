@@ -75,12 +75,19 @@
 
 # Mute
 "pactl set-sink-mute 0 toggle"
-XF86AudioMute
+   XF86AudioMute
 
 # Play/pause
-"pianoctl p"
+"playerctl play-pause"
    XF86AudioPlay
 
+# Next track
+"playerctl next"
+   Control+Mod4 + n
+
+# Previous track
+"playerctl previous"
+   Control+Mod4 + p
 
 ##################################
 # End of xbindkeys configuration #

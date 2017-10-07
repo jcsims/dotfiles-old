@@ -125,7 +125,7 @@
   :bind ("C-c m" . macrostep-expand))
 
 (use-package exec-path-from-shell
-  :if (memq window-system '(mac ns))
+  :if (memq window-system '(mac ns x))
   :config (exec-path-from-shell-initialize))
 
 (use-package re-builder
@@ -587,5 +587,7 @@
 
 ;; Seed the PRNG anew, from the system's entropy pool
 (random t)
+
+(use-package systemd :defer 2)
 
 ;;; init.el ends here
