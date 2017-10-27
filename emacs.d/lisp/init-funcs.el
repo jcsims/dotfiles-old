@@ -242,7 +242,7 @@ Emacswiki."
                 (goto-char (point-min))
                 (insert prefix ": ")
                 (insert "\n")
-                (beginning-of-buffer)
+                (goto-char (point-min))
                 (move-end-of-line nil))
             (goto-char (point-min)))))))
 

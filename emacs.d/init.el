@@ -106,8 +106,8 @@
   :config (paradox-enable))
 
 (use-package solarized-theme
-  :disabled
   :init
+  :disabled
   (setq jcs-active-theme 'solarized-dark)
   (defun toggle-dark-light-theme ()
     "Toggle the current solarized theme between light and dark."
@@ -119,6 +119,7 @@
   :config (load-theme jcs-active-theme t))
 
 (use-package monokai-theme
+  ;:disabled
   :config (load-theme 'monokai t))
 
 (use-package macrostep
@@ -275,6 +276,8 @@
 
 (use-package git-timemachine :defer 5)
 (use-package git-gutter :defer 2)
+(use-package ghub :defer 2)
+(use-package ghub+ :defer 2)
 
 (use-package windmove
   :config (windmove-default-keybindings))
@@ -292,7 +295,14 @@
   :config (add-hook 'prog-mode-hook 'paredit-everywhere-mode))
 
 (use-package projectile
-  :config (projectile-mode))
+  :delight
+  :config
+  (projectile-mode)
+  ;; Note: remove this once
+  ;; https://github.com/bbatsov/projectile/issues/1183 is resolved
+  (setq projectile-mode-line
+         '(:eval (format " Projectile[%s]"
+                        (projectile-project-name)))))
 
 (use-package expand-region
   :defer 2
@@ -332,10 +342,11 @@
 (use-package super-save
   :delight
   :init
-  (setq super-save-auto-save-when-idle t)
   (setq auto-save-default nil)
   :defer 2
-  :config (super-save-mode +1))
+  :config
+  (super-save-mode +1)
+  (setq super-save-auto-save-when-idle t))
 
 ;; Set up the fancy mode-line
 (use-package smart-mode-line
@@ -362,7 +373,7 @@
    ("C-c C-<" . mc/mark-all-like-this)))
 
 (use-package alchemist
-  :init
+  :config
   ;; Run the whole test suite with alchemist-mix-test after saving a buffer.
   (setq alchemist-hooks-test-on-save t)
   ;; Compile your project with alchemist-mix-compile after saving a
@@ -412,11 +423,13 @@
                 org-src-fontify-natively t
                 org-use-fast-todo-selection t
                 gtd-file (concat org-directory "gtd.org")
+                work-gtd-file (concat org-directory "work-gtd.org")
                 someday-file (concat org-directory "someday.org")
                 tickler-file (concat org-directory "tickler.org")
                 inbox-file (concat org-directory "inbox.org")
                 reference-file (concat org-directory "reference.org")
                 org-refile-targets '((gtd-file . (:maxlevel . 2))
+                                     (work-gtd-file . (:maxlevel . 2))
                                      (someday-file . (:level . 1))
                                      (tickler-file . (:level . 1))
                                      (reference-file . (:level . 1)))
@@ -429,6 +442,7 @@
                 ;; Don't ask every time before evaluating an org source block
                 org-confirm-babel-evaluate nil)
   (defun find-gtd-file () (interactive) (find-file gtd-file))
+  (defun find-work-gtd-file () (interactive) (find-file work-gtd-file))
   (defun find-someday-file () (interactive) (find-file someday-file))
   (defun find-inbox-file () (interactive) (find-file inbox-file))
   (defun find-tickler-file () (interactive) (find-file tickler-file))
@@ -437,6 +451,7 @@
          ("C-c a" . org-agenda)
          ("C-c c" . org-capture)
          ("C-c e g" . find-gtd-file)
+         ("C-c e w" . find-work-gtd-file)
          ("C-c e s" . find-someday-file)
          ("C-c e n" . find-inbox-file)
          ("C-c e t" . find-tickler-file)

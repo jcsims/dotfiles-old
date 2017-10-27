@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
 ## Basic bash config
-export LSCOLORS="exfxcxdxbxegedabagacad"
 export CLICOLOR=true
 export EDITOR='emacsclient'
 export TERM=xterm-256color
+
+if [[ -x /usr/bin/dircolors ]] ; then
+    eval "$(dircolors)"
+fi
 
 # Source global definitions
 if [ -f /etc/bashrc ]; then
@@ -139,7 +142,14 @@ alias gpl='git pull --rebase --prune'
 alias gd='git diff'
 alias gc='git commit'
 alias gco='git checkout'
-alias gs='git status -sb' # upgrade your git if -sb breaks for you. it's fun.
+alias gs='git status -sb' # upgrade your git if -sb breaks for # you. it's fun.
+
+## Pacman aliases
+alias pac-list-orphans='pacaur -Qdt'
+alias pac-list-files-in-package='pacaur -Ql'
+alias pac-remove-with-deps='pacaur -Rs'
+alias pac-upgrade='pacaur -Syu'
+alias pac-leaves='pacman -Qet'
 
 for f in $HOME/.functions/*; do source "$f"; done
 

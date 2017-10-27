@@ -77,11 +77,29 @@
 "pactl set-sink-mute 0 toggle"
    XF86AudioMute
 
-# Play/pause
+# # Pandora Controls
+# ## Play/pause
+# "pianoctl p"
+#    XF86AudioPlay
+
+# ## Next track
+# "pianoctl n"
+#    Control+Mod4 + n
+
+# ## Thumbs down
+# "pianoctl -"
+#    Control+Mod4 + minus
+
+# ## Thumbs up
+# "pianoctl +"
+#    Control+Mod4 + equal
+
+# Spotify controls
+## Play/pause
 "playerctl play-pause"
    XF86AudioPlay
 
-# Next track
+## Next track
 "playerctl next"
    Control+Mod4 + n
 

@@ -3,7 +3,7 @@ _c() {
   shift
   [ "$1" == "open" ] && shift
 
-  local cur prev words cword
+  local cur
   _init_completion || return
 
   local IFS=$'\n' i j k

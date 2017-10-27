@@ -30,10 +30,6 @@
   autocorrect = 1
 [credential]
   helper = osxkeychain
-[filter "media"]
-  clean = git media clean %f
-  smudge = git media smudge %f
-  required = true
 [psh]
   default = simple
 [status]
@@ -50,4 +46,6 @@
 [interactive]
   diffFilter = diff-highlight
 [magit]
-	hideCampaign = true
+  hideCampaign = true
+[github "github.threatbuild.com"]
+  user = chrsims
