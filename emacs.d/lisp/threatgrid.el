@@ -4,43 +4,98 @@
 
 ;;; Code:
 
-(require 'ghub+)
+(require 'ghub)
+(require 'magit-git)
+(require 'dash)
 
 (defvar tg-base-url "https://github.threatbuild.com/api/v3")
 (defvar tg-gh-username)
 
-;; (ghubp-get-issues "/users/chrsims")
 
-(defun tb-get-threatbrain-issues ()
-  "Get all issues from the Threatbrain repo."
-  (let ((ghub-base-url tg-base-url)
-        (repo (ghub-get "/repos/threatgrid/threatbrain")))
-    (ghubp-get-repos-owner-repo-issues repo)))
+;;; Issue -> Pull Request
+(defun tg-get-current-upstream-branch ()
+  "Get the bare branch name of the currently configured upstream."
+  (replace-regexp-in-string
+   (concat (magit-get-upstream-remote) "/")
+   ""
+   (magit-get-upstream-branch)))
 
-;; (tb-get-threatbrain-issues)
-
-(defun tb-get-threatbrain-prs ()
-  "Get all pull requests from the Threatbrain repo."
-  (let ((ghub-base-url tg-base-url)
-        (repo (ghub-get "/repos/threatgrid/threatbrain")))
-    (ghubp-get-repos-owner-repo-pulls repo)))
-
-;; (tb-get-threatbrain-prs)
-
-(defun preq (issue-name)
-  "Convert a particular ISSUE-NAME to a pull-request.
+(defun tg-convert-issue-to-pr (branch-name upstream)
+  "Convert a particular issue branch BRANCH-NAME to a pull-request.
+Pass different UPSTREAM to target something other than master for the PR.
 See: https://developer.github.com/v3/pulls/#alternative-input"
-  (let ((ghub-base-url tg-base-url)
-        (repo (ghub-get "/repos/threatgrid/threatbrain"))
-        (issue-number (replace-regexp-in-string "^issue-" "" issue-name))
-        (pr-head (concat tg-gh-username ":" issue-name)))
-    (ghubp-post-repos-owner-repo-pulls repo
-                                       (list
-                                        (cons 'issue issue-number)
-                                        (cons 'head pr-head)
-                                        (cons 'base "master")))))
+  (let ((branch-name (or branch-name (magit-get-current-branch))))
+    (if (not (string-prefix-p "issue-" branch-name))
+        (message "branch-name should be of the format `issue-<issue number>`.")
+      (let ((ghub-base-url tg-base-url)
+            (repo "threatgrid/threatbrain")
+            (upstream (or upstream (tg-get-current-upstream-branch) "master"))
+            (issue-number (substring branch-name 6))
+            (pr-head (concat tg-gh-username ":" branch-name)))
+        (ghub-post (concat "/repo/" repo "/pulls")
+                   (list
+                    (cons 'issue issue-number)
+                    (cons 'head pr-head)
+                    (cons 'base upstream)))))))
 
-;; (preq "issue-5329")
+(defun preq ()
+  "Convert an issue to a PR."
+  (interactive)
+  (tg-convert-issue-to-pr nil nil))
+
+;;; Reporting
+(defun tg--prs-for-user (prs username)
+  "Filter a list of PRS for a specific USERNAME."
+  (-filter (lambda (pr)
+             (let ((assignee (alist-get 'assignee pr)))
+               (equal username (alist-get 'login assignee))))
+           prs))
+
+(defun tg--prs-in-time-range (prs start end)
+  "Filter a list of PRS based on START and END times.
+nil START or END will not bracket.  START and END are Emacs time structures."
+  (-filter (lambda (pr)
+             (let ((closed-at (date-to-time (alist-get 'closed_at pr))))
+               (and
+                (if start
+                    (time-less-p start closed-at)
+                  t)
+                (if end
+                    (time-less-p closed-at end)
+                  t))))
+           prs))
+
+(defun tg-weekly-work (username)
+  "Return a list of PRs completed by USERNAME in the last week."
+  (let* ((ghub-base-url tg-base-url)
+         (repo "threatgrid/threatbrain")
+         (latest-prs (ghub-get (concat "/repos/" repo "/pulls")
+                               (list (cons 'state "closed")
+                                     (cons 'per_page "100"))))
+         (eight-days-ago (time-add (current-time) (* -1 8 24 60 60))))
+    (-> latest-prs
+        (tg--prs-in-time-range eight-days-ago (current-time))
+        (tg--prs-for-user username))))
+
+(defun tg-merged-prs-with-no-assignee ()
+  "Return a list of merged pull requests that are missing an assignee."
+  (tg-weekly-work nil))
+
+(defun tg-weekly-work-report (username)
+  "Pretty-print a list of PRs completed in the last week by USERNAME."
+  (let ((prs (tg-weekly-work username)))
+    (-reduce-from (lambda (acc pr)
+                    (concat acc
+                            (format "- %s\n  %s\n"
+                                    (alist-get 'title pr)
+                                    (alist-get 'html_url pr))))
+                  ""
+                  prs)))
+
+(defun tg-insert-weekly-work-report ()
+  "Insert a pretty-printed list of work done in the last week at point."
+  (interactive)
+  (insert (tg-weekly-work-report tg-gh-username)))
 
 (provide 'threatgrid)
 ;;; threatgrid.el ends here

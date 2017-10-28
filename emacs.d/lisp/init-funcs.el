@@ -231,8 +231,7 @@ Emacswiki."
         (global-linum-mode))))
 
 (defun jcs-magit-commit-template (&rest _)
-  "Ensures that commits on an issue- branch have the issue name
-  in the commit as well."
+  "Ensure that commits on an issue- branch have the issue name in the commit as well."
   (let ((prefix (magit-get-current-branch)))
     (if (string-prefix-p "issue-" prefix)
         (progn

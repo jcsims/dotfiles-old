@@ -139,6 +139,10 @@
   :ensure f
   :load-path "lisp")
 
+(use-package threatgrid
+  :ensure f
+  :load-path "lisp")
+
 (use-package whitespace
   :delight whitespace-mode
   :config
@@ -271,7 +275,8 @@
   (setq-default magit-last-seen-setup-instructions "1.4.0"
                 ;; Gravatars are messed up in OSX
                 magit-revision-use-gravatar-kludge t
-                magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-")))
+                magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-"))
+                magit-prefer-remote-upstream t)
   :bind ("C-c g" . magit-status))
 
 (use-package git-timemachine :defer 5)
