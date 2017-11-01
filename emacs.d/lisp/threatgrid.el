@@ -1,7 +1,17 @@
 ;;; threatgrid.el --- Helper functions for working at Threatgrid
 
 ;;; Commentary:
+;; Two main helper functions for git + threatgrid.  `preq` will convert
+;; an issue to a pull request for you, and `tg-weekly-work-report`
+;; will generate a markdown list of the PRs assigned to you that have
+;; been merged in the last 8 days.
 
+;; There are a few dependencies:
+;; - ghub
+;; - magit
+;; - dash
+
+;; Make sure you set the `tg-gh-username` var for it to work properly.
 ;;; Code:
 
 (require 'ghub)
