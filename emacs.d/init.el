@@ -119,7 +119,7 @@
   :config (load-theme jcs-active-theme t))
 
 (use-package monokai-theme
-  ;:disabled
+  ;;:disabled
   :config (load-theme 'monokai t))
 
 (use-package macrostep
@@ -306,7 +306,7 @@
   ;; Note: remove this once
   ;; https://github.com/bbatsov/projectile/issues/1183 is resolved
   (setq projectile-mode-line
-         '(:eval (format " Projectile[%s]"
+        '(:eval (format " Projectile[%s]"
                         (projectile-project-name)))))
 
 (use-package expand-region
@@ -419,20 +419,21 @@
 
 (use-package org
   :init
-  (setq-default org-directory "~/org/"
-                org-log-done t
+  (setq org-directory "~/org/")
+  (defvar gtd-file (concat org-directory "gtd.org"))
+  (defvar work-gtd-file (concat org-directory "work-gtd.org"))
+  (defvar someday-file (concat org-directory "someday.org"))
+  (defvar tickler-file (concat org-directory "tickler.org"))
+  (defvar work-tickler-file (concat org-directory "work-tickler.org"))
+  (defvar inbox-file (concat org-directory "inbox.org"))
+  (defvar reference-file (concat org-directory "reference.org"))
+  (setq-default org-log-done t
                 org-startup-indented t
                 org-startup-folded t
-                org-agenda-files (list org-directory)
+                org-agenda-files (file-expand-wildcards (concat org-directory "*.org"))
                 org-default-notes-file (concat org-directory "inbox.org")
                 org-src-fontify-natively t
                 org-use-fast-todo-selection t
-                gtd-file (concat org-directory "gtd.org")
-                work-gtd-file (concat org-directory "work-gtd.org")
-                someday-file (concat org-directory "someday.org")
-                tickler-file (concat org-directory "tickler.org")
-                inbox-file (concat org-directory "inbox.org")
-                reference-file (concat org-directory "reference.org")
                 org-refile-targets '((gtd-file . (:maxlevel . 2))
                                      (work-gtd-file . (:maxlevel . 2))
                                      (someday-file . (:level . 1))
@@ -476,6 +477,9 @@
                                 ("T" "Tickler" entry
                                  (file+headline (concat org-directory "tickler.org") "Tickler")
                                  "* %i%? \n %U")
+                                ("w" "Work Tickler" entry
+                                 (file+headline (concat org-directory "work-tickler.org") "Tickler")
+                                 "* %i%? \n %U")
                                 ("r" "Reference" entry
                                  (file (concat org-directory "reference.org"))
                                  "* %i%? \n %U"))))
@@ -493,13 +497,19 @@
                   ((org-agenda-sorting-strategy '(todo-state-down))))))
           ("w" "Work tasks"
            ((agenda ""
-                    ((org-agenda-overriding-header "Work")))
-            (todo "WAITING")
-            (todo "DOING|TODO"
-                  ((org-agenda-sorting-strategy '(todo-state-down)))))
-           ((org-agenda-tag-filter-preset '("@work"))))
-          ("h" todo "HOLD")))
+                    ((org-agenda-files (list work-tickler-file work-gtd-file))
+                     (org-agenda-overriding-header "Work")))
+            (todo "WAITING" ((org-agenda-files (list work-tickler-file work-gtd-file))))
+            (todo "DOING"
+                  ((org-agenda-files (list work-tickler-file work-gtd-file))))
+            (todo "TODO"
+                  ((org-agenda-files (list work-tickler-file work-gtd-file))))))
+          ("a" todo "WAITING")))
   :config
+  (defun org-current-is-todo ()
+    "Is the current org heading a TODO?"
+    (string= "TODO" (org-get-todo-state)))
+
   ;; Borrowed from https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
   (defun my-org-agenda-skip-all-siblings-but-first ()
     "Skip all but the first non-done entry."
@@ -512,11 +522,7 @@
             (setq should-skip-entry t))))
       (when should-skip-entry
         (or (outline-next-heading)
-            (goto-char (point-max))))))
-
-  (defun org-current-is-todo ()
-    "Is the current org heading a TODO?"
-    (string= "TODO" (org-get-todo-state))))
+            (goto-char (point-max)))))))
 
 (use-package ox-md :ensure f)
 (use-package restclient)
