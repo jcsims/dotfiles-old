@@ -524,6 +524,15 @@
         (or (outline-next-heading)
             (goto-char (point-max)))))))
 
+(use-package alert
+  :config
+  (setq alert-default-style 'libnotify))
+
+(use-package org-alert
+  :config
+  (setq org-alert-notification-title "Org Agenda")
+  (org-alert-enable))
+
 (use-package ox-md :ensure f)
 (use-package restclient)
 (use-package ob-restclient)
