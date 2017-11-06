@@ -531,7 +531,8 @@
 (use-package org-alert
   :config
   (setq org-alert-notification-title "Org Agenda")
-  (org-alert-enable))
+  ;;(org-alert-enable)
+  (run-at-time "0800" (* 60 60 24) 'org-alert-check))
 
 (use-package ox-md :ensure f)
 (use-package restclient)
