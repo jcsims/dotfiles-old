@@ -438,6 +438,7 @@
                                      (work-gtd-file . (:maxlevel . 2))
                                      (someday-file . (:level . 1))
                                      (tickler-file . (:level . 1))
+                                     (work-tickler-file . (:level . 1))
                                      (reference-file . (:level . 1)))
                 org-todo-keywords
                 (quote ((sequence "TODO(t)" "DOING(o)" "|" "DONE(d)")
@@ -497,13 +498,13 @@
                   ((org-agenda-sorting-strategy '(todo-state-down))))))
           ("w" "Work tasks"
            ((agenda ""
-                    ((org-agenda-files (list work-tickler-file work-gtd-file))
+                    ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))
                      (org-agenda-overriding-header "Work")))
-            (todo "WAITING" ((org-agenda-files (list work-tickler-file work-gtd-file))))
+            (todo "WAITING" ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))))
             (todo "DOING"
-                  ((org-agenda-files (list work-tickler-file work-gtd-file))))
+                  ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))))
             (todo "TODO"
-                  ((org-agenda-files (list work-tickler-file work-gtd-file))))))
+                  ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))))))
           ("a" todo "WAITING")))
   :config
   (defun org-current-is-todo ()
@@ -531,8 +532,8 @@
 (use-package org-alert
   :config
   (setq org-alert-notification-title "Org Agenda")
-  ;;(org-alert-enable)
-  (run-at-time "0800" (* 60 60 24) 'org-alert-check))
+  (setq org-alert-interval (* 60 60))
+  (org-alert-enable))
 
 (use-package ox-md :ensure f)
 (use-package restclient)

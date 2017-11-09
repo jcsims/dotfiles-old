@@ -6,7 +6,7 @@
   protocol = https
 [user]
   name = Chris Sims
-  email = chris@jcsi.ms
+  email = chris@jcs.im
 [alias]
   co = checkout
   count   = shortlog -sn

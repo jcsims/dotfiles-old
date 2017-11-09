@@ -11,7 +11,12 @@
 ;; - magit
 ;; - dash
 
-;; Make sure you set the `tg-gh-username` var for it to work properly.
+;; Configuration:
+;; - Make sure you set the `tg-gh-username` var
+;; - Set git config for ghub:
+;;    [github "github.threatbuild.com"]
+;;       user = <username>
+;; - Configure auth for ghub: https://github.com/magit/ghub#github-enterprise-support
 ;;; Code:
 
 (require 'ghub)
@@ -19,6 +24,7 @@
 (require 'dash)
 
 (defvar tg-base-url "https://github.threatbuild.com/api/v3")
+(defvar tg-work-repos '("threatgrid/threatbrain"))
 (defvar tg-gh-username)
 
 
@@ -42,11 +48,13 @@ See: https://developer.github.com/v3/pulls/#alternative-input"
             (upstream (or upstream (tg-get-current-upstream-branch) "master"))
             (issue-number (substring branch-name 6))
             (pr-head (concat tg-gh-username ":" branch-name)))
-        (ghub-post (concat "/repo/" repo "/pulls")
+        (ghub-post (concat "/repos/" repo "/pulls")
+                   nil
                    (list
                     (cons 'issue issue-number)
                     (cons 'head pr-head)
-                    (cons 'base upstream)))))))
+                    (cons 'base upstream)))
+        (message "Created PR")))))
 
 (defun preq ()
   "Convert an issue to a PR."
@@ -78,10 +86,10 @@ nil START or END will not bracket.  START and END are Emacs time structures."
 (defun tg-weekly-work (username)
   "Return a list of PRs completed by USERNAME in the last week."
   (let* ((ghub-base-url tg-base-url)
-         (repo "threatgrid/threatbrain")
-         (latest-prs (ghub-get (concat "/repos/" repo "/pulls")
-                               (list (cons 'state "closed")
-                                     (cons 'per_page "100"))))
+         (latest-prs (--mapcat (ghub-get (concat "/repos/" it "/pulls")
+                                         (list (cons 'state "closed")
+                                               (cons 'per_page "100")))
+                               tg-work-repos))
          (eight-days-ago (time-add (current-time) (* -1 8 24 60 60))))
     (-> latest-prs
         (tg--prs-in-time-range eight-days-ago (current-time))
