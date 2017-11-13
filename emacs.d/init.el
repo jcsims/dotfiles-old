@@ -239,6 +239,7 @@
   :config (global-flycheck-mode))
 
 (use-package ido
+  :disabled
   :config
   (setq ido-use-filename-at-point nil
         ido-auto-merge-work-directories-length 0
@@ -251,21 +252,49 @@
   (ido-mode t)
   (ido-everywhere t))
 
-(use-package idomenu)
+(use-package idomenu
+  :disabled)
 
 (use-package ido-completing-read+
+  :disabled
   :config
   (setq-default ido-ubiquitous-auto-update-overrides t)
   (ido-ubiquitous-mode t))
 
 (use-package flx-ido
+  :disabled
   :config (flx-ido-mode t))
 
 (use-package smex
   :init
+  :disabled
   (setq-default smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
   :bind (("M-x" . smex)
          ("M-X" . smex-major-mode-commands)))
+
+(use-package ivy
+  :delight
+  :bind (("C-c C-r" . ivy-resume))
+  :config
+  (ivy-mode 1)
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t))
+
+(use-package swiper)
+
+(use-package counsel
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-h f" . counsel-describe-function)
+         ("C-h v" . counsel-describe-variable)
+         ("C-s" . counsel-grep-or-swiper))
+  :config
+  (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
+  (setq counsel-grep-base-command
+        "rg -i -M 120 --no-heading --line-number --color never '%s' %s"))
+
+(use-package counsel-projectile
+  :config (counsel-projectile-on))
 
 (use-package js2-mode
   :mode "\\.js\\'")
