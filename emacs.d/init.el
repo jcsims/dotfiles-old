@@ -474,7 +474,8 @@
                         (sequence "WAITING(w@/!)" "|" "CANCELLED(c@/!)")))
                 org-refile-allow-creating-parent-nodes t
                 org-refile-use-outline-path 'file
-                org-completion-use-ido t
+                org-outline-path-complete-in-steps nil
+                org-completion-use-ido nil
                 ;; Don't ask every time before evaluating an org source block
                 org-confirm-babel-evaluate nil)
   (defun find-gtd-file () (interactive) (find-file gtd-file))
