@@ -560,6 +560,7 @@
   (setq alert-default-style 'libnotify))
 
 (use-package org-alert
+  :disabled
   :config
   (setq org-alert-notification-title "Org Agenda")
   (setq org-alert-interval (* 60 60))
