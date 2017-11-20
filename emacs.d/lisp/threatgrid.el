@@ -95,13 +95,9 @@ nil START or END will not bracket.  START and END are Emacs time structures."
         (tg--prs-in-time-range eight-days-ago (current-time))
         (tg--prs-for-user username))))
 
-(defun tg-merged-prs-with-no-assignee ()
-  "Return a list of merged pull requests that are missing an assignee."
-  (tg-weekly-work nil))
-
-(defun tg-weekly-work-report (username)
+(defun tg-print-weekly-closed-prs (username)
   "Pretty-print a list of PRs completed in the last week by USERNAME."
-  (let ((prs (tg-weekly-work username)))
+  (let ((prs (reverse (tg-weekly-work username))))
     (-reduce-from (lambda (acc pr)
                     (concat acc
                             (format "- %s\n  %s\n"
@@ -110,10 +106,57 @@ nil START or END will not bracket.  START and END are Emacs time structures."
                   ""
                   prs)))
 
+(defun tg-open-prs (username)
+  "Return a list of PRs currently open by USERNAME."
+  (let* ((ghub-base-url tg-base-url)
+         (open-prs (--mapcat (ghub-get (concat "/repos/" it "/pulls")
+                                       (list (cons 'state "open")
+                                             (cons 'per_page "100")))
+                             tg-work-repos)))
+    (tg--prs-for-user open-prs username)))
+
+(defun tg-print-weekly-open-prs (username)
+  "Pretty-print a list of PRs completed in the last week by USERNAME."
+  (let ((prs (tg-open-prs username)))
+    (-reduce-from (lambda (acc pr)
+                    (concat acc
+                            (format "- %s\n  %s\n"
+                                    (alist-get 'title pr)
+                                    (alist-get 'html_url pr))))
+                  ""
+                  prs)))
+
+(defun tg-in-progress-issues ()
+  "Return a list of issues assigned to the auth'd user and labeled `in progress`."
+  (let* ((ghub-base-url tg-base-url))
+    (ghub-get "/issues"
+              (list (cons 'labels "in progress")
+                    (cons 'per_page "100")))))
+
+(defun tg-print-in-progress-issues ()
+  "Pretty-print a list of issues assigned to the auth'd user and labeled `in progress`."
+  (let ((issues (tg-in-progress-issues)))
+    (-reduce-from (lambda (acc issue)
+                    (concat acc
+                            (format "- %s\n  %s\n"
+                                    (alist-get 'title issue)
+                                    (alist-get 'html_url issue))))
+                  ""
+                  issues)))
+
 (defun tg-insert-weekly-work-report ()
   "Insert a pretty-printed list of work done in the last week at point."
   (interactive)
-  (insert (tg-weekly-work-report tg-gh-username)))
+  (insert "## Did\n"
+          (tg-print-weekly-closed-prs tg-gh-username)
+          "## Doing\n"
+          (tg-print-weekly-open-prs tg-gh-username)
+          (tg-print-in-progress-issues)))
+
+(defun tg-insert-unassigned-prs ()
+  "Insert a pretty-printed list of work done in the last week at point, that had no assignee."
+  (interactive)
+  (insert (tg-print-weekly-closed-prs nil)))
 
 (provide 'threatgrid)
 ;;; threatgrid.el ends here

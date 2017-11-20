@@ -10,7 +10,7 @@ if [[ -x /usr/bin/dircolors ]] ; then
 fi
 
 # Source global definitions
-if [ -f /etc/bashrc ]; then
+if [[ -f /etc/bashrc ]]; then
 	. /etc/bashrc
 fi
 
@@ -18,34 +18,44 @@ fi
 # want in your public, versioned repo.
 if [[ -a ~/.localrc ]]
 then
-    source ~/.localrc
-fi
-
-[ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
-
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
+    source "$HOME/.localrc"
 fi
 
 ## Path
-export PATH=/usr/local/bin:/usr/local/sbin:$PATH
 export PATH=$HOME/bin:$PATH
 
-# Add GOROOT bin path to PATH
-export PATH=/usr/local/go/bin:$PATH
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    # enable programmable completion features (you don't need to enable
+    # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+    # sources /etc/bash.bashrc).
+    if ! shopt -oq posix; then
+        if [ -f /usr/share/bash-completion/bash_completion ]; then
+            . /usr/share/bash-completion/bash_completion
+        elif [ -f /etc/bash_completion ]; then
+            . /etc/bash_completion
+        fi
+    fi
 
-export GOPATH=$HOME/code/go:$HOME/code/sandcastle:$HOME/code/ops
+    # Add an "alert" alias for long running commands.  Use like so:
+    #   sleep 10; alert
+    alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+    ## Pacman aliases
+    alias pac-list-orphans='pacman -Qdt'
+    alias pac-list-files-in-package='pacman -Ql'
+    alias pac-leaves='pacman -Qet'
+
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    # Add GOROOT bin path to PATH
+    export PATH=/usr/local/go/bin:$PATH
+    [ -f /usr/local/etc/bash_completion ] && . /usr/local/etc/bash_completion
+
+    # Brew-installed paths
+    export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+fi
+
+export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle:$HOME/code/tg/ops
 export GOBIN=$HOME/bin
-
-# Add postgres tools
-export PATH=/usr/pgsql-9.6/bin:$PATH
 
 # Sensible options, borrowed from
 # https://github.com/mrzool/bash-sensible
@@ -131,10 +141,6 @@ alias tree='tree -C'
 alias e='emacsclient -t -a ""'
 alias ec='emacsclient -c -a ""'
 
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
 ## Git aliases
 alias gl="git log --graph --abbrev-commit --date=relative --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 alias gp='git push origin HEAD'
@@ -143,13 +149,6 @@ alias gd='git diff'
 alias gc='git commit'
 alias gco='git checkout'
 alias gs='git status -sb' # upgrade your git if -sb breaks for # you. it's fun.
-
-## Pacman aliases
-alias pac-list-orphans='pacaur -Qdt'
-alias pac-list-files-in-package='pacaur -Ql'
-alias pac-remove-with-deps='pacaur -Rs'
-alias pac-upgrade='pacaur -Syu'
-alias pac-leaves='pacman -Qet'
 
 for f in $HOME/.functions/*; do source "$f"; done
 
