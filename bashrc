@@ -133,7 +133,12 @@ shopt -s cdspell 2> /dev/null
 # CDPATH=".:~/code"
 
 alias grep='grep --color=auto'
-alias ls='ls --color=auto'
+if [[ -x /usr/local/bin/gls ]] ; then
+    alias ls='gls'
+else
+    alias ls='ls --color=auto'
+fi
+
 
 alias reload!='. ~/.bashrc'
 alias tree='tree -C'
