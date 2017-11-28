@@ -49,3 +49,5 @@
   hideCampaign = true
 [github "github.threatbuild.com"]
   user = chrsims
+[diff "gpg"]
+	textconv = gpg --no-tty --decrypt

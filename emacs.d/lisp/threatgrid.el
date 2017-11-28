@@ -6,6 +6,8 @@
 ;; will generate a markdown list of the PRs assigned to you that have
 ;; been merged in the last 8 days.
 
+;; Github API docs:https://developer.github.com/enterprise/2.9/v3/
+
 ;; There are a few dependencies:
 ;; - ghub
 ;; - magit
@@ -157,6 +159,21 @@ nil START or END will not bracket.  START and END are Emacs time structures."
   "Insert a pretty-printed list of work done in the last week at point, that had no assignee."
   (interactive)
   (insert (tg-print-weekly-closed-prs nil)))
+
+(defun tg--create-issue (repo title)
+  "Create a new issue in REPO with TITLE, adding the issue number to the kill ring."
+  (let* ((ghub-base-url tg-base-url)
+	 (response (ghub-post (concat "/repos/" repo "/issues")
+			      nil
+			      (list (cons 'title title))))
+	 (issue-number (alist-get 'number response)))
+    (kill-new (number-to-string issue-number))
+    (message "Created issue: %s" (alist-get 'html_url response))))
+
+(defun tg-create-threatbrain-issue (title)
+  "Create a new issue in the threatbrain repo, with title TITLE."
+  (interactive "MIssue Title: ")
+  (tg--create-issue "threatgrid/threatbrain" title))
 
 (provide 'threatgrid)
 ;;; threatgrid.el ends here

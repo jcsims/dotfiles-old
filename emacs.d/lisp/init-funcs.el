@@ -262,5 +262,16 @@ Emacswiki."
   "Return a random lowercase character, from a-z."
   (format "%c" (+ 97 (random 26))))
 
+(defun todays-log ()
+  "Return the filename for today's log file."
+  (format-time-string "%Y-%m-%d.org" (current-time)))
+
+(defun visit-todays-log ()
+  "Visit buffer for a log file for today."
+  (interactive)
+  (find-file (concat "~/org/log/" (todays-log))))
+
+(global-set-key (kbd "C-c e l") 'visit-todays-log)
+
 (provide 'init-funcs)
 ;;; init-funcs.el ends here

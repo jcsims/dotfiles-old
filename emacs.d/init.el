@@ -28,31 +28,11 @@
 (use-package delight)
 (use-package bind-key)
 
-;;; Personal info
-(setq user-full-name "Chris Sims"
-      user-mail-address "chris@jcsi.ms")
+(use-package validate)
 
-;;; Misc settings
-(setq-default inhibit-splash-screen t   ; Don't show the splash screen
-              ring-bell-function 'ignore ; Just ignore error notifications
-              ;;vc-make-backup-files t     ; Make backups of files,
-              vc-follow-symlinks t ; even when they're in version control
-              backup-directory-alist ; Save backups to a central location
-              `(("." . ,(expand-file-name
-                         (concat user-emacs-directory "backups"))))
-              global-auto-revert-non-file-buffers t ; Refresh dired buffers,
-              auto-revert-verbose nil   ; but do it quietly
-              indent-tabs-mode nil ; Don't use tabs unless buffer-local
-              gui-select-enable-clipboard t
-              x-select-enable-primary t
-              save-interprogram-paste-before-kill t
-              apropos-do-all t
-              mouse-yank-at-point t
-              save-place-file (concat user-emacs-directory "places")
-              ;; When scrolling, make sure to come back to the same spot
-              scroll-preserve-screen-position 'always
-              scroll-error-top-bottom t ; Scroll similar to vim
-              )
+;;; Personal info
+(validate-setq user-full-name "Chris Sims"
+      user-mail-address "chris@jcsi.ms")
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -67,7 +47,7 @@
 (put 'downcase-region 'disabled nil)
 
 ;; Increase the GC threshold
-(setq gc-cons-threshold 20000000)
+(validate-setq gc-cons-threshold 20000000)
 
 ;; Get rid of the insert key. I never use it, and I turn it on
 ;; accidentally all the time
@@ -99,27 +79,50 @@
   (find-file "~/.emacs.d/init.el"))
 (global-set-key (kbd "C-c e i") 'find-init-file)
 
+(use-package autorevert
+  :ensure nil)
+
+;;; Misc settings
+(setq inhibit-splash-screen t           ; Don't show the splash screen
+      ring-bell-function 'ignore     ; Just ignore error notifications
+      vc-follow-symlinks t      ; even when they're in version control
+      backup-directory-alist    ; Save backups to a central location
+      `(("." . ,(expand-file-name
+                 (concat user-emacs-directory "backups"))))
+      global-auto-revert-non-file-buffers t ; Refresh dired buffers,
+      auto-revert-verbose nil               ; but do it quietly
+      indent-tabs-mode nil        ; Don't use tabs unless buffer-local
+      gui-select-enable-clipboard t
+      x-select-enable-primary t
+      save-interprogram-paste-before-kill t
+      apropos-do-all t
+      mouse-yank-at-point t
+      save-place-file (concat user-emacs-directory "places")
+      ;; When scrolling, make sure to come back to the same spot
+      scroll-preserve-screen-position 'always
+      scroll-error-top-bottom t         ; Scroll similar to vim
+      )
 
 ;;; Packages
 (use-package paradox
-  :init (setq-default paradox-execute-asynchronously t)
-  :config (paradox-enable))
+  :config
+  (validate-setq paradox-execute-asynchronously t)
+  (paradox-enable))
 
 (use-package solarized-theme
   :init
   :disabled
-  (setq jcs-active-theme 'solarized-dark)
+  (validate-setq jcs-active-theme 'solarized-dark)
   (defun toggle-dark-light-theme ()
     "Toggle the current solarized theme between light and dark."
     (interactive)
     (if (eq jcs-active-theme 'solarized-light)
-        (setq jcs-active-theme 'solarized-dark)
-      (setq jcs-active-theme 'solarized-light))
+        (validate-setq jcs-active-theme 'solarized-dark)
+      (validate-setq jcs-active-theme 'solarized-light))
     (load-theme jcs-active-theme))
   :config (load-theme jcs-active-theme t))
 
 (use-package monokai-theme
-  ;;:disabled
   :config (load-theme 'monokai t))
 
 (use-package macrostep
@@ -132,7 +135,7 @@
 (use-package re-builder
   :ensure f
   :bind (("C-c R" . re-builder))
-  :config (setq reb-re-syntax 'string))
+  :config (validate-setq reb-re-syntax 'string))
 
 ;; External user config
 (use-package init-funcs
@@ -146,12 +149,12 @@
 (use-package whitespace
   :delight whitespace-mode
   :config
-  (setq whitespace-line-column 100
+  (validate-setq whitespace-line-column 100
         whitespace-style '(face trailing lines-tail))
   (add-hook 'prog-mode-hook 'whitespace-mode))
 
 (use-package markdown-mode
-  :config (setq markdown-fontify-code-blocks-natively t))
+  :config (validate-setq markdown-fontify-code-blocks-natively t))
 
 (use-package simple
   :ensure f
@@ -177,8 +180,7 @@
   (global-auto-revert-mode))
 
 (use-package saveplace
-  :init
-  (setq-default save-place t))
+  :config (save-place-mode))
 
 ;; Highlight matching parens
 (use-package paren
@@ -196,7 +198,7 @@
 (use-package epa-file :ensure f)
 
 ;; Work-specific code - should be encrypted!
-(setq work-init (concat user-emacs-directory "lisp/init-work.el.gpg"))
+(defvar work-init (concat user-emacs-directory "lisp/init-work.el.gpg"))
 (if (file-exists-p work-init)
     (load work-init))
 
@@ -227,8 +229,8 @@
 
 (use-package ag
   :config
-  (setq-default ag-highlight-search t
-                ag-reuse-buffers t))
+  (validate-setq ag-highlight-search t
+                 ag-reuse-buffers t))
 
 (use-package rainbow-delimiters
   :defer 2
@@ -241,14 +243,14 @@
 (use-package ido
   :disabled
   :config
-  (setq ido-use-filename-at-point nil
+  (validate-setq ido-use-filename-at-point nil
         ido-auto-merge-work-directories-length 0
         ido-use-virtual-buffers t
         ido-default-buffer-method 'selected-window
         ido-use-faces nil
         ido-enable-flex-matching t)
   (add-hook 'ido-setup-hook (lambda () (define-key ido-completion-map [up]
-                                         'previous-history-element)))
+                                    'previous-history-element)))
   (ido-mode t)
   (ido-everywhere t))
 
@@ -258,7 +260,7 @@
 (use-package ido-completing-read+
   :disabled
   :config
-  (setq-default ido-ubiquitous-auto-update-overrides t)
+  (validate-setq ido-ubiquitous-auto-update-overrides t)
   (ido-ubiquitous-mode t))
 
 (use-package flx-ido
@@ -268,17 +270,19 @@
 (use-package smex
   :init
   :disabled
-  (setq-default smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
+  (validate-setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
   :bind (("M-x" . smex)
          ("M-X" . smex-major-mode-commands)))
 
 (use-package ivy
   :delight
-  :bind (("C-c C-r" . ivy-resume))
+  :bind (("C-c M-r" . ivy-resume)) ; TODO: Find a binding that doesn't
+				   ; get overwritten...
   :config
-  (ivy-mode 1)
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t))
+  (validate-setq ivy-use-virtual-buffers t
+		 enable-recursive-minibuffers t
+		 ivy-use-selectable-prompt t)
+  (ivy-mode 1))
 
 (use-package swiper)
 
@@ -290,7 +294,7 @@
          ("C-s" . counsel-grep-or-swiper))
   :config
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
-  (setq counsel-grep-base-command
+  (validate-setq counsel-grep-base-command
         "rg -i -M 120 --no-heading --line-number --color never '%s' %s"))
 
 (use-package counsel-projectile
@@ -300,12 +304,9 @@
   :mode "\\.js\\'")
 
 (use-package magit
-  :init
-  (setq-default magit-last-seen-setup-instructions "1.4.0"
-                ;; Gravatars are messed up in OSX
-                magit-revision-use-gravatar-kludge t
-                magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-"))
-                magit-prefer-remote-upstream t)
+  :config
+  (validate-setq magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-"))
+                 magit-prefer-remote-upstream t)
   :bind ("C-c g" . magit-status))
 
 (use-package git-timemachine :defer 5)
@@ -334,7 +335,7 @@
   (projectile-mode)
   ;; Note: remove this once
   ;; https://github.com/bbatsov/projectile/issues/1183 is resolved
-  (setq projectile-mode-line
+  (validate-setq projectile-mode-line
         '(:eval (format " Projectile[%s]"
                         (projectile-project-name)))))
 
@@ -376,11 +377,11 @@
 (use-package super-save
   :delight
   :init
-  (setq auto-save-default nil)
+  (validate-setq auto-save-default nil)
   :defer 2
   :config
   (super-save-mode +1)
-  (setq super-save-auto-save-when-idle t))
+  (validate-setq super-save-auto-save-when-idle t))
 
 ;; Set up the fancy mode-line
 (use-package smart-mode-line
@@ -409,28 +410,28 @@
 (use-package alchemist
   :config
   ;; Run the whole test suite with alchemist-mix-test after saving a buffer.
-  (setq alchemist-hooks-test-on-save t)
+  (validate-setq alchemist-hooks-test-on-save t)
   ;; Compile your project with alchemist-mix-compile after saving a
   ;; buffer.
-  (setq alchemist-hooks-compile-on-save t))
+  (validate-setq alchemist-hooks-compile-on-save t))
 
 (use-package tex
+  :disabled
   :ensure auctex
-  :init
+  :config
   (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
   (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
   (add-hook 'LaTeX-mode-hook 'flyspell-mode)
-  (setq-default TeX-auto-save t
-                TeX-parse-self t
-                TeX-master nil
-                TeX-PDF-mode t
-                reftex-plug-into-AUCTeX t)
+  (validate-setq TeX-auto-save t
+                 TeX-parse-self t
+                 TeX-master nil
+                 TeX-PDF-mode t)
   (when (eq system-type 'darwin) ;; mac-specific settings
     (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-    (setq-default TeX-source-correlate-method 'synctex)
-    (setq-default TeX-view-program-list
-                  '(("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
-    (setq-default TeX-view-program-selection '((output-pdf "Skim")))
+    (validate-setq TeX-source-correlate-method 'synctex)
+    (validate-setq TeX-view-program-list
+                   '(("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
+    (validate-setq TeX-view-program-selection '((output-pdf "Skim")))
     (add-hook 'TeX-mode-hook
               (lambda ()
                 (add-to-list
@@ -447,8 +448,8 @@
 (use-package company-auctex)
 
 (use-package org
-  :init
-  (setq org-directory "~/org/")
+  :config
+  (validate-setq org-directory "~/org/")
   (defvar gtd-file (concat org-directory "gtd.org"))
   (defvar work-gtd-file (concat org-directory "work-gtd.org"))
   (defvar someday-file (concat org-directory "someday.org"))
@@ -456,44 +457,34 @@
   (defvar work-tickler-file (concat org-directory "work-tickler.org"))
   (defvar inbox-file (concat org-directory "inbox.org"))
   (defvar reference-file (concat org-directory "reference.org"))
-  (setq-default org-log-done t
-                org-startup-indented t
-                org-startup-folded t
-                org-agenda-files (file-expand-wildcards (concat org-directory "*.org"))
-                org-default-notes-file (concat org-directory "inbox.org")
-                org-src-fontify-natively t
-                org-use-fast-todo-selection t
-                org-refile-targets '((gtd-file . (:maxlevel . 2))
-                                     (work-gtd-file . (:maxlevel . 2))
-                                     (someday-file . (:level . 1))
-                                     (tickler-file . (:level . 1))
-                                     (work-tickler-file . (:level . 1))
-                                     (reference-file . (:level . 1)))
-                org-todo-keywords
-                (quote ((sequence "TODO(t)" "DOING(o)" "|" "DONE(d)")
-                        (sequence "WAITING(w@/!)" "|" "CANCELLED(c@/!)")))
-                org-refile-allow-creating-parent-nodes t
-                org-refile-use-outline-path 'file
-                org-outline-path-complete-in-steps nil
-                org-completion-use-ido nil
-                ;; Don't ask every time before evaluating an org source block
-                org-confirm-babel-evaluate nil)
+  (validate-setq org-log-done 'time
+                 org-startup-indented t
+                 org-startup-folded t
+                 org-agenda-files (file-expand-wildcards (concat org-directory "*.org"))
+                 org-default-notes-file (concat org-directory "inbox.org")
+                 org-src-fontify-natively t
+                 org-use-fast-todo-selection t
+                 org-refile-allow-creating-parent-nodes t
+                 org-refile-use-outline-path 'file
+                 org-outline-path-complete-in-steps nil
+                 org-completion-use-ido nil
+                 ;; Don't ask every time before evaluating an org source block
+                 org-confirm-babel-evaluate nil)
+  (setq org-refile-targets '((gtd-file . (:maxlevel . 2))
+                             (work-gtd-file . (:maxlevel . 2))
+                             (someday-file . (:level . 1))
+                             (tickler-file . (:level . 1))
+                             (work-tickler-file . (:level . 1))
+                             (reference-file . (:level . 1)))
+        org-todo-keywords
+        (quote ((sequence "TODO(t)" "DOING(o)" "|" "DONE(d)")
+                (sequence "WAITING(w@/!)" "|" "CANCELLED(c@/!)"))))
   (defun find-gtd-file () (interactive) (find-file gtd-file))
   (defun find-work-gtd-file () (interactive) (find-file work-gtd-file))
   (defun find-someday-file () (interactive) (find-file someday-file))
   (defun find-inbox-file () (interactive) (find-file inbox-file))
   (defun find-tickler-file () (interactive) (find-file tickler-file))
   (defun find-reference-file () (interactive) (find-file reference-file))
-  :bind (("C-c l" . org-store-link)
-         ("C-c a" . org-agenda)
-         ("C-c c" . org-capture)
-         ("C-c e g" . find-gtd-file)
-         ("C-c e w" . find-work-gtd-file)
-         ("C-c e s" . find-someday-file)
-         ("C-c e n" . find-inbox-file)
-         ("C-c e t" . find-tickler-file)
-         ("C-c e r" . find-reference-file))
-  :config
   ;; Add a few languages for execution in org source blocks
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((clojure . t)
@@ -502,6 +493,19 @@
                                  (elasticsearch . t)
                                  (restclient . t)))
 
+  :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c e g" . find-gtd-file)
+         ("C-c e w" . find-work-gtd-file)
+         ("C-c e s" . find-someday-file)
+         ("C-c e n" . find-inbox-file)
+         ("C-c e t" . find-tickler-file)
+         ("C-c e r" . find-reference-file)))
+
+(use-package org-capture
+  :ensure f
+  :bind ("C-c c" . org-capture)
+  :config
   (setq org-capture-templates '(("t" "Todo [inbox]" entry
                                  (file (concat org-directory "inbox.org"))
                                  "* TODO %i%?")
@@ -517,9 +521,9 @@
 
 (use-package org-agenda
   :ensure f
-  :init
+  :config
   ;; Use the current window to open the agenda
-  (setq-default org-agenda-window-setup 'current-window)
+  (validate-setq org-agenda-window-setup 'current-window)
   (setq org-agenda-custom-commands
         '(("c" "Agenda and all action items"
            ((agenda "")
@@ -536,7 +540,7 @@
             (todo "TODO"
                   ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))))))
           ("a" todo "WAITING")))
-  :config
+
   (defun org-current-is-todo ()
     "Is the current org heading a TODO?"
     (string= "TODO" (org-get-todo-state)))
@@ -546,11 +550,11 @@
     "Skip all but the first non-done entry."
     (let (should-skip-entry)
       (unless (org-current-is-todo)
-        (setq should-skip-entry t))
+        (validate-setq should-skip-entry t))
       (save-excursion
         (while (and (not should-skip-entry) (org-goto-sibling t))
           (when (org-current-is-todo)
-            (setq should-skip-entry t))))
+            (validate-setq should-skip-entry t))))
       (when should-skip-entry
         (or (outline-next-heading)
             (goto-char (point-max)))))))
@@ -562,8 +566,8 @@
 (use-package org-alert
   :disabled
   :config
-  (setq org-alert-notification-title "Org Agenda")
-  (setq org-alert-interval (* 60 60))
+  (validate-setq org-alert-notification-title "Org Agenda")
+  (validate-setq org-alert-interval (* 60 60))
   (org-alert-enable))
 
 (use-package ox-md :ensure f)
@@ -610,12 +614,11 @@
 (use-package cider
   :delight
   :defer 2
-  :init
-  (setq-default cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
-                cljr-favor-prefix-notation nil
-                cider-repl-display-help-banner nil
-                nrepl-hide-special-buffers t)
   :config
+  (validate-setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
+                 cljr-favor-prefix-notation nil
+                 cider-repl-display-help-banner nil
+                 nrepl-hide-special-buffers t)
   (add-hook 'cider-mode-hook 'eldoc-mode)
   (add-hook 'clojure-mode-hook 'cider-mode)
   (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
@@ -639,7 +642,7 @@
   :defer 2
   :delight
   :config
-  (setq cljr-suppress-middleware-warnings t
+  (validate-setq cljr-suppress-middleware-warnings t
         ;; Lazily build ASTs, instead of immediately on REPL connect
         cljr-warn-on-eval t
         cljr-eagerly-build-asts-on-startup nil)
@@ -657,5 +660,13 @@
 (random t)
 
 (use-package systemd :defer 2)
+
+(use-package shell-pop
+  :custom
+  (shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell)))) "Use eshell.")
+  (shell-pop-universal-key "C-t")
+  (shell-pop-window-size 30)
+  (shell-pop-full-span t)
+  (shell-pop-window-position "bottom"))
 
 ;;; init.el ends here
