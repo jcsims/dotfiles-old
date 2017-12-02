@@ -139,7 +139,6 @@ else
     alias ls='ls --color=auto'
 fi
 
-
 alias reload!='. ~/.bashrc'
 alias tree='tree -C'
 

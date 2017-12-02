@@ -276,7 +276,7 @@
 
 (use-package ivy
   :delight
-  :bind (("C-c M-r" . ivy-resume)) ; TODO: Find a binding that doesn't
+  :bind (("C-c C-r" . ivy-resume)) ; TODO: Find a binding that doesn't
 				   ; get overwritten...
   :config
   (validate-setq ivy-use-virtual-buffers t
@@ -297,8 +297,21 @@
   (validate-setq counsel-grep-base-command
         "rg -i -M 120 --no-heading --line-number --color never '%s' %s"))
 
+(use-package projectile
+  :delight
+  :config
+  (projectile-mode)
+  ;; Note: remove this once
+  ;; https://github.com/bbatsov/projectile/issues/1183 is resolved
+  (validate-setq projectile-mode-line
+        '(:eval (format " Projectile[%s]"
+                        (projectile-project-name)))))
+
 (use-package counsel-projectile
-  :config (counsel-projectile-on))
+  :config
+  (counsel-projectile-on)
+  ;; ripgrep is ever-so-slightly faster
+  (define-key projectile-mode-map [remap projectile-ag] #'counsel-projectile-rg))
 
 (use-package js2-mode
   :mode "\\.js\\'")
@@ -328,16 +341,6 @@
 (use-package paredit-everywhere
   :delight
   :config (add-hook 'prog-mode-hook 'paredit-everywhere-mode))
-
-(use-package projectile
-  :delight
-  :config
-  (projectile-mode)
-  ;; Note: remove this once
-  ;; https://github.com/bbatsov/projectile/issues/1183 is resolved
-  (validate-setq projectile-mode-line
-        '(:eval (format " Projectile[%s]"
-                        (projectile-project-name)))))
 
 (use-package expand-region
   :defer 2
@@ -618,7 +621,7 @@
   (validate-setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
                  cljr-favor-prefix-notation nil
                  cider-repl-display-help-banner nil
-                 nrepl-hide-special-buffers t)
+		 nrepl-log-messages t)
   (add-hook 'cider-mode-hook 'eldoc-mode)
   (add-hook 'clojure-mode-hook 'cider-mode)
   (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
@@ -668,5 +671,12 @@
   (shell-pop-window-size 30)
   (shell-pop-full-span t)
   (shell-pop-window-position "bottom"))
+
+(use-package browse-url
+  :ensure f
+  ;; browse-url decides not to use xdg-open if you don't use one of a
+  ;; handful of desktop environments...
+  :config (when (eq system-type 'gnu/linux)
+	    (validate-setq browse-url-browser-function 'browse-url-xdg-open)))
 
 ;;; init.el ends here

@@ -14,9 +14,6 @@
  '(paradox-automatically-star t)
  '(paradox-github-token t))
 
-(add-hook 'kill-emacs-query-functions
-          'custom-prompt-customize-unsaved-options)
-
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
