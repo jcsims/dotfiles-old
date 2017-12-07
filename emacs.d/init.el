@@ -80,28 +80,30 @@
 (global-set-key (kbd "C-c e i") 'find-init-file)
 
 (use-package autorevert
-  :ensure nil)
+  :ensure f)
+
+(use-package saveplace
+  :ensure f
+  :config (save-place-mode))
 
 ;;; Misc settings
-(setq inhibit-splash-screen t           ; Don't show the splash screen
-      ring-bell-function 'ignore     ; Just ignore error notifications
-      vc-follow-symlinks t      ; even when they're in version control
-      backup-directory-alist    ; Save backups to a central location
-      `(("." . ,(expand-file-name
-                 (concat user-emacs-directory "backups"))))
-      global-auto-revert-non-file-buffers t ; Refresh dired buffers,
-      auto-revert-verbose nil               ; but do it quietly
-      indent-tabs-mode nil        ; Don't use tabs unless buffer-local
-      gui-select-enable-clipboard t
-      x-select-enable-primary t
-      save-interprogram-paste-before-kill t
-      apropos-do-all t
-      mouse-yank-at-point t
-      save-place-file (concat user-emacs-directory "places")
-      ;; When scrolling, make sure to come back to the same spot
-      scroll-preserve-screen-position 'always
-      scroll-error-top-bottom t         ; Scroll similar to vim
-      )
+(validate-setq inhibit-splash-screen t  ; Don't show the splash screen
+               ring-bell-function 'ignore ; Just ignore error notifications
+               vc-follow-symlinks t ; even when they're in version control
+               backup-directory-alist ; Save backups to a central location
+               `(("." . ,(expand-file-name
+                          (concat user-emacs-directory "backups"))))
+               global-auto-revert-non-file-buffers t ; Refresh dired buffers,
+               auto-revert-verbose nil  ; but do it quietly
+               indent-tabs-mode nil ; Don't use tabs unless buffer-local
+               select-enable-primary t
+               save-interprogram-paste-before-kill t
+               mouse-yank-at-point t
+               save-place-file (concat user-emacs-directory "places")
+               ;; When scrolling, make sure to come back to the same spot
+               scroll-preserve-screen-position 'always
+               scroll-error-top-bottom t ; Scroll similar to vim
+               )
 
 ;;; Packages
 (use-package paradox
@@ -178,9 +180,6 @@
   :config
   ;; Auto-refresh buffers
   (global-auto-revert-mode))
-
-(use-package saveplace
-  :config (save-place-mode))
 
 ;; Highlight matching parens
 (use-package paren
@@ -678,5 +677,11 @@
   ;; handful of desktop environments...
   :config (when (eq system-type 'gnu/linux)
 	    (validate-setq browse-url-browser-function 'browse-url-xdg-open)))
+
+(use-package rg)
+
+(use-package wgrep)
+
+(use-package nov)
 
 ;;; init.el ends here
