@@ -13,8 +13,10 @@
         org-shiftright
         paredit-forward-delete
         smex
+        yaml-electric-backspace
         ))
 
 (setq mc/cmds-to-run-once
       '(
+        yaml-electric-dash-and-dot
         ))
