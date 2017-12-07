@@ -50,4 +50,6 @@
 [github "github.threatbuild.com"]
   user = chrsims
 [diff "gpg"]
-	textconv = gpg --no-tty --decrypt
+  textconv = gpg --no-tty --decrypt
+[github "github.threatbuild.com/api/v3"]
+  user = chrsims

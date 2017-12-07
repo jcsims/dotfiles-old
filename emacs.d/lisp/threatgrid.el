@@ -25,7 +25,7 @@
 (require 'magit-git)
 (require 'dash)
 
-(defvar tg-base-url "https://github.threatbuild.com/api/v3")
+(defvar tg-gh-host "github.threatbuild.com/api/v3")
 (defvar tg-work-repos '("threatgrid/threatbrain"))
 (defvar tg-gh-username)
 
@@ -45,8 +45,7 @@ See: https://developer.github.com/v3/pulls/#alternative-input"
   (let ((branch-name (or branch-name (magit-get-current-branch))))
     (if (not (string-prefix-p "issue-" branch-name))
         (message "branch-name should be of the format `issue-<issue number>`.")
-      (let ((ghub-base-url tg-base-url)
-            (repo "threatgrid/threatbrain")
+      (let ((repo "threatgrid/threatbrain")
             (upstream (or upstream (tg-get-current-upstream-branch) "master"))
             (issue-number (substring branch-name 6))
             (pr-head (concat tg-gh-username ":" branch-name)))
@@ -55,7 +54,8 @@ See: https://developer.github.com/v3/pulls/#alternative-input"
                    (list
                     (cons 'issue issue-number)
                     (cons 'head pr-head)
-                    (cons 'base upstream)))
+                    (cons 'base upstream))
+		   :host tg-gh-host)
         (message "Created PR")))))
 
 (defun preq ()
@@ -87,12 +87,12 @@ nil START or END will not bracket.  START and END are Emacs time structures."
 
 (defun tg-weekly-work (username)
   "Return a list of PRs completed by USERNAME in the last week."
-  (let* ((ghub-base-url tg-base-url)
-         (latest-prs (--mapcat (ghub-get (concat "/repos/" it "/pulls")
-                                         (list (cons 'state "closed")
-                                               (cons 'per_page "100")))
-                               tg-work-repos))
-         (eight-days-ago (time-add (current-time) (* -1 8 24 60 60))))
+  (let ((latest-prs (--mapcat (ghub-get (concat "/repos/" it "/pulls")
+					(list (cons 'state "closed")
+					      (cons 'per_page "100"))
+					:host tg-gh-host)
+			      tg-work-repos))
+	(eight-days-ago (time-add (current-time) (* -1 8 24 60 60))))
     (-> latest-prs
         (tg--prs-in-time-range eight-days-ago (current-time))
         (tg--prs-for-user username))))
@@ -110,11 +110,11 @@ nil START or END will not bracket.  START and END are Emacs time structures."
 
 (defun tg-open-prs (username)
   "Return a list of PRs currently open by USERNAME."
-  (let* ((ghub-base-url tg-base-url)
-         (open-prs (--mapcat (ghub-get (concat "/repos/" it "/pulls")
-                                       (list (cons 'state "open")
-                                             (cons 'per_page "100")))
-                             tg-work-repos)))
+  (let ((open-prs (--mapcat (ghub-get (concat "/repos/" it "/pulls")
+				      (list (cons 'state "open")
+					    (cons 'per_page "100"))
+				      :host tg-gh-host)
+			    tg-work-repos)))
     (tg--prs-for-user open-prs username)))
 
 (defun tg-print-weekly-open-prs (username)
@@ -130,10 +130,10 @@ nil START or END will not bracket.  START and END are Emacs time structures."
 
 (defun tg-in-progress-issues ()
   "Return a list of issues assigned to the auth'd user and labeled `in progress`."
-  (let* ((ghub-base-url tg-base-url))
-    (ghub-get "/issues"
-              (list (cons 'labels "in progress")
-                    (cons 'per_page "100")))))
+  (ghub-get "/issues"
+	    (list (cons 'labels "in progress")
+		  (cons 'per_page "100"))
+	    :host tg-gh-host))
 
 (defun tg-print-in-progress-issues ()
   "Pretty-print a list of issues assigned to the auth'd user and labeled `in progress`."
@@ -162,10 +162,10 @@ nil START or END will not bracket.  START and END are Emacs time structures."
 
 (defun tg--create-issue (repo title)
   "Create a new issue in REPO with TITLE, adding the issue number to the kill ring."
-  (let* ((ghub-base-url tg-base-url)
-	 (response (ghub-post (concat "/repos/" repo "/issues")
+  (let* ((response (ghub-post (concat "/repos/" repo "/issues")
 			      nil
-			      (list (cons 'title title))))
+			      (list (cons 'title title))
+			      :host tg-gh-host))
 	 (issue-number (alist-get 'number response)))
     (kill-new (number-to-string issue-number))
     (message "Created issue: %s" (alist-get 'html_url response))))
