@@ -50,12 +50,12 @@ See: https://developer.github.com/v3/pulls/#alternative-input"
             (issue-number (substring branch-name 6))
             (pr-head (concat tg-gh-username ":" branch-name)))
         (ghub-post (concat "/repos/" repo "/pulls")
-                   nil
-                   (list
-                    (cons 'issue issue-number)
-                    (cons 'head pr-head)
-                    (cons 'base upstream))
-		   :host tg-gh-host)
+		   nil
+                   :payload (list
+                             (cons 'issue issue-number)
+                             (cons 'head pr-head)
+                             (cons 'base upstream))
+                   :host tg-gh-host)
         (message "Created PR")))))
 
 (defun preq ()
@@ -88,11 +88,12 @@ nil START or END will not bracket.  START and END are Emacs time structures."
 (defun tg-weekly-work (username)
   "Return a list of PRs completed by USERNAME in the last week."
   (let ((latest-prs (--mapcat (ghub-get (concat "/repos/" it "/pulls")
-					(list (cons 'state "closed")
-					      (cons 'per_page "100"))
-					:host tg-gh-host)
-			      tg-work-repos))
-	(eight-days-ago (time-add (current-time) (* -1 8 24 60 60))))
+                                        nil
+                                        :query (list (cons 'state "closed")
+                                                     (cons 'per_page "100"))
+                                        :host tg-gh-host)
+                              tg-work-repos))
+        (eight-days-ago (time-add (current-time) (* -1 8 24 60 60))))
     (-> latest-prs
         (tg--prs-in-time-range eight-days-ago (current-time))
         (tg--prs-for-user username))))
@@ -111,10 +112,11 @@ nil START or END will not bracket.  START and END are Emacs time structures."
 (defun tg-open-prs (username)
   "Return a list of PRs currently open by USERNAME."
   (let ((open-prs (--mapcat (ghub-get (concat "/repos/" it "/pulls")
-				      (list (cons 'state "open")
-					    (cons 'per_page "100"))
-				      :host tg-gh-host)
-			    tg-work-repos)))
+                                      nil
+                                      :query (list (cons 'state "open")
+                                                   (cons 'per_page "100"))
+                                      :host tg-gh-host)
+                            tg-work-repos)))
     (tg--prs-for-user open-prs username)))
 
 (defun tg-print-weekly-open-prs (username)
@@ -131,9 +133,10 @@ nil START or END will not bracket.  START and END are Emacs time structures."
 (defun tg-in-progress-issues ()
   "Return a list of issues assigned to the auth'd user and labeled `in progress`."
   (ghub-get "/issues"
-	    (list (cons 'labels "in progress")
-		  (cons 'per_page "100"))
-	    :host tg-gh-host))
+            nil
+            :query (list (cons 'labels "in progress")
+                         (cons 'per_page "100"))
+            :host tg-gh-host))
 
 (defun tg-print-in-progress-issues ()
   "Pretty-print a list of issues assigned to the auth'd user and labeled `in progress`."
@@ -163,10 +166,10 @@ nil START or END will not bracket.  START and END are Emacs time structures."
 (defun tg--create-issue (repo title)
   "Create a new issue in REPO with TITLE, adding the issue number to the kill ring."
   (let* ((response (ghub-post (concat "/repos/" repo "/issues")
-			      nil
-			      (list (cons 'title title))
-			      :host tg-gh-host))
-	 (issue-number (alist-get 'number response)))
+                              nil
+                              :payload (list (cons 'title title))
+                              :host tg-gh-host))
+         (issue-number (alist-get 'number response)))
     (kill-new (number-to-string issue-number))
     (message "Created issue: %s" (alist-get 'html_url response))))
 
