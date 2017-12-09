@@ -11,7 +11,7 @@ fi
 
 # Source global definitions
 if [[ -f /etc/bashrc ]]; then
-	. /etc/bashrc
+    . /etc/bashrc
 fi
 
 # use .localrc for SUPER SECRET CRAP that you don't
@@ -52,6 +52,10 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 
     # Brew-installed paths
     export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+
+    # Add pkgsrc bin directory
+    export PATH=/opt/pkg/bin:$PATH
+
 fi
 
 export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle:$HOME/code/tg/ops
@@ -160,13 +164,13 @@ for f in $HOME/.functions/*; do source "$f"; done
 ## http://boredzo.org/blog/archives/2016-08-15/colorized-man-pages-understood-and-customized
 man() {
     env \
-    LESS_TERMCAP_md=$'\e[1;36m' \
-    LESS_TERMCAP_me=$'\e[0m' \
-    LESS_TERMCAP_se=$'\e[0m' \
-    LESS_TERMCAP_so=$'\e[1;40;92m' \
-    LESS_TERMCAP_ue=$'\e[0m' \
-    LESS_TERMCAP_us=$'\e[1;32m' \
-    man "$@"
+	LESS_TERMCAP_md=$'\e[1;36m' \
+	LESS_TERMCAP_me=$'\e[0m' \
+	LESS_TERMCAP_se=$'\e[0m' \
+	LESS_TERMCAP_so=$'\e[1;40;92m' \
+	LESS_TERMCAP_ue=$'\e[0m' \
+	LESS_TERMCAP_us=$'\e[1;32m' \
+	man "$@"
 }
 
 ## Prompt
