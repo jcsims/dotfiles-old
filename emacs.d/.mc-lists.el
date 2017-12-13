@@ -5,18 +5,20 @@
 
 (setq mc/cmds-to-run-for-all
       '(
-        dabbrev-expand
-        describe-key
-        org-cycle
-        org-metaright
-        org-self-insert-command
-        org-shiftright
-        paredit-forward-delete
-        smex
-        yaml-electric-backspace
-        ))
+	counsel-grep-or-swiper
+	dabbrev-expand
+	describe-key
+	org-cycle
+	org-delete-char
+	org-metaright
+	org-self-insert-command
+	org-shiftright
+	paredit-forward-delete
+	smex
+	yaml-electric-backspace
+	))
 
 (setq mc/cmds-to-run-once
       '(
-        yaml-electric-dash-and-dot
-        ))
+	yaml-electric-dash-and-dot
+	))
