@@ -32,7 +32,7 @@
 
 ;;; Personal info
 (validate-setq user-full-name "Chris Sims"
-      user-mail-address "chris@jcsi.ms")
+	       user-mail-address "chris@jcsi.ms")
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -151,9 +151,9 @@
 (use-package whitespace
   :delight whitespace-mode
   :config
-  (validate-setq whitespace-line-column 100
-        whitespace-style '(face trailing lines-tail))
-  (add-hook 'prog-mode-hook 'whitespace-mode))
+  (validate-setq whitespace-line-column 80
+		 whitespace-style '(face trailing lines-tail))
+  :hook (prog-mode . whitespace-mode))
 
 (use-package markdown-mode
   :config (validate-setq markdown-fontify-code-blocks-natively t))
@@ -162,12 +162,8 @@
   :ensure f
   :delight auto-fill-function
   :defer 2
-  :config
-  (column-number-mode)
-  ;; Fill mode is pretty handy
-  (add-hook 'text-mode-hook 'turn-on-auto-fill)
-  (add-hook 'org-mode 'turn-on-auto-fill)
-  (add-hook 'markdown-mode 'turn-on-auto-fill))
+  :config (column-number-mode)
+  :hook ((text-mode org-mode markdown-mode) . turn-on-auto-fill))
 
 ;; Ensure that when we go to a new line, it's indented properly
 (use-package electric
@@ -204,27 +200,33 @@
 ;; Flyspell mode
 (use-package flyspell
   :defer 2
-  :config (add-hook 'text-mode-hook 'flyspell-mode))
+  :hook (text-mode . flyspell-mode))
 
 ;; Config other packages
 (use-package company-mode
   :ensure company
   :defer 5
+  ;; Consider:
+  ;; (setq company-tooltip-limit 20)                      ; bigger popup window
+  ;; (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
+  ;; (setq company-echo-delay 0)                          ; remove annoying blinking
+  ;; (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
   :config (global-company-mode))
 
-(use-package company-quickhelp)
+(use-package company-quickhelp
+  :defer 5
+  :config (company-quickhelp-mode 1))
 
 (use-package elisp-slime-nav
   :delight
   :config
   ;; Enable M-. and M-, along with C-c C-d {c,C-d} for elisp
-  (dolist (hook '(emacs-lisp-mode-hook ielm-mode-hook))
-    (add-hook hook 'turn-on-elisp-slime-nav-mode)))
+  :hook ((emacs-lisp-mode ielm-mode) . turn-on-elisp-slime-nav-mode))
 
 (use-package idle-highlight-mode
   :delight
   :defer 2
-  :config (add-hook 'prog-mode-hook 'idle-highlight-mode))
+  :hook (prog-mode . idle-highlight-mode))
 
 (use-package ag
   :config
@@ -233,7 +235,7 @@
 
 (use-package rainbow-delimiters
   :defer 2
-  :config (add-hook 'emacs-lisp-mode-hook 'rainbow-delimiters-mode))
+  :hook (emacs-lisp-mode . rainbow-delimiters-mode))
 
 (use-package flycheck
   :defer 2
@@ -241,15 +243,15 @@
 
 (use-package ido
   :disabled
+  :hook (ido-setup . (lambda () (define-key ido-completion-map [up]
+                                  'previous-history-element)))
   :config
   (validate-setq ido-use-filename-at-point nil
-        ido-auto-merge-work-directories-length 0
-        ido-use-virtual-buffers t
-        ido-default-buffer-method 'selected-window
-        ido-use-faces nil
-        ido-enable-flex-matching t)
-  (add-hook 'ido-setup-hook (lambda () (define-key ido-completion-map [up]
-                                    'previous-history-element)))
+                 ido-auto-merge-work-directories-length 0
+                 ido-use-virtual-buffers t
+                 ido-default-buffer-method 'selected-window
+                 ido-use-faces nil
+                 ido-enable-flex-matching t)
   (ido-mode t)
   (ido-everywhere t))
 
@@ -276,11 +278,11 @@
 (use-package ivy
   :delight
   :bind (("C-c C-r" . ivy-resume)) ; TODO: Find a binding that doesn't
-				   ; get overwritten...
+					; get overwritten...
   :config
   (validate-setq ivy-use-virtual-buffers t
-		 enable-recursive-minibuffers t
-		 ivy-use-selectable-prompt t)
+                 enable-recursive-minibuffers t
+                 ivy-use-selectable-prompt t)
   (ivy-mode 1))
 
 (use-package swiper)
@@ -294,7 +296,7 @@
   :config
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
   (validate-setq counsel-grep-base-command
-        "rg -i -M 120 --no-heading --line-number --color never '%s' %s"))
+		 "rg -i -M 120 --no-heading --line-number --color never '%s' %s"))
 
 (use-package projectile
   :delight
@@ -303,8 +305,8 @@
   ;; Note: remove this once
   ;; https://github.com/bbatsov/projectile/issues/1183 is resolved
   (validate-setq projectile-mode-line
-        '(:eval (format " Projectile[%s]"
-                        (projectile-project-name)))))
+		 '(:eval (format " Projectile[%s]"
+				 (projectile-project-name)))))
 
 (use-package counsel-projectile
   :config
@@ -324,7 +326,6 @@
 (use-package git-timemachine :defer 5)
 (use-package git-gutter :defer 2)
 (use-package ghub :defer 2)
-(use-package ghub+ :defer 2)
 
 (use-package windmove
   :config (windmove-default-keybindings))
@@ -335,11 +336,11 @@
 
 (use-package paredit
   :delight
-  :config (add-hook 'emacs-lisp-mode-hook 'paredit-mode))
+  :hook (emacs-lisp-mode . paredit-mode))
 
 (use-package paredit-everywhere
   :delight
-  :config (add-hook 'prog-mode-hook 'paredit-everywhere-mode))
+  :hook (prog-mode . paredit-everywhere-mode))
 
 (use-package expand-region
   :defer 2
@@ -372,9 +373,7 @@
 ;; `diff-hl-next-hunk'       C-x v ]
 (use-package diff-hl
   :defer 2
-  :config
-  (add-hook 'prog-mode-hook 'turn-on-diff-hl-mode)
-  (add-hook 'vc-dir-mode-hook 'turn-on-diff-hl-mode))
+  :hook ((prog-mode vc-dir-mode) . turn-on-diff-hl-mode))
 
 (use-package super-save
   :delight
@@ -420,10 +419,11 @@
 (use-package tex
   :disabled
   :ensure auctex
+  :hook
+  (LaTeX-mode . turn-on-reftex)
+  (LaTeX-mode . auto-fill-mode)
+  (LaTeX-mode . flyspell-mode)
   :config
-  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-  (add-hook 'LaTeX-mode-hook 'auto-fill-mode)
-  (add-hook 'LaTeX-mode-hook 'flyspell-mode)
   (validate-setq TeX-auto-save t
                  TeX-parse-self t
                  TeX-master nil
@@ -444,8 +444,7 @@
 ;; Use latex-extra package
 (use-package latex-extra
   :commands latex-extra-mode
-  :config
-  (add-hook 'LaTeX-mode-hook #'latex-extra-mode))
+  :hook (LaTeX-mode . latex-extra-mode))
 
 (use-package company-auctex)
 
@@ -587,9 +586,11 @@
   :mode ("\\.clj.*\\'" "\\.edn.*\\'")
   :bind (:map clojure-mode-map
               ("C-c i" . cider-inspect-last-result))
+  :hook
+  (clojure-mode . rainbow-delimiters-mode)
+  (clojure-mode . paredit-mode)
   :config
-  (add-hook 'clojure-mode-hook 'rainbow-delimiters-mode)
-  (add-hook 'clojure-mode-hook 'paredit-mode)
+
   ;; Add some goodies from Emacs Live
   (font-lock-add-keywords
    'clojure-mode `(("\\(#\\)("
@@ -616,17 +617,16 @@
 (use-package cider
   :delight
   :defer 2
+  :hook
+  (clojure-mode . cider-mode)
+  ((cider-mode cider-repl-mode) . eldoc-mode)
+  (cider-repl-mode . rainbow-delimiters-mode)
+  (cider-repl-mode . paredit-mode)
   :config
   (validate-setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
                  cljr-favor-prefix-notation nil
                  cider-repl-display-help-banner nil
-		 nrepl-log-messages t)
-  (add-hook 'cider-mode-hook 'eldoc-mode)
-  (add-hook 'clojure-mode-hook 'cider-mode)
-  (add-hook 'cider-repl-mode-hook 'rainbow-delimiters-mode)
-  (add-hook 'cider-repl-mode-hook 'paredit-mode)
-  (add-hook 'cider-repl-mode-hook 'eldoc-mode)
-
+                 nrepl-log-messages t)
   (defun tdd-test ()
     "Thin wrapper around `cider-test-run-project-tests', borrowed from
   http://endlessparentheses.com/test-driven-development-in-cider-and-emacs.html"
@@ -643,15 +643,16 @@
 (use-package clj-refactor
   :defer 2
   :delight
+  :hook
+  (clojure-mode . (lambda ()
+                         (clj-refactor-mode 1)
+                         (yas-minor-mode 1)
+                         (cljr-add-keybindings-with-prefix "C-c r")))
   :config
   (validate-setq cljr-suppress-middleware-warnings t
-        ;; Lazily build ASTs, instead of immediately on REPL connect
-        cljr-warn-on-eval t
-        cljr-eagerly-build-asts-on-startup nil)
-  (add-hook 'clojure-mode-hook (lambda ()
-                                 (clj-refactor-mode 1)
-                                 (yas-minor-mode 1)
-                                 (cljr-add-keybindings-with-prefix "C-c r"))))
+                 ;; Lazily build ASTs, instead of immediately on REPL connect
+                 cljr-warn-on-eval t
+                 cljr-eagerly-build-asts-on-startup nil))
 
 (use-package yasnippet :delight)
 
