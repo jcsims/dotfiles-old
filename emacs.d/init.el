@@ -681,12 +681,22 @@
   ;; browse-url decides not to use xdg-open if you don't use one of a
   ;; handful of desktop environments...
   :config (when (eq system-type 'gnu/linux)
-	    (validate-setq browse-url-browser-function 'browse-url-xdg-open)))
+            (validate-setq browse-url-browser-function 'browse-url-xdg-open)))
 
 (use-package rg)
 
 (use-package wgrep)
 
-(use-package nov)
+(use-package nov
+  :defer 5)
+
+(use-package json-snatcher
+  :defer 2
+  :config (validate-setq jsons-path-printer 'jsons-print-path-jq))
+
+(use-package json-mode
+  :defer 2)
+
+
 
 ;;; init.el ends here
