@@ -576,6 +576,10 @@
 (use-package ob-restclient)
 (use-package ob-sql-mode)
 (use-package go-mode)
+(use-package company-go)
+(use-package go-eldoc
+  :hook (go-mode . go-eldoc-setup))
+(use-package go-errcheck)
 (use-package csv-mode)
 (use-package sql-indent)
 (use-package eldoc :delight :ensure f)
