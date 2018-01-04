@@ -22,9 +22,10 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-(setq use-package-always-ensure t)
 (eval-when-compile
   (require 'use-package))
+(setq use-package-always-ensure t)
+
 (use-package delight)
 (use-package bind-key)
 
@@ -69,7 +70,8 @@
 (when (memq window-system '(mac ns))
   (set-frame-font "-*-Menlo-normal-normal-normal-*-11-*-*-*-m-0-iso10646-1"))
 (when (memq window-system '(x))
-  (set-frame-font "-PfEd-DejaVu Sans Mono-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
+  (set-frame-font "-1ASC-Liberation Mono-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
+
 (global-prettify-symbols-mode 1)
 
 ;; Quick access to a few files
@@ -310,7 +312,7 @@
 
 (use-package counsel-projectile
   :config
-  (counsel-projectile-on)
+  (counsel-projectile-mode)
   ;; ripgrep is ever-so-slightly faster
   (define-key projectile-mode-map [remap projectile-ag] #'counsel-projectile-rg))
 
@@ -696,7 +698,5 @@
 
 (use-package json-mode
   :defer 2)
-
-
 
 ;;; init.el ends here
