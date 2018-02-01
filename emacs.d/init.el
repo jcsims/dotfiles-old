@@ -12,9 +12,10 @@
 (require 'package)
 (setq package-enable-at-startup nil)
 (setq package-archives
-      '(("gnu"          . "https://elpa.gnu.org/packages/")
-        ("melpa"        . "https://melpa.org/packages/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")))
+      '(("gnu" . "https://elpa.gnu.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")
+        ("org" . "https://orgmode.org/elpa/")))
 
 (package-initialize)
 
@@ -24,12 +25,14 @@
 
 (eval-when-compile
   (require 'use-package))
-(setq use-package-always-ensure t)
-
+(use-package validate)
+(validate-setq use-package-always-ensure t
+	       use-package-compute-statistics t
+	       use-package-verbose t)
 (use-package delight)
 (use-package bind-key)
 
-(use-package validate)
+(setq source-directory "~/code/emacs")
 
 ;;; Personal info
 (validate-setq user-full-name "Chris Sims"
@@ -67,6 +70,7 @@
 
 ;; Handy to get the current font/size that you've got:
 ;; (insert "\n(set-frame-font \"" (cdr (assoc 'font (frame-parameters))) "\")")
+
 (when (memq window-system '(mac ns))
   (set-frame-font "-*-Menlo-normal-normal-normal-*-11-*-*-*-m-0-iso10646-1"))
 (when (memq window-system '(x))
@@ -183,7 +187,7 @@
 (use-package paren
   :defer 2
   :config
-  (show-paren-mode t))
+  (show-paren-mode))
 
 ;; Ensure that a server is running for quicker start times
 (use-package server
@@ -205,19 +209,18 @@
   :hook (text-mode . flyspell-mode))
 
 ;; Config other packages
-(use-package company-mode
-  :ensure company
+(use-package company
   :defer 5
-  ;; Consider:
-  ;; (setq company-tooltip-limit 20)                      ; bigger popup window
-  ;; (setq company-idle-delay .3)                         ; decrease delay before autocompletion popup shows
-  ;; (setq company-echo-delay 0)                          ; remove annoying blinking
-  ;; (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing
-  :config (global-company-mode))
+  :config
+  (setq company-tooltip-limit 20)                       ; bigger popup window
+  (setq company-idle-delay .3)                          ; decrease delay before autocompletion popup shows
+  (setq company-echo-delay 0)                           ; remove annoying blinking
+  (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing)
+  (global-company-mode))
 
 (use-package company-quickhelp
   :defer 5
-  :config (company-quickhelp-mode 1))
+  :config (company-quickhelp-mode))
 
 (use-package elisp-slime-nav
   :delight
@@ -312,9 +315,7 @@
 
 (use-package counsel-projectile
   :config
-  (counsel-projectile-mode)
-  ;; ripgrep is ever-so-slightly faster
-  (define-key projectile-mode-map [remap projectile-ag] #'counsel-projectile-rg))
+  (counsel-projectile-mode))
 
 (use-package js2-mode
   :mode "\\.js\\'")
@@ -453,25 +454,28 @@
 (use-package org
   :config
   (validate-setq org-directory "~/org/")
-  (defvar gtd-file (concat org-directory "gtd.org"))
-  (defvar work-gtd-file (concat org-directory "work-gtd.org"))
-  (defvar someday-file (concat org-directory "someday.org"))
-  (defvar tickler-file (concat org-directory "tickler.org"))
-  (defvar work-tickler-file (concat org-directory "work-tickler.org"))
-  (defvar inbox-file (concat org-directory "inbox.org"))
-  (defvar reference-file (concat org-directory "reference.org"))
+  (defvar gtd-file (expand-file-name "gtd.org" org-directory))
+  (defvar work-gtd-file (expand-file-name "work-gtd.org" org-directory))
+  (defvar someday-file (expand-file-name "someday.org" org-directory))
+  (defvar tickler-file (expand-file-name "tickler.org" org-directory))
+  (defvar work-tickler-file (expand-file-name "work-tickler.org" org-directory))
+  (defvar inbox-file (expand-file-name "inbox.org" org-directory))
+  (defvar reference-file (expand-file-name "reference.org" org-directory))
+  (defvar checklists-file (expand-file-name "checklists.org" org-directory))
+  (defvar filtered-agenda-files '(someday-file checklists-file))
   (validate-setq org-log-done 'time
                  org-startup-indented t
                  org-startup-folded t
-                 org-agenda-files (file-expand-wildcards (concat org-directory "*.org"))
-                 org-default-notes-file (concat org-directory "inbox.org")
+                 org-agenda-files (file-expand-wildcards
+				   (concat org-directory "*.org"))
+                 org-default-notes-file (expand-file-name
+					 "inbox.org" org-directory)
                  org-src-fontify-natively t
                  org-use-fast-todo-selection t
                  org-refile-allow-creating-parent-nodes t
                  org-refile-use-outline-path 'file
                  org-outline-path-complete-in-steps nil
-                 org-completion-use-ido nil
-                 ;; Don't ask every time before evaluating an org source block
+		 ;; Don't ask every time before evaluating an org source block
                  org-confirm-babel-evaluate nil)
   (setq org-refile-targets '((gtd-file . (:maxlevel . 2))
                              (work-gtd-file . (:maxlevel . 2))
@@ -488,6 +492,7 @@
   (defun find-inbox-file () (interactive) (find-file inbox-file))
   (defun find-tickler-file () (interactive) (find-file tickler-file))
   (defun find-reference-file () (interactive) (find-file reference-file))
+  (defun find-checklists-file () (interactive) (find-file checklists-file))
   ;; Add a few languages for execution in org source blocks
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((clojure . t)
@@ -503,23 +508,25 @@
          ("C-c e s" . find-someday-file)
          ("C-c e n" . find-inbox-file)
          ("C-c e t" . find-tickler-file)
-         ("C-c e r" . find-reference-file)))
+         ("C-c e r" . find-reference-file)
+	 ("C-c e c" . find-checklists-file)))
 
 (use-package org-capture
   :ensure f
+  :after org
   :bind ("C-c c" . org-capture)
   :config
   (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                                 (file (concat org-directory "inbox.org"))
+                                 (file "inbox.org")
                                  "* TODO %i%?")
                                 ("T" "Tickler" entry
-                                 (file+headline (concat org-directory "tickler.org") "Tickler")
+                                 (file+headline "tickler.org" "Tickler")
                                  "* %i%? \n %U")
                                 ("w" "Work Tickler" entry
-                                 (file+headline (concat org-directory "work-tickler.org") "Tickler")
+                                 (file+headline "work-tickler.org" "Tickler")
                                  "* %i%? \n %U")
                                 ("r" "Reference" entry
-                                 (file (concat org-directory "reference.org"))
+                                 (file+headline "reference.org" "Reference")
                                  "* %i%? \n %U"))))
 
 (use-package org-agenda
@@ -528,21 +535,26 @@
   ;; Use the current window to open the agenda
   (validate-setq org-agenda-window-setup 'current-window)
   (setq org-agenda-custom-commands
-        '(("c" "Agenda and all action items"
-           ((agenda "")
-            (todo "WAITING")
-            (todo "DOING|TODO"
-                  ((org-agenda-sorting-strategy '(todo-state-down))))))
+        '(("p" "Personal agenda and tasks"
+	   ((agenda ""
+                    ((org-agenda-files (list tickler-file gtd-file inbox-file))
+		     (org-agenda-overriding-header "Personal")))
+            (todo "WAITING"
+		  ((org-agenda-files (list tickler-file gtd-file inbox-file))))
+            (todo "DOING"
+                  ((org-agenda-files (list tickler-file gtd-file inbox-file))))
+            (todo "TODO"
+                  ((org-agenda-files (list tickler-file gtd-file inbox-file))))))
           ("w" "Work tasks"
            ((agenda ""
                     ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))
                      (org-agenda-overriding-header "Work")))
-            (todo "WAITING" ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))))
+            (todo "WAITING"
+		  ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))))
             (todo "DOING"
                   ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))))
             (todo "TODO"
-                  ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))))))
-          ("a" todo "WAITING")))
+                  ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))))))))
 
   (defun org-current-is-todo ()
     "Is the current org heading a TODO?"
@@ -573,6 +585,11 @@
   (validate-setq org-alert-interval (* 60 60))
   (org-alert-enable))
 
+(use-package org-wild-notifier
+  :disabled
+  :after alert
+  :config (org-wild-notifier-mode))
+
 (use-package ox-md :ensure f)
 (use-package restclient)
 (use-package ob-restclient)
@@ -590,8 +607,6 @@
   :defer 2
   :delight
   :mode ("\\.clj.*\\'" "\\.edn.*\\'")
-  :bind (:map clojure-mode-map
-              ("C-c i" . cider-inspect-last-result))
   :hook
   (clojure-mode . rainbow-delimiters-mode)
   (clojure-mode . paredit-mode)
@@ -628,36 +643,25 @@
   ((cider-mode cider-repl-mode) . eldoc-mode)
   (cider-repl-mode . rainbow-delimiters-mode)
   (cider-repl-mode . paredit-mode)
+  :bind (:map clojure-mode-map
+              ("C-c i" . cider-inspect-last-result))
+  :custom (cider-jdk-src-paths '("~/code/clojure-1.8" "~/code/java8"))
   :config
   (validate-setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
                  cljr-favor-prefix-notation nil
                  cider-repl-display-help-banner nil
-                 nrepl-log-messages t)
-  (defun tdd-test ()
-    "Thin wrapper around `cider-test-run-project-tests', borrowed from
-  http://endlessparentheses.com/test-driven-development-in-cider-and-emacs.html"
-    (when (cider-connected-p)
-      (cider-test-run-project-tests)))
-
-  (define-minor-mode tdd-mode
-    "Run all Clojure tests whenever a file is saved"
-    nil " TDD" nil
-    (if tdd-mode
-        (add-hook 'after-save-hook #'tdd-test nil 'local)
-      (remove-hook 'after-save-hook #'tdd-test 'local))))
+                 nrepl-log-messages t))
 
 (use-package clj-refactor
   :defer 2
   :delight
-  :hook
-  (clojure-mode . (lambda ()
-                         (clj-refactor-mode 1)
-                         (yas-minor-mode 1)
-                         (cljr-add-keybindings-with-prefix "C-c r")))
+  :hook (clojure-mode . (lambda ()
+                          (clj-refactor-mode 1)
+                          (yas-minor-mode 1)
+                          (cljr-add-keybindings-with-prefix "C-c r")))
   :config
   (validate-setq cljr-suppress-middleware-warnings t
                  ;; Lazily build ASTs, instead of immediately on REPL connect
-                 cljr-warn-on-eval t
                  cljr-eagerly-build-asts-on-startup nil))
 
 (use-package yasnippet :delight)
@@ -698,5 +702,23 @@
 
 (use-package json-mode
   :defer 2)
+
+(use-package rust-mode
+  :defer 2
+  :custom (rust-format-on-save t))
+
+(use-package lsp-rust
+  :defer 2
+  :config (setq lsp-rust-rls-command '("rls"))
+  :hook (rust-mode . lsp-rust-enable))
+
+(use-package racer
+  :defer 2
+  :hook ((rust-mode . racer-mode)
+	 (racer-mode . eldoc-mode)))
+
+(use-package atomic-chrome
+  :defer 5
+  :config (atomic-chrome-start-server))
 
 ;;; init.el ends here

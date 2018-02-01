@@ -6,7 +6,7 @@
   protocol = https
 [user]
   name = Chris Sims
-  email = chris@jcs.im
+  email = chris@jcsi.ms
 [alias]
   co = checkout
   count   = shortlog -sn
@@ -49,7 +49,9 @@
   hideCampaign = true
 [github "github.threatbuild.com"]
   user = chrsims
-[diff "gpg"]
-  textconv = gpg --no-tty --decrypt
 [github "github.threatbuild.com/api/v3"]
   user = chrsims
+[diff "gpg"]
+  textconv = gpg --no-tty --decrypt
+[includeIf "gitdir:~/code/tg/"]
+    path = ~/code/tg/.gitconfig
