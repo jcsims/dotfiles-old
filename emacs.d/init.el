@@ -444,130 +444,129 @@
   :commands latex-extra-mode
   :hook (LaTeX-mode . latex-extra-mode))
 
-(use-package company-auctex)
+(use-package company-auctex :disabled)
+
+(defvar org-dir "~/org/")
+(defvar jcs/projects-file (expand-file-name "projects.org" org-dir))
+(defvar jcs/someday-file (expand-file-name "someday.org" org-dir))
+(defvar jcs/next-file (expand-file-name "next.org" org-dir))
+(defvar jcs/tickler-file (expand-file-name "tickler.org" org-dir))
+(defvar jcs/inbox-file (expand-file-name "inbox.org" org-dir))
+(defvar jcs/reference-file (expand-file-name "reference.org" org-dir))
+(defvar jcs/checklists-file (expand-file-name "checklists.org" org-dir))
+
+;; Load some org-babel dependencies
+(use-package restclient)
+(use-package ob-restclient)
+(use-package ob-sql-mode :disabled)
 
 (use-package org
   :config
-  (validate-setq org-directory "~/org/")
-  (defvar gtd-file (expand-file-name "gtd.org" org-directory))
-  (defvar work-gtd-file (expand-file-name "work-gtd.org" org-directory))
-  (defvar someday-file (expand-file-name "someday.org" org-directory))
-  (defvar tickler-file (expand-file-name "tickler.org" org-directory))
-  (defvar work-tickler-file (expand-file-name "work-tickler.org" org-directory))
-  (defvar inbox-file (expand-file-name "inbox.org" org-directory))
-  (defvar reference-file (expand-file-name "reference.org" org-directory))
-  (defvar checklists-file (expand-file-name "checklists.org" org-directory))
-  (defvar filtered-agenda-files '(someday-file checklists-file))
-  (validate-setq org-log-done 'time
+  (validate-setq org-directory org-dir
+                 org-log-done 'time
+                 org-log-into-drawer t
                  org-startup-indented t
                  org-startup-folded t
-                 org-agenda-files (file-expand-wildcards
-				   (concat org-directory "*.org"))
-                 org-default-notes-file (expand-file-name
-					 "inbox.org" org-directory)
+                 org-default-notes-file jcs/inbox-file
                  org-src-fontify-natively t
                  org-use-fast-todo-selection t
                  org-refile-allow-creating-parent-nodes t
                  org-refile-use-outline-path 'file
                  org-outline-path-complete-in-steps nil
-		 ;; Don't ask every time before evaluating an org source block
-                 org-confirm-babel-evaluate nil)
-  (setq org-refile-targets '((gtd-file . (:maxlevel . 2))
-                             (work-gtd-file . (:maxlevel . 2))
-                             (someday-file . (:level . 1))
-                             (tickler-file . (:level . 1))
-                             (work-tickler-file . (:level . 1))
-                             (reference-file . (:level . 1)))
+                 ;; Don't ask every time before evaluating an org source block
+                 org-confirm-babel-evaluate nil
+		 org-agenda-files (list jcs/projects-file
+					jcs/inbox-file
+					jcs/someday-file
+					jcs/next-file
+					jcs/tickler-file))
+  (setq org-refile-targets '((jcs/projects-file . (:maxlevel . 1))
+                             (jcs/someday-file . (:level . 0))
+                             (jcs/next-file . (:level . 0))
+                             (jcs/tickler-file . (:level . 0))
+                             (jcs/reference-file . (:level . 1)))
+        org-tag-alist (quote (("@work" . ?w)
+                              ("@errand" . ?E)
+                              ("@home" . ?h)
+			      ("@computer" . ?c)
+                              (:newline)
+                              ("@kasey" . ?k)
+                              ("@alex" . ?a)
+			      (:newline)
+			      ("james" . ?j)
+			      ("weekend" . ?W)
+			      ("evening" . ?e)))
         org-todo-keywords
-        (quote ((sequence "TODO(t)" "DOING(o)" "|" "DONE(d)")
-                (sequence "WAITING(w@/!)" "|" "CANCELLED(c@/!)"))))
-  (defun find-gtd-file () (interactive) (find-file gtd-file))
-  (defun find-work-gtd-file () (interactive) (find-file work-gtd-file))
-  (defun find-someday-file () (interactive) (find-file someday-file))
-  (defun find-inbox-file () (interactive) (find-file inbox-file))
-  (defun find-tickler-file () (interactive) (find-file tickler-file))
-  (defun find-reference-file () (interactive) (find-file reference-file))
-  (defun find-checklists-file () (interactive) (find-file checklists-file))
+        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
   ;; Add a few languages for execution in org source blocks
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((clojure . t)
                                  (sh . t)
+                                 (sql . t)
                                  (emacs-lisp . t)
                                  (elasticsearch . t)
                                  (restclient . t)))
+  (defun find-projects-file () (interactive) (find-file jcs/projects-file))
+  (defun find-someday-file () (interactive) (find-file jcs/someday-file))
+  (defun find-inbox-file () (interactive) (find-file jcs/inbox-file))
+  (defun find-next-file () (interactive) (find-file jcs/next-file))
+  (defun find-tickler-file () (interactive) (find-file jcs/tickler-file))
+  (defun find-reference-file () (interactive) (find-file jcs/reference-file))
+  (defun find-checklists-file () (interactive) (find-file jcs/checklists-file))
 
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
-         ("C-c e g" . find-gtd-file)
-         ("C-c e w" . find-work-gtd-file)
+         ("C-c e p" . find-projects-file)
          ("C-c e s" . find-someday-file)
-         ("C-c e n" . find-inbox-file)
+         ("C-c e i" . find-inbox-file)
+         ("C-c e n" . find-next-file)
          ("C-c e t" . find-tickler-file)
          ("C-c e r" . find-reference-file)
-	 ("C-c e c" . find-checklists-file)))
+         ("C-c e c" . find-checklists-file)))
+
+(use-package ox-md :ensure f)
+
+(use-package org-agenda
+  :ensure f
+  :after org
+  :config
+  ;; Use the current window to open the agenda
+  (validate-setq org-agenda-window-setup 'current-window
+		 org-agenda-block-separator nil)
+  (setq jcs/agenda-files (list jcs/projects-file jcs/tickler-file jcs/next-file))
+  (setq org-agenda-custom-commands
+        '(("c" "Agenda and tasks"
+           ((agenda ""
+                    ((org-agenda-files jcs/agenda-files)))
+	    (todo "TODO"
+		  ((org-agenda-overriding-header "To Refile")
+		   (org-agenda-files '("~/org/inbox.org"))))
+	    (todo "WAITING"
+                  ((org-agenda-files jcs/agenda-files)))
+            (todo "NEXT"
+                  ((org-agenda-files jcs/agenda-files)))
+            (todo "TODO"
+                  ((org-agenda-files jcs/agenda-files))))))))
 
 (use-package org-capture
   :ensure f
   :after org
   :bind ("C-c c" . org-capture)
   :config
-  (setq org-capture-templates '(("t" "Todo [inbox]" entry
-                                 (file "inbox.org")
-                                 "* TODO %i%?")
-                                ("T" "Tickler" entry
-                                 (file+headline "tickler.org" "Tickler")
-                                 "* %i%? \n %U")
-                                ("w" "Work Tickler" entry
-                                 (file+headline "work-tickler.org" "Tickler")
-                                 "* %i%? \n %U")
-                                ("r" "Reference" entry
-                                 (file+headline "reference.org" "Reference")
-                                 "* %i%? \n %U"))))
-
-(use-package org-agenda
-  :ensure f
-  :config
-  ;; Use the current window to open the agenda
-  (validate-setq org-agenda-window-setup 'current-window)
-  (setq org-agenda-custom-commands
-        '(("p" "Personal agenda and tasks"
-	   ((agenda ""
-                    ((org-agenda-files (list tickler-file gtd-file inbox-file))
-		     (org-agenda-overriding-header "Personal")))
-            (todo "WAITING"
-		  ((org-agenda-files (list tickler-file gtd-file inbox-file))))
-            (todo "DOING"
-                  ((org-agenda-files (list tickler-file gtd-file inbox-file))))
-            (todo "TODO"
-                  ((org-agenda-files (list tickler-file gtd-file inbox-file))))))
-          ("w" "Work tasks"
-           ((agenda ""
-                    ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))
-                     (org-agenda-overriding-header "Work")))
-            (todo "WAITING"
-		  ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))))
-            (todo "DOING"
-                  ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))))
-            (todo "TODO"
-                  ((org-agenda-files (list work-tickler-file work-gtd-file inbox-file))))))))
-
-  (defun org-current-is-todo ()
-    "Is the current org heading a TODO?"
-    (string= "TODO" (org-get-todo-state)))
-
-  ;; Borrowed from https://emacs.cafe/emacs/orgmode/gtd/2017/06/30/orgmode-gtd.html
-  (defun my-org-agenda-skip-all-siblings-but-first ()
-    "Skip all but the first non-done entry."
-    (let (should-skip-entry)
-      (unless (org-current-is-todo)
-        (validate-setq should-skip-entry t))
-      (save-excursion
-        (while (and (not should-skip-entry) (org-goto-sibling t))
-          (when (org-current-is-todo)
-            (validate-setq should-skip-entry t))))
-      (when should-skip-entry
-        (or (outline-next-heading)
-            (goto-char (point-max)))))))
+  (setq org-capture-templates
+        '(("t" "Todo [inbox]" entry
+           (file "inbox.org")
+           "* TODO %i%?")
+	  ("n" "Next task [inbox]" entry
+           (file "inbox.org")
+           "* NEXT %i%?")
+          ("T" "Tickler" entry
+           (file "tickler.org")
+           "* %i%? \n %U")
+          ("r" "Reference" entry
+           (file+headline "reference.org" "Reference")
+           "* %i%? \n %U"))))
 
 (use-package alert
   :config
@@ -585,10 +584,7 @@
   :after alert
   :config (org-wild-notifier-mode))
 
-(use-package ox-md :ensure f)
-(use-package restclient)
-(use-package ob-restclient)
-(use-package ob-sql-mode)
+
 (use-package go-mode)
 (use-package company-go)
 (use-package go-eldoc
