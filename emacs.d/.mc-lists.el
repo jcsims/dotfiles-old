@@ -8,12 +8,15 @@
 	counsel-grep-or-swiper
 	dabbrev-expand
 	describe-key
+	indent-rigidly
+	indent-rigidly-right
 	org-cycle
 	org-delete-char
 	org-metaright
 	org-self-insert-command
 	org-shiftright
 	paredit-forward-delete
+	paredit-splice-sexp-killing-backward
 	smex
 	yaml-electric-backspace
 	))

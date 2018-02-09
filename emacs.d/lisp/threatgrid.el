@@ -173,7 +173,7 @@ nil START or END will not bracket.  START and END are Emacs time structures."
     (kill-new (number-to-string issue-number))
     (message "Created issue: %s" (alist-get 'html_url response))))
 
-(defun tg-create-threatbrain-issue (title)
+(defun tg-create-tb-issue (title)
   "Create a new issue in the threatbrain repo, with title TITLE."
   (interactive "MIssue Title: ")
   (tg--create-issue "threatgrid/threatbrain" title))

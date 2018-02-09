@@ -1,4 +1,4 @@
-;;; init --- configuration starting point
+;;; init --- configuration starting point -*- no-byte-compile: t -*-
 
 ;;; Commentary:
 ;; Most of what is found in these files has been pulled from the
@@ -8,6 +8,8 @@
 ;;; Code:
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
+
+(setq load-prefer-newer t)
 
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -19,24 +21,29 @@
 
 (package-initialize)
 
+;; Setup use-package
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
-
 (eval-when-compile
   (require 'use-package))
-(use-package validate)
+(use-package validate :ensure t)
 (validate-setq use-package-always-ensure t
-	       use-package-compute-statistics t
-	       use-package-verbose t)
+               use-package-compute-statistics t
+               use-package-verbose t)
 (use-package delight)
 (use-package bind-key)
+
+(use-package auto-compile
+  :config
+  (auto-compile-on-load-mode)
+  (auto-compile-on-save-mode))
 
 (setq source-directory "~/code/emacs")
 
 ;;; Personal info
 (validate-setq user-full-name "Chris Sims"
-	       user-mail-address "chris@jcsi.ms")
+               user-mail-address "chris@jcsi.ms")
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -74,7 +81,7 @@
 (when (memq window-system '(mac ns))
   (set-frame-font "-*-Menlo-normal-normal-normal-*-11-*-*-*-m-0-iso10646-1"))
 (when (memq window-system '(x))
-  (set-frame-font "-1ASC-Liberation Mono-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
+  (set-frame-font "Hack 9"))
 
 (global-prettify-symbols-mode 1)
 
@@ -83,7 +90,7 @@
   "Open the init file for editing."
   (interactive)
   (find-file "~/.emacs.d/init.el"))
-(global-set-key (kbd "C-c e i") 'find-init-file)
+(global-set-key (kbd "C-c e e") 'find-init-file)
 
 (use-package autorevert
   :ensure f)
@@ -150,15 +157,11 @@
   :ensure f
   :load-path "lisp")
 
-(use-package threatgrid
-  :ensure f
-  :load-path "lisp")
-
 (use-package whitespace
   :delight whitespace-mode
   :config
   (validate-setq whitespace-line-column 80
-		 whitespace-style '(face trailing lines-tail))
+                 whitespace-style '(face trailing lines-tail))
   :hook (prog-mode . whitespace-mode))
 
 (use-package markdown-mode
@@ -173,19 +176,16 @@
 
 ;; Ensure that when we go to a new line, it's indented properly
 (use-package electric
-  :defer 2
   :config (electric-indent-mode))
 
 (use-package autorevert
   :delight auto-revert-mode
-  :defer 2
   :config
   ;; Auto-refresh buffers
   (global-auto-revert-mode))
 
 ;; Highlight matching parens
 (use-package paren
-  :defer 2
   :config
   (show-paren-mode))
 
@@ -205,12 +205,10 @@
 
 ;; Flyspell mode
 (use-package flyspell
-  :defer 2
   :hook (text-mode . flyspell-mode))
 
 ;; Config other packages
 (use-package company
-  :defer 5
   :config
   (setq company-tooltip-limit 20)                       ; bigger popup window
   (setq company-idle-delay .3)                          ; decrease delay before autocompletion popup shows
@@ -219,7 +217,6 @@
   (global-company-mode))
 
 (use-package company-quickhelp
-  :defer 5
   :config (company-quickhelp-mode))
 
 (use-package elisp-slime-nav
@@ -230,7 +227,6 @@
 
 (use-package idle-highlight-mode
   :delight
-  :defer 2
   :hook (prog-mode . idle-highlight-mode))
 
 (use-package ag
@@ -239,17 +235,15 @@
                  ag-reuse-buffers t))
 
 (use-package rainbow-delimiters
-  :defer 2
   :hook (emacs-lisp-mode . rainbow-delimiters-mode))
 
 (use-package flycheck
-  :defer 2
   :config (global-flycheck-mode))
 
 (use-package ido
   :disabled
   :hook (ido-setup . (lambda () (define-key ido-completion-map [up]
-                                  'previous-history-element)))
+                             'previous-history-element)))
   :config
   (validate-setq ido-use-filename-at-point nil
                  ido-auto-merge-work-directories-length 0
@@ -283,7 +277,7 @@
 (use-package ivy
   :delight
   :bind (("C-c C-r" . ivy-resume)) ; TODO: Find a binding that doesn't
-					; get overwritten...
+                                        ; get overwritten...
   :config
   (validate-setq ivy-use-virtual-buffers t
                  enable-recursive-minibuffers t
@@ -301,7 +295,7 @@
   :config
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
   (validate-setq counsel-grep-base-command
-		 "rg -i -M 120 --no-heading --line-number --color never '%s' %s"))
+                 "rg -i -M 120 --no-heading --line-number --color never '%s' %s"))
 
 (use-package projectile
   :delight
@@ -310,8 +304,8 @@
   ;; Note: remove this once
   ;; https://github.com/bbatsov/projectile/issues/1183 is resolved
   (validate-setq projectile-mode-line
-		 '(:eval (format " Projectile[%s]"
-				 (projectile-project-name)))))
+                 '(:eval (format " Projectile[%s]"
+                                 (projectile-project-name)))))
 
 (use-package counsel-projectile
   :config
@@ -326,15 +320,21 @@
                  magit-prefer-remote-upstream t)
   :bind ("C-c g" . magit-status))
 
-(use-package git-timemachine :defer 5)
-(use-package git-gutter :defer 2)
-(use-package ghub :defer 2)
+(use-package git-timemachine )
+(use-package git-gutter )
+
+;; ghub and dash are required by threatgrid.el
+(use-package ghub )
+(use-package dash)
+(use-package threatgrid
+  :ensure f
+  :commands (preq tg-insert-weekly-work-report tg-create-tb-issue)
+  :load-path "lisp")
 
 (use-package windmove
   :config (windmove-default-keybindings))
 
 (use-package winner
-  :defer 2
   :config (winner-mode 1))
 
 (use-package paredit
@@ -346,18 +346,15 @@
   :hook (prog-mode . paredit-everywhere-mode))
 
 (use-package expand-region
-  :defer 2
   :bind ("C-=" . er/expand-region))
 
 (use-package browse-kill-ring
-  :defer 2
   :config (browse-kill-ring-default-keybindings))
 
 (use-package dockerfile-mode
   :mode "Dockerfile")
 
 (use-package dumb-jump
-  :defer 2
   :bind ("C-M-g" . dumb-jump-go)
   :config (dumb-jump-mode))
 
@@ -366,7 +363,6 @@
 
 (use-package which-key
   :delight
-  :defer 2
   :config (which-key-mode))
 
 ;; Some keybinds for this mode:
@@ -375,14 +371,12 @@
 ;; `diff-hl-previous-hunk'   C-x v [
 ;; `diff-hl-next-hunk'       C-x v ]
 (use-package diff-hl
-  :defer 2
   :hook ((prog-mode vc-dir-mode) . turn-on-diff-hl-mode))
 
 (use-package super-save
   :delight
   :init
   (validate-setq auto-save-default nil)
-  :defer 2
   :config
   (super-save-mode +1)
   (validate-setq super-save-auto-save-when-idle t))
@@ -396,9 +390,8 @@
 (use-package nlinum
   :config (global-nlinum-mode))
 
-(use-package dired-collapse :defer 2)
+(use-package dired-collapse )
 (use-package salt-mode
-  :defer 2
   :mode "\\.sls\\'")
 
 ;; Use es-mode for ElasticSearch buffers
@@ -412,6 +405,7 @@
    ("C-c C-<" . mc/mark-all-like-this)))
 
 (use-package alchemist
+  :disabled
   :config
   ;; Run the whole test suite with alchemist-mix-test after saving a buffer.
   (validate-setq alchemist-hooks-test-on-save t)
@@ -446,6 +440,7 @@
 
 ;; Use latex-extra package
 (use-package latex-extra
+  :disabled
   :commands latex-extra-mode
   :hook (LaTeX-mode . latex-extra-mode))
 
@@ -604,7 +599,6 @@
 (use-package eldoc :delight :ensure f)
 
 (use-package clojure-mode
-  :defer 2
   :delight
   :mode ("\\.clj.*\\'" "\\.edn.*\\'")
   :hook
@@ -637,7 +631,6 @@
 ;;; Cider
 (use-package cider
   :delight
-  :defer 2
   :hook
   (clojure-mode . cider-mode)
   ((cider-mode cider-repl-mode) . eldoc-mode)
@@ -648,12 +641,10 @@
   :custom (cider-jdk-src-paths '("~/code/clojure-1.8" "~/code/java8"))
   :config
   (validate-setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
-                 cljr-favor-prefix-notation nil
                  cider-repl-display-help-banner nil
                  nrepl-log-messages t))
 
 (use-package clj-refactor
-  :defer 2
   :delight
   :hook (clojure-mode . (lambda ()
                           (clj-refactor-mode 1)
@@ -661,18 +652,19 @@
                           (cljr-add-keybindings-with-prefix "C-c r")))
   :config
   (validate-setq cljr-suppress-middleware-warnings t
+                 cljr-favor-prefix-notation nil
                  ;; Lazily build ASTs, instead of immediately on REPL connect
                  cljr-eagerly-build-asts-on-startup nil))
 
 (use-package yasnippet :delight)
 
 ;; Try out a linter...
-(use-package flycheck-joker :defer 2)
+(use-package flycheck-joker)
 
 ;; Seed the PRNG anew, from the system's entropy pool
 (random t)
 
-(use-package systemd :defer 2)
+(use-package systemd)
 
 (use-package shell-pop
   :custom
@@ -693,32 +685,25 @@
 
 (use-package wgrep)
 
-(use-package nov
-  :defer 5)
+(use-package nov)
 
 (use-package json-snatcher
-  :defer 2
   :config (validate-setq jsons-path-printer 'jsons-print-path-jq))
 
-(use-package json-mode
-  :defer 2)
+(use-package json-mode)
 
 (use-package rust-mode
-  :defer 2
   :custom (rust-format-on-save t))
 
 (use-package lsp-rust
-  :defer 2
   :config (setq lsp-rust-rls-command '("rls"))
   :hook (rust-mode . lsp-rust-enable))
 
 (use-package racer
-  :defer 2
   :hook ((rust-mode . racer-mode)
-	 (racer-mode . eldoc-mode)))
+         (racer-mode . eldoc-mode)))
 
 (use-package atomic-chrome
-  :defer 5
   :config (atomic-chrome-start-server))
 
 ;;; init.el ends here
