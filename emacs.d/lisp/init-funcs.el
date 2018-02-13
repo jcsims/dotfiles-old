@@ -62,43 +62,11 @@ point reaches the beginning or end of buffer, stop there."
 (global-set-key (kbd "<C-return>") 'open-line-below)
 (global-set-key (kbd "<C-S-return>") 'open-line-above)
 
-(defmacro rename-modeline (package-name mode new-name)
-  "Change the name of a mode on the mode-line.
-In PACKAGE-NAME, change MODE from PACKAGE-NAME to NEW-NAME.
-Taken from what the emacs.d."
-  `(eval-after-load ,package-name
-     '(defadvice ,mode (after rename-modeline activate)
-        (setq mode-name ,new-name))))
-
-;; Taken from technomancy's emacs.d
-(global-set-key (kbd "C-c n")
-                (defun pnh-cleanup-buffer ()
-                  (interactive)
-                  (delete-trailing-whitespace)
-                  (untabify (point-min) (point-max))
-                  (indent-region (point-min) (point-max))))
-
 ;; A few taken from bodil
-(defun recompile-init ()
-  "Byte-compile all your dotfiles again."
-  (interactive)
-  (byte-recompile-directory user-emacs-directory 0))
-
 (defun sudo-edit ()
   "Edit current buffer using sudo."
   (interactive)
   (find-alternate-file (concat "/sudo:root@localhost:" buffer-file-name)))
-
-(defun remove-elc-on-save ()
-  "If you're saving an elisp file, likely the .elc is no longer valid."
-  (make-local-variable 'after-save-hook)
-  (add-hook 'after-save-hook
-            (lambda ()
-              (if (file-exists-p (concat buffer-file-name "c"))
-                  (delete-file (concat buffer-file-name "c"))))))
-
-(add-hook 'emacs-lisp-mode-hook 'turn-on-eldoc-mode)
-(add-hook 'emacs-lisp-mode-hook 'remove-elc-on-save)
 
 ;; Set transparency of current frame
 (defun transparency (value)
@@ -140,41 +108,6 @@ If region is active, apply to active region instead."
       '(lambda()
           (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
-;; Stolen from Reddit:
-;; https://www.reddit.com/r/emacs/comments/3uu1iw/setting_and_using_emacs_in_three_columns/
-(defun emc-working-split (window-count)
-  "Make vertical splits for working window setup, and populate
-them with appropriate buffers.  Buffers are the most recently
-used from (projectile-project-buffers), falling back
-to (buffer-list) when not in a project.
-
-If optional argument WINDOW-COUNT is omitted or nil, default to
-max splits of at least 90 chars wide."
-  (interactive "P")
-  (recentf-mode t) ; Make sure recentf mode is on - won't work without it
-  (let* ((window-count (if window-count window-count (/ (frame-width) 104)))
-         (show-buffers (cond
-                        ((projectile-project-p)
-                         (dotimes (i window-count) ;; ensure enough
-                           ;; buffers open
-                           (let ((num-files (length (projectile-recentf-files))))
-                             (unless (>= i num-files)
-                               (find-file-noselect (concat (projectile-project-root)
-                                                           (nth i (projectile-recentf-files)))))))
-                         (projectile-project-buffers))
-                        (t
-                         (remove-if 'minibufferp (buffer-list))))))
-    (delete-other-windows)
-    ;; split window appropriate count - make 2nd window current
-    (dotimes (i (- window-count 1))
-      (split-window-horizontally)
-      (if (= i 0) (other-window 1)))
-    (balance-windows)
-    ;; set window buffer from show-buffers list
-    (mapcar* 'set-window-buffer (window-list nil "no-minibuf") show-buffers)))
-
-(global-set-key (kbd "C-c 3") 'emc-working-split)
-
 (defun dired-do-ispell (&optional arg)
   "Check all marked files ARG with ispell.  Borrowed from the
 Emacswiki."
@@ -193,14 +126,6 @@ Emacswiki."
   (set (make-local-variable 'comment-auto-fill-only-comments) t)
   (auto-fill-mode t))
 
-(defun esk-turn-on-hl-line-mode ()
-  (when (> (display-color-cells) 8)
-    (hl-line-mode t)))
-
-(defun esk-turn-on-save-place-mode ()
-  (require 'saveplace)
-  (setq save-place t))
-
 (defun esk-pretty-lambdas ()
   (font-lock-add-keywords
    nil `(("(?\\(lambda\\>\\)"
@@ -214,23 +139,10 @@ Emacswiki."
           1 font-lock-warning-face t))))
 
 (add-hook 'prog-mode-hook 'esk-local-comment-auto-fill)
-;; (add-hook 'prog-mode-hook 'esk-turn-on-hl-line-mode)
-(add-hook 'prog-mode-hook 'esk-turn-on-save-place-mode)
 (add-hook 'prog-mode-hook 'esk-pretty-lambdas)
 (add-hook 'prog-mode-hook 'esk-add-watchwords)
 
-(defun toggle-pair-mode ()
-  "Turn on/off some modes that are friendlier to pairing."
-  (interactive)
-  (if global-linum-mode
-    (progn
-      (global-linum-mode 0)
-      (git-gutter-mode))
-    (progn
-        (git-gutter-mode 0)
-        (global-linum-mode))))
-
-(defun jcs-magit-commit-template (&rest _)
+(defun jcs/magit-commit-template (&rest _)
   "Ensure that commits on an issue- branch have the issue name in the commit as well."
   (let ((prefix (magit-get-current-branch)))
     (if (string-prefix-p "issue-" prefix)
@@ -245,7 +157,7 @@ Emacswiki."
                 (move-end-of-line nil))
             (goto-char (point-min)))))))
 
-(add-hook 'git-commit-mode-hook 'jcs-magit-commit-template)
+(add-hook 'git-commit-mode-hook 'jcs/magit-commit-template)
 
 (defun urldecode ()
   "Call `url-unhex-string` on the active region."
@@ -261,17 +173,6 @@ Emacswiki."
 (defun random-lowercase-char ()
   "Return a random lowercase character, from a-z."
   (format "%c" (+ 97 (random 26))))
-
-(defun todays-log ()
-  "Return the filename for today's log file."
-  (format-time-string "%Y-%m-%d.org" (current-time)))
-
-(defun visit-todays-log ()
-  "Visit buffer for a log file for today."
-  (interactive)
-  (find-file (concat "~/org/log/" (todays-log))))
-
-(global-set-key (kbd "C-c e l") 'visit-todays-log)
 
 (provide 'init-funcs)
 ;;; init-funcs.el ends here

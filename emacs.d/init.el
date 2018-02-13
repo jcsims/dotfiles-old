@@ -6,8 +6,8 @@
 ;; troubleshoot yourself!
 
 ;;; Code:
-(setq custom-file "~/.emacs.d/custom.el")
-(load custom-file)
+(setq jcs/custom-file "~/.emacs.d/custom.el")
+(load jcs/custom-file)
 
 (setq load-prefer-newer t)
 
@@ -325,7 +325,8 @@
 
 ;; ghub and dash are required by threatgrid.el
 (use-package ghub )
-(use-package dash)
+(use-package dash
+  :config (dash-enable-font-lock))
 (use-package threatgrid
   :ensure f
   :commands (preq tg-insert-weekly-work-report tg-create-tb-issue)
@@ -390,7 +391,7 @@
 (use-package nlinum
   :config (global-nlinum-mode))
 
-(use-package dired-collapse )
+(use-package dired-collapse)
 (use-package salt-mode
   :mode "\\.sls\\'")
 
@@ -475,11 +476,11 @@
                  org-outline-path-complete-in-steps nil
                  ;; Don't ask every time before evaluating an org source block
                  org-confirm-babel-evaluate nil
-		 org-agenda-files (list jcs/projects-file
-					jcs/inbox-file
-					jcs/someday-file
-					jcs/next-file
-					jcs/tickler-file))
+                 org-agenda-files (list jcs/projects-file
+                                        jcs/inbox-file
+                                        jcs/someday-file
+                                        jcs/next-file
+                                        jcs/tickler-file))
   (setq org-refile-targets '((jcs/projects-file . (:maxlevel . 1))
                              (jcs/someday-file . (:level . 0))
                              (jcs/next-file . (:level . 0))
@@ -488,14 +489,18 @@
         org-tag-alist (quote (("@work" . ?w)
                               ("@errand" . ?E)
                               ("@home" . ?h)
-			      ("@computer" . ?c)
+                              ("@computer" . ?c)
                               (:newline)
                               ("@kasey" . ?k)
                               ("@alex" . ?a)
-			      (:newline)
-			      ("james" . ?j)
-			      ("weekend" . ?W)
-			      ("evening" . ?e)))
+                              (:newline)
+                              ("james" . ?j)
+                              ("weekend" . ?W)
+                              ("evening" . ?e)
+                              ("workstation" . ?K)
+                              ("server" . ?s)
+                              ("project_idea" . ?p)
+			      ("business_hours" . ?b)))
         org-todo-keywords
         (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
@@ -515,6 +520,14 @@
   (defun find-reference-file () (interactive) (find-file jcs/reference-file))
   (defun find-checklists-file () (interactive) (find-file jcs/checklists-file))
 
+  (defun visit-todays-log ()
+    "Visit buffer for a log file for today's date."
+    (interactive)
+    (find-file (concat "~/org/log/" (format-time-string
+				     "%Y-%m-%d.org" (current-time)))))
+
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
          ("C-c e p" . find-projects-file)
@@ -523,7 +536,8 @@
          ("C-c e n" . find-next-file)
          ("C-c e t" . find-tickler-file)
          ("C-c e r" . find-reference-file)
-         ("C-c e c" . find-checklists-file)))
+         ("C-c e c" . find-checklists-file)
+         ("C-c e l" . visit-todays-log)))
 
 (use-package ox-md :ensure f)
 
@@ -533,21 +547,24 @@
   :config
   ;; Use the current window to open the agenda
   (validate-setq org-agenda-window-setup 'current-window
-		 org-agenda-block-separator nil)
+                 org-agenda-block-separator nil)
   (setq jcs/agenda-files (list jcs/projects-file jcs/tickler-file jcs/next-file))
   (setq org-agenda-custom-commands
         '(("c" "Agenda and tasks"
            ((agenda ""
                     ((org-agenda-files jcs/agenda-files)))
-	    (todo "TODO"
-		  ((org-agenda-overriding-header "To Refile")
-		   (org-agenda-files '("~/org/inbox.org"))))
-	    (todo "WAITING"
-                  ((org-agenda-files jcs/agenda-files)))
+            (todo ""
+                  ((org-agenda-overriding-header "To Refile")
+                   (org-agenda-files '("~/org/inbox.org"))))
+            (todo "WAITING"
+                  ((org-agenda-overriding-header "Waiting")
+		   (org-agenda-files jcs/agenda-files)))
             (todo "NEXT"
-                  ((org-agenda-files jcs/agenda-files)))
+                  ((org-agenda-overriding-header "Next")
+		   (org-agenda-files jcs/agenda-files)))
             (todo "TODO"
-                  ((org-agenda-files jcs/agenda-files))))))))
+                  ((org-agenda-overriding-header "Todo")
+		   (org-agenda-files jcs/agenda-files))))))))
 
 (use-package org-capture
   :ensure f
@@ -558,7 +575,7 @@
         '(("t" "Todo [inbox]" entry
            (file "inbox.org")
            "* TODO %i%?")
-	  ("n" "Next task [inbox]" entry
+          ("n" "Next task [inbox]" entry
            (file "inbox.org")
            "* NEXT %i%?")
           ("T" "Tickler" entry
@@ -701,5 +718,9 @@
 
 (use-package atomic-chrome
   :config (atomic-chrome-start-server))
+
+(use-package crux
+  :bind (("C-x 4 t" . crux-transpose-windows)
+         ("C-c n". crux-cleanup-buffer-or-region)))
 
 ;;; init.el ends here
