@@ -10,8 +10,10 @@
 	describe-key
 	indent-rigidly
 	indent-rigidly-right
+	kill-region
 	org-cycle
 	org-delete-char
+	org-force-self-insert
 	org-metaright
 	org-self-insert-command
 	org-shiftright
@@ -23,5 +25,6 @@
 
 (setq mc/cmds-to-run-once
       '(
+	indent-new-comment-line
 	yaml-electric-dash-and-dot
 	))
