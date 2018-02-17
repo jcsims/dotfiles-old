@@ -106,6 +106,9 @@
                backup-directory-alist ; Save backups to a central location
                `(("." . ,(expand-file-name
                           (concat user-emacs-directory "backups"))))
+	       auto-save-file-name-transforms
+	       `((".*" ,(expand-file-name
+			 (concat user-emacs-directory "auto-saves")) t))
                global-auto-revert-non-file-buffers t ; Refresh dired buffers,
                auto-revert-verbose nil  ; but do it quietly
                indent-tabs-mode nil ; Don't use tabs unless buffer-local
@@ -481,9 +484,9 @@
                                         jcs/someday-file
                                         jcs/next-file
                                         jcs/tickler-file))
-  (setq org-refile-targets '((jcs/projects-file . (:maxlevel . 1))
+  (setq org-refile-targets '((jcs/projects-file . (:maxlevel . 2))
                              (jcs/someday-file . (:level . 0))
-                             (jcs/next-file . (:level . 0))
+                             (jcs/next-file . (:level . 1))
                              (jcs/tickler-file . (:level . 0))
                              (jcs/reference-file . (:level . 1)))
         org-tag-alist (quote (("@work" . ?w)
@@ -502,7 +505,7 @@
                               ("project_idea" . ?p)
 			      ("business_hours" . ?b)))
         org-todo-keywords
-        (quote ((sequence "TODO(t)" "NEXT(n)" "|" "DONE(d)")
+        (quote ((sequence "TODO(t)" "NEXT(n)" "DOING(o)" "|" "DONE(d)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
   ;; Add a few languages for execution in org source blocks
   (org-babel-do-load-languages 'org-babel-load-languages
@@ -526,7 +529,9 @@
     (find-file (concat "~/org/log/" (format-time-string
 				     "%Y-%m-%d.org" (current-time)))))
 
+  ;; These tend to modify files, so save after doing it
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
+  (advice-add 'org-archive-subtree-default :after 'org-save-all-org-buffers)
 
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
@@ -555,9 +560,12 @@
                     ((org-agenda-files jcs/agenda-files)))
             (todo ""
                   ((org-agenda-overriding-header "To Refile")
-                   (org-agenda-files '("~/org/inbox.org"))))
+                   (org-agenda-files '("~/org/inbox.org" "~/org/refile-beorg.org"))))
             (todo "WAITING"
                   ((org-agenda-overriding-header "Waiting")
+		   (org-agenda-files jcs/agenda-files)))
+	    (todo "DOING"
+                  ((org-agenda-overriding-header "In Progress")
 		   (org-agenda-files jcs/agenda-files)))
             (todo "NEXT"
                   ((org-agenda-overriding-header "Next")
