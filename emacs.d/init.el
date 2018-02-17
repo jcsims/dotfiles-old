@@ -175,6 +175,7 @@
   :delight auto-fill-function
   :defer 2
   :config (column-number-mode)
+  :bind ("M-SPC" . cycle-spacing)
   :hook ((text-mode org-mode markdown-mode) . turn-on-auto-fill))
 
 ;; Ensure that when we go to a new line, it's indented properly
