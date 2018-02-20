@@ -6,8 +6,8 @@
 ;; troubleshoot yourself!
 
 ;;; Code:
-(setq jcs/custom-file "~/.emacs.d/custom.el")
-(load jcs/custom-file)
+(setq custom-file "~/.emacs.d/custom.el")
+(load custom-file)
 
 (setq load-prefer-newer t)
 
@@ -573,6 +573,9 @@
 		   (org-agenda-files jcs/agenda-files)))
             (todo "TODO"
                   ((org-agenda-overriding-header "Todo")
+		   (org-agenda-files jcs/agenda-files)))
+	    (todo "HOLD"
+                  ((org-agenda-overriding-header "On Hold")
 		   (org-agenda-files jcs/agenda-files))))))))
 
 (use-package org-capture
@@ -731,5 +734,11 @@
 (use-package crux
   :bind (("C-x 4 t" . crux-transpose-windows)
          ("C-c n". crux-cleanup-buffer-or-region)))
+
+(use-package org-rich-yank
+  :ensure t
+  :after org
+  :bind (:map org-mode-map
+              ("C-M-y" . org-rich-yank)))
 
 ;;; init.el ends here
