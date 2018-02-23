@@ -625,7 +625,6 @@
 
 (use-package clojure-mode
   :delight
-  :mode ("\\.clj.*\\'" "\\.edn.*\\'")
   :hook
   (clojure-mode . rainbow-delimiters-mode)
   (clojure-mode . paredit-mode)
