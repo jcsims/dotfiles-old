@@ -561,7 +561,8 @@
                     ((org-agenda-files jcs/agenda-files)))
             (todo ""
                   ((org-agenda-overriding-header "To Refile")
-                   (org-agenda-files '("~/org/inbox.org" "~/org/refile-beorg.org"))))
+                   (org-agenda-files '("~/org/inbox.org"
+				       "~/org/refile-beorg.org"))))
             (todo "WAITING"
                   ((org-agenda-overriding-header "Waiting")
 		   (org-agenda-files jcs/agenda-files)))
