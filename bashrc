@@ -56,6 +56,10 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Add pkgsrc bin directory
     export PATH=/opt/pkg/bin:$PATH
 
+    # Add installed-from-source Postgres binary and manpage paths
+    export PATH=/usr/local/pgsql/bin:$PATH
+    export MANPATH=/usr/local/pgsql/share/man:$MANPATH
+
 fi
 
 export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle:$HOME/code/tg/ops

@@ -640,17 +640,7 @@
    'clojure-mode `(("\\(#\\){"
                     (0 (progn (compose-region (match-beginning 1)
                                               (match-end 1) "∈")
-                              nil)))))
-  ;; Set up proper indentation for a few compojure functions
-  (define-clojure-indent
-    (defroutes 'defun)
-    (GET 2)
-    (POST 2)
-    (PUT 2)
-    (DELETE 2)
-    (HEAD 2)
-    (ANY 2)
-    (context 2)))
+                              nil))))))
 
 ;;; Cider
 (use-package cider
