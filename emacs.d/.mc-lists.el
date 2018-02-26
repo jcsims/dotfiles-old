@@ -14,6 +14,7 @@
 	org-cycle
 	org-delete-char
 	org-force-self-insert
+	org-kill-line
 	org-metaright
 	org-self-insert-command
 	org-shiftright

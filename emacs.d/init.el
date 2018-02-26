@@ -69,11 +69,13 @@
 ;; (global-set-key (kbd "C-M-s") 'isearch-forward)
 ;; (global-set-key (kbd "C-M-r") 'isearch-backward)
 
-;; Turn off the toolbar and scroll bar
+;; Turn off the toolbar, menu bar, and scroll bar
 (when (fboundp 'tool-bar-mode)
   (tool-bar-mode -1))
 (when (fboundp 'scroll-bar-mode)
   (scroll-bar-mode -1))
+(when (fboundp 'menu-bar-mode)
+  (menu-bar-mode -1))
 
 ;; Handy to get the current font/size that you've got:
 ;; (insert "\n(set-frame-font \"" (cdr (assoc 'font (frame-parameters))) "\")")
