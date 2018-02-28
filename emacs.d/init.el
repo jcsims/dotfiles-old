@@ -365,6 +365,11 @@
   :bind ("C-M-g" . dumb-jump-go)
   :config (dumb-jump-mode))
 
+(use-package smart-jump
+  :ensure t
+  :config
+  (smart-jump-setup-default-registers))
+
 (use-package yaml-mode
   :mode "\\.yml.*\\'")
 
