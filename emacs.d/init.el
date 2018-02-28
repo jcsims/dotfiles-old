@@ -550,13 +550,59 @@
          ("C-c e t" . find-tickler-file)
          ("C-c e r" . find-reference-file)
          ("C-c e c" . find-checklists-file)
-         ("C-c e l" . visit-todays-log)))
+         ("C-c e l" . visit-todays-log)
+
+	 ;; Below stolen from
+	 ;; https://github.com/raxod502/radian/blob/ee92ea6cb0473bf7d20c6d381753011312ef4a52/radian-emacs/radian-org.el
+         :map org-mode-map
+
+         ;; Prevent Org from overriding the bindings for windmove. By
+         ;; default, these keys are mapped to `org-shiftleft', etc.
+         ("S-<left>" . nil)
+         ("S-<right>" . nil)
+         ("S-<up>" . nil)
+         ("S-<down>" . nil)
+
+         ;; Add replacements for the keybindings we just removed.
+         ;; C-<left> and C-<right> are unused by Org. C-<up> and
+         ;; C-<down> are bound to `org-backward-paragraph', etc. (but
+         ;; see below).
+         ("C-<left>" . org-shiftleft)
+         ("C-<right>" . org-shiftright)
+         ("C-<up>" . org-shiftup)
+         ("C-<down>" . org-shiftdown)
+
+         ;; By default, Org maps C-<up> to `org-backward-paragraph'
+         ;; instead of `backward-paragraph' (and analogously for
+         ;; C-<down>). However, it doesn't do the same remapping for
+         ;; the other bindings of `backward-paragraph' (e.g. M-{).
+         ;; Here we establish that remapping. (This is important since
+         ;; we remap C-<up> and C-<down> to other things, above. So
+         ;; otherwise there would be no easy way to invoke
+         ;; `org-backward-paragraph' and `org-forward-paragraph'.)
+         ([remap backward-paragraph] . org-backward-paragraph)
+	 ([remap forward-paragraph] . org-forward-paragraph)))
 
 (use-package ox-md :ensure f)
 
 (use-package org-agenda
   :ensure f
   :after org
+  :bind (:map org-agenda-mode-map
+
+	      ;; Prevent Org Agenda from overriding the bindings for
+	      ;; windmove.
+	      ("S-<up>" . nil)
+	      ("S-<down>" . nil)
+	      ("S-<left>" . nil)
+	      ("S-<right>" . nil)
+
+	      ;; Same routine as above. Now for Org Agenda, we could use
+	      ;; C-up and C-down because M-{ and M-} are bound to the same
+	      ;; commands. But I think it's best to take the same approach
+	      ;; as before, for consistency.
+	      ("C-<left>" . org-agenda-do-date-earlier)
+	      ("C-<right>" . org-agenda-do-date-later))
   :config
   ;; Use the current window to open the agenda
   (validate-setq org-agenda-window-setup 'current-window
@@ -620,7 +666,6 @@
   :disabled
   :after alert
   :config (org-wild-notifier-mode))
-
 
 (use-package go-mode)
 (use-package company-go)
@@ -733,7 +778,6 @@
          ("C-c n". crux-cleanup-buffer-or-region)))
 
 (use-package org-rich-yank
-  :ensure t
   :after org
   :bind (:map org-mode-map
               ("C-M-y" . org-rich-yank)))
