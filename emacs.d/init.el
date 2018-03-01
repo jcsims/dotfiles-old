@@ -711,6 +711,8 @@
                  cider-repl-display-help-banner nil
                  nrepl-log-messages t))
 
+(use-package yasnippet :delight)
+
 (use-package clj-refactor
   :delight
   :hook (clojure-mode . (lambda ()
@@ -722,8 +724,6 @@
                  cljr-favor-prefix-notation nil
                  ;; Lazily build ASTs, instead of immediately on REPL connect
                  cljr-eagerly-build-asts-on-startup nil))
-
-(use-package yasnippet :delight)
 
 ;; Try out a linter...
 (use-package flycheck-joker)
