@@ -6,38 +6,32 @@
 ;; troubleshoot yourself!
 
 ;;; Code:
+
+;; Bootstrap straight.el, if it's not already present
+(let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
+      (bootstrap-version 3))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+(straight-use-package 'use-package)
+
+(setq straight-use-package-by-default t)
+
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
-(setq load-prefer-newer t)
-
-(require 'package)
-(setq package-enable-at-startup nil)
-(setq package-archives
-      '(("gnu" . "https://elpa.gnu.org/packages/")
-        ("melpa" . "https://melpa.org/packages/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")
-        ("org" . "https://orgmode.org/elpa/")))
-
-(package-initialize)
-
 ;; Setup use-package
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
-(eval-when-compile
-  (require 'use-package))
-(use-package validate :ensure t)
-(validate-setq use-package-always-ensure t
-               use-package-compute-statistics t
+(use-package validate)
+(validate-setq use-package-compute-statistics t
                use-package-verbose t)
 (use-package delight)
 (use-package bind-key)
-
-(use-package auto-compile
-  :config
-  (auto-compile-on-load-mode)
-  (auto-compile-on-save-mode))
 
 (setq source-directory "~/code/emacs")
 
@@ -94,11 +88,267 @@
   (find-file "~/.emacs.d/init.el"))
 (global-set-key (kbd "C-c e e") 'find-init-file)
 
-(use-package autorevert
-  :ensure f)
+
+(defvar org-dir "~/org/")
+(defvar jcs/projects-file (expand-file-name "projects.org" org-dir))
+(defvar jcs/someday-file (expand-file-name "someday.org" org-dir))
+(defvar jcs/next-file (expand-file-name "next.org" org-dir))
+(defvar jcs/tickler-file (expand-file-name "tickler.org" org-dir))
+(defvar jcs/inbox-file (expand-file-name "inbox.org" org-dir))
+(defvar jcs/reference-file (expand-file-name "reference.org" org-dir))
+(defvar jcs/checklists-file (expand-file-name "checklists.org" org-dir))
+
+(use-package git)
+(use-package org
+  :init
+  ;; Borrowed from:
+  ;; https://github.com/raxod502/radian/blob/master/radian-emacs/radian-org.el
+
+  ;; The following is a temporary hack until straight.el supports
+  ;; building Org, see:
+  ;;
+  ;; * https://github.com/raxod502/straight.el/issues/211
+  ;; * https://github.com/raxod502/radian/issues/410
+  ;;
+  ;; There are three things missing from our version of Org: the
+  ;; functions `org-git-version' and `org-release', and the feature
+  ;; `org-version'. We provide all three of those ourself, therefore.
+
+  (defun org-git-version ()
+    "The Git version of org-mode.
+  Inserted by installing org-mode or when a release is made."
+    (require 'git)
+    (let ((git-repo (expand-file-name
+                     "straight/repos/org/" user-emacs-directory)))
+      (string-trim
+       (git-run "describe"
+                "--match=release\*"
+                "--abbrev=6"
+                "HEAD"))))
+
+  (defun org-release ()
+    "The release version of org-mode.
+  Inserted by installing org-mode or when a release is made."
+    (require 'git)
+    (let ((git-repo (expand-file-name
+                     "straight/repos/org/" user-emacs-directory)))
+      (string-trim
+       (string-remove-prefix
+        "release_"
+        (git-run "describe"
+                 "--match=release\*"
+                 "--abbrev=0"
+                 "HEAD")))))
+
+  (provide 'org-version)
+
+  :config
+  (validate-setq org-directory org-dir
+                 org-log-done 'time
+                 org-log-into-drawer t
+                 org-startup-indented t
+                 org-startup-folded t
+                 org-default-notes-file jcs/inbox-file
+                 org-src-fontify-natively t
+                 org-use-fast-todo-selection t
+                 org-refile-allow-creating-parent-nodes t
+                 org-refile-use-outline-path 'file
+                 org-outline-path-complete-in-steps nil
+                 ;; Don't ask every time before evaluating an org source block
+                 org-confirm-babel-evaluate nil
+                 org-agenda-files (list jcs/projects-file
+                                        jcs/inbox-file
+                                        jcs/someday-file
+                                        jcs/next-file
+                                        jcs/tickler-file))
+  (setq org-refile-targets '((jcs/projects-file . (:maxlevel . 2))
+                             (jcs/someday-file . (:level . 0))
+                             (jcs/next-file . (:level . 1))
+                             (jcs/tickler-file . (:level . 0))
+                             (jcs/reference-file . (:level . 1)))
+        org-tag-alist (quote (("@work" . ?w)
+                              ("@errand" . ?E)
+                              ("@home" . ?h)
+                              ("@computer" . ?c)
+                              (:newline)
+                              ("@kasey" . ?k)
+                              ("@alex" . ?a)
+                              (:newline)
+                              ("james" . ?j)
+                              ("weekend" . ?W)
+                              ("evening" . ?e)
+                              ("workstation" . ?K)
+                              ("server" . ?s)
+                              ("project_idea" . ?p)
+			      ("business_hours" . ?b)))
+        org-todo-keywords
+        (quote ((sequence "TODO(t)" "NEXT(n)" "DOING(o)" "|" "DONE(d)")
+                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
+  (defun find-projects-file () (interactive) (find-file jcs/projects-file))
+  (defun find-someday-file () (interactive) (find-file jcs/someday-file))
+  (defun find-inbox-file () (interactive) (find-file jcs/inbox-file))
+  (defun find-next-file () (interactive) (find-file jcs/next-file))
+  (defun find-tickler-file () (interactive) (find-file jcs/tickler-file))
+  (defun find-reference-file () (interactive) (find-file jcs/reference-file))
+  (defun find-checklists-file () (interactive) (find-file jcs/checklists-file))
+
+  (defun visit-todays-log ()
+    "Visit buffer for a log file for today's date."
+    (interactive)
+    (find-file (concat "~/org/log/" (format-time-string
+				     "%Y-%m-%d.org" (current-time)))))
+
+  ;; These tend to modify files, so save after doing it
+  (advice-add 'org-refile :after 'org-save-all-org-buffers)
+  (advice-add 'org-archive-subtree-default :after 'org-save-all-org-buffers)
+
+  :bind (("C-c l" . org-store-link)
+         ("C-c a" . org-agenda)
+         ("C-c e p" . find-projects-file)
+         ("C-c e s" . find-someday-file)
+         ("C-c e i" . find-inbox-file)
+         ("C-c e n" . find-next-file)
+         ("C-c e t" . find-tickler-file)
+         ("C-c e r" . find-reference-file)
+         ("C-c e c" . find-checklists-file)
+         ("C-c e l" . visit-todays-log)
+
+	 ;; Below stolen from
+	 ;; https://github.com/raxod502/radian/blob/ee92ea6cb0473bf7d20c6d381753011312ef4a52/radian-emacs/radian-org.el
+         :map org-mode-map
+
+         ;; Prevent Org from overriding the bindings for windmove. By
+         ;; default, these keys are mapped to `org-shiftleft', etc.
+         ("S-<left>" . nil)
+         ("S-<right>" . nil)
+         ("S-<up>" . nil)
+         ("S-<down>" . nil)
+
+         ;; Add replacements for the keybindings we just removed.
+         ;; C-<left> and C-<right> are unused by Org. C-<up> and
+         ;; C-<down> are bound to `org-backward-paragraph', etc. (but
+         ;; see below).
+         ("C-<left>" . org-shiftleft)
+         ("C-<right>" . org-shiftright)
+         ("C-<up>" . org-shiftup)
+         ("C-<down>" . org-shiftdown)
+
+         ;; By default, Org maps C-<up> to `org-backward-paragraph'
+         ;; instead of `backward-paragraph' (and analogously for
+         ;; C-<down>). However, it doesn't do the same remapping for
+         ;; the other bindings of `backward-paragraph' (e.g. M-{).
+         ;; Here we establish that remapping. (This is important since
+         ;; we remap C-<up> and C-<down> to other things, above. So
+         ;; otherwise there would be no easy way to invoke
+         ;; `org-backward-paragraph' and `org-forward-paragraph'.)
+         ([remap backward-paragraph] . org-backward-paragraph)
+	 ([remap forward-paragraph] . org-forward-paragraph)))
+
+(use-package ox-md :straight org)
+
+(use-package restclient)
+(use-package ob-restclient
+  :config (add-to-list 'org-babel-load-languages '(restclient . t)))
+
+  ;; Use es-mode for ElasticSearch buffers
+(use-package es-mode
+  :mode "\\.es$"
+  :config (add-to-list 'org-babel-load-languages '(elasticsearch . t)))
+
+(use-package ob-core
+  :straight org
+  :config
+  (add-to-list 'org-babel-load-languages '(sh . t))
+  (add-to-list 'org-babel-load-languages '(sql . t))
+  (org-babel-do-load-languages 'org-babel-load-languages
+			       org-babel-load-languages))
+
+(use-package org-agenda
+  :straight org
+  :after org
+  :bind (:map org-agenda-mode-map
+
+	      ;; Prevent Org Agenda from overriding the bindings for
+	      ;; windmove.
+	      ("S-<up>" . nil)
+	      ("S-<down>" . nil)
+	      ("S-<left>" . nil)
+	      ("S-<right>" . nil)
+
+	      ;; Same routine as above. Now for Org Agenda, we could use
+	      ;; C-up and C-down because M-{ and M-} are bound to the same
+	      ;; commands. But I think it's best to take the same approach
+	      ;; as before, for consistency.
+	      ("C-<left>" . org-agenda-do-date-earlier)
+	      ("C-<right>" . org-agenda-do-date-later))
+  :config
+  ;; Use the current window to open the agenda
+  (validate-setq org-agenda-window-setup 'current-window
+                 org-agenda-block-separator nil)
+  (setq jcs/agenda-files (list jcs/projects-file jcs/tickler-file jcs/next-file))
+  (setq org-agenda-custom-commands
+        '(("c" "Agenda and tasks"
+           ((agenda ""
+                    ((org-agenda-files jcs/agenda-files)))
+            (todo ""
+                  ((org-agenda-overriding-header "To Refile")
+                   (org-agenda-files '("~/org/inbox.org"
+				       "~/org/refile-beorg.org"))))
+            (todo "WAITING"
+                  ((org-agenda-overriding-header "Waiting")
+		   (org-agenda-files jcs/agenda-files)))
+	    (todo "DOING"
+                  ((org-agenda-overriding-header "In Progress")
+		   (org-agenda-files jcs/agenda-files)))
+            (todo "NEXT"
+                  ((org-agenda-overriding-header "Next")
+		   (org-agenda-files jcs/agenda-files)))
+            (todo "TODO"
+                  ((org-agenda-overriding-header "Todo")
+		   (org-agenda-files jcs/agenda-files)))
+	    (todo "HOLD"
+                  ((org-agenda-overriding-header "On Hold")
+		   (org-agenda-files jcs/agenda-files))))))))
+
+(use-package org-capture
+  :straight org
+  :after org
+  :bind ("C-c c" . org-capture)
+  :config
+  (setq org-capture-templates
+        '(("t" "Todo [inbox]" entry
+           (file "inbox.org")
+           "* TODO %i%?")
+          ("n" "Next task [inbox]" entry
+           (file "inbox.org")
+           "* NEXT %i%?")
+          ("T" "Tickler" entry
+           (file "tickler.org")
+           "* %i%? \n %U")
+          ("r" "Reference" entry
+           (file+headline "reference.org" "Reference")
+           "* %i%? \n %U"))))
+
+(use-package alert
+  :config
+  (setq alert-default-style 'libnotify))
+
+(use-package org-alert
+  :disabled
+  :config
+  (validate-setq org-alert-notification-title "Org Agenda")
+  (validate-setq org-alert-interval (* 60 60))
+  (org-alert-enable))
+
+(use-package org-wild-notifier
+  :disabled
+  :after alert
+  :config (org-wild-notifier-mode))
+
+(use-package autorevert :straight nil)
 
 (use-package saveplace
-  :ensure f
+  :straight f
   :config (save-place-mode))
 
 ;;; Misc settings
@@ -125,6 +375,7 @@
 
 ;;; Packages
 (use-package paradox
+  :disabled
   :config
   (validate-setq paradox-execute-asynchronously t)
   (paradox-enable))
@@ -153,13 +404,13 @@
   :config (exec-path-from-shell-initialize))
 
 (use-package re-builder
-  :ensure f
+  :straight f
   :bind (("C-c R" . re-builder))
   :config (validate-setq reb-re-syntax 'string))
 
 ;; External user config
 (use-package init-funcs
-  :ensure f
+  :straight f
   :load-path "lisp")
 
 (use-package whitespace
@@ -173,7 +424,7 @@
   :config (validate-setq markdown-fontify-code-blocks-natively t))
 
 (use-package simple
-  :ensure f
+  :straight f
   :delight auto-fill-function
   :defer 2
   :config (column-number-mode)
@@ -202,7 +453,7 @@
     (server-start)))
 
 ;; Allow for seamless gpg interaction
-(use-package epa-file :ensure f)
+(use-package epa-file :straight f)
 
 ;; Work-specific code - should be encrypted!
 (defvar work-init (concat user-emacs-directory "lisp/init-work.el.gpg"))
@@ -330,11 +581,11 @@
 (use-package git-gutter )
 
 ;; ghub and dash are required by threatgrid.el
-(use-package ghub )
+(use-package ghub)
 (use-package dash
   :config (dash-enable-font-lock))
 (use-package threatgrid
-  :ensure f
+  :straight f
   :commands (preq tg-insert-weekly-work-report tg-create-tb-issue)
   :load-path "lisp")
 
@@ -366,7 +617,6 @@
   :config (dumb-jump-mode))
 
 (use-package smart-jump
-  :ensure t
   :config
   (smart-jump-setup-default-registers))
 
@@ -406,10 +656,6 @@
 (use-package salt-mode
   :mode "\\.sls\\'")
 
-;; Use es-mode for ElasticSearch buffers
-(use-package es-mode
-  :mode "\\.es$")
-
 (use-package multiple-cursors
   :bind
   (("C->"     . mc/mark-next-like-this)
@@ -427,7 +673,7 @@
 
 (use-package tex
   :disabled
-  :ensure auctex
+  :straight auctex
   :hook
   (LaTeX-mode . turn-on-reftex)
   (LaTeX-mode . auto-fill-mode)
@@ -458,215 +704,6 @@
 
 (use-package company-auctex :disabled)
 
-(defvar org-dir "~/org/")
-(defvar jcs/projects-file (expand-file-name "projects.org" org-dir))
-(defvar jcs/someday-file (expand-file-name "someday.org" org-dir))
-(defvar jcs/next-file (expand-file-name "next.org" org-dir))
-(defvar jcs/tickler-file (expand-file-name "tickler.org" org-dir))
-(defvar jcs/inbox-file (expand-file-name "inbox.org" org-dir))
-(defvar jcs/reference-file (expand-file-name "reference.org" org-dir))
-(defvar jcs/checklists-file (expand-file-name "checklists.org" org-dir))
-
-;; Load some org-babel dependencies
-(use-package restclient)
-(use-package ob-restclient)
-(use-package ob-sql-mode :disabled)
-
-(use-package org
-  :config
-  (validate-setq org-directory org-dir
-                 org-log-done 'time
-                 org-log-into-drawer t
-                 org-startup-indented t
-                 org-startup-folded t
-                 org-default-notes-file jcs/inbox-file
-                 org-src-fontify-natively t
-                 org-use-fast-todo-selection t
-                 org-refile-allow-creating-parent-nodes t
-                 org-refile-use-outline-path 'file
-                 org-outline-path-complete-in-steps nil
-                 ;; Don't ask every time before evaluating an org source block
-                 org-confirm-babel-evaluate nil
-                 org-agenda-files (list jcs/projects-file
-                                        jcs/inbox-file
-                                        jcs/someday-file
-                                        jcs/next-file
-                                        jcs/tickler-file))
-  (setq org-refile-targets '((jcs/projects-file . (:maxlevel . 2))
-                             (jcs/someday-file . (:level . 0))
-                             (jcs/next-file . (:level . 1))
-                             (jcs/tickler-file . (:level . 0))
-                             (jcs/reference-file . (:level . 1)))
-        org-tag-alist (quote (("@work" . ?w)
-                              ("@errand" . ?E)
-                              ("@home" . ?h)
-                              ("@computer" . ?c)
-                              (:newline)
-                              ("@kasey" . ?k)
-                              ("@alex" . ?a)
-                              (:newline)
-                              ("james" . ?j)
-                              ("weekend" . ?W)
-                              ("evening" . ?e)
-                              ("workstation" . ?K)
-                              ("server" . ?s)
-                              ("project_idea" . ?p)
-			      ("business_hours" . ?b)))
-        org-todo-keywords
-        (quote ((sequence "TODO(t)" "NEXT(n)" "DOING(o)" "|" "DONE(d)")
-                (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
-  ;; Add a few languages for execution in org source blocks
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               '((clojure . t)
-                                 (sh . t)
-                                 (sql . t)
-                                 (emacs-lisp . t)
-                                 (elasticsearch . t)
-                                 (restclient . t)))
-  (defun find-projects-file () (interactive) (find-file jcs/projects-file))
-  (defun find-someday-file () (interactive) (find-file jcs/someday-file))
-  (defun find-inbox-file () (interactive) (find-file jcs/inbox-file))
-  (defun find-next-file () (interactive) (find-file jcs/next-file))
-  (defun find-tickler-file () (interactive) (find-file jcs/tickler-file))
-  (defun find-reference-file () (interactive) (find-file jcs/reference-file))
-  (defun find-checklists-file () (interactive) (find-file jcs/checklists-file))
-
-  (defun visit-todays-log ()
-    "Visit buffer for a log file for today's date."
-    (interactive)
-    (find-file (concat "~/org/log/" (format-time-string
-				     "%Y-%m-%d.org" (current-time)))))
-
-  ;; These tend to modify files, so save after doing it
-  (advice-add 'org-refile :after 'org-save-all-org-buffers)
-  (advice-add 'org-archive-subtree-default :after 'org-save-all-org-buffers)
-
-  :bind (("C-c l" . org-store-link)
-         ("C-c a" . org-agenda)
-         ("C-c e p" . find-projects-file)
-         ("C-c e s" . find-someday-file)
-         ("C-c e i" . find-inbox-file)
-         ("C-c e n" . find-next-file)
-         ("C-c e t" . find-tickler-file)
-         ("C-c e r" . find-reference-file)
-         ("C-c e c" . find-checklists-file)
-         ("C-c e l" . visit-todays-log)
-
-	 ;; Below stolen from
-	 ;; https://github.com/raxod502/radian/blob/ee92ea6cb0473bf7d20c6d381753011312ef4a52/radian-emacs/radian-org.el
-         :map org-mode-map
-
-         ;; Prevent Org from overriding the bindings for windmove. By
-         ;; default, these keys are mapped to `org-shiftleft', etc.
-         ("S-<left>" . nil)
-         ("S-<right>" . nil)
-         ("S-<up>" . nil)
-         ("S-<down>" . nil)
-
-         ;; Add replacements for the keybindings we just removed.
-         ;; C-<left> and C-<right> are unused by Org. C-<up> and
-         ;; C-<down> are bound to `org-backward-paragraph', etc. (but
-         ;; see below).
-         ("C-<left>" . org-shiftleft)
-         ("C-<right>" . org-shiftright)
-         ("C-<up>" . org-shiftup)
-         ("C-<down>" . org-shiftdown)
-
-         ;; By default, Org maps C-<up> to `org-backward-paragraph'
-         ;; instead of `backward-paragraph' (and analogously for
-         ;; C-<down>). However, it doesn't do the same remapping for
-         ;; the other bindings of `backward-paragraph' (e.g. M-{).
-         ;; Here we establish that remapping. (This is important since
-         ;; we remap C-<up> and C-<down> to other things, above. So
-         ;; otherwise there would be no easy way to invoke
-         ;; `org-backward-paragraph' and `org-forward-paragraph'.)
-         ([remap backward-paragraph] . org-backward-paragraph)
-	 ([remap forward-paragraph] . org-forward-paragraph)))
-
-(use-package ox-md :ensure f)
-
-(use-package org-agenda
-  :ensure f
-  :after org
-  :bind (:map org-agenda-mode-map
-
-	      ;; Prevent Org Agenda from overriding the bindings for
-	      ;; windmove.
-	      ("S-<up>" . nil)
-	      ("S-<down>" . nil)
-	      ("S-<left>" . nil)
-	      ("S-<right>" . nil)
-
-	      ;; Same routine as above. Now for Org Agenda, we could use
-	      ;; C-up and C-down because M-{ and M-} are bound to the same
-	      ;; commands. But I think it's best to take the same approach
-	      ;; as before, for consistency.
-	      ("C-<left>" . org-agenda-do-date-earlier)
-	      ("C-<right>" . org-agenda-do-date-later))
-  :config
-  ;; Use the current window to open the agenda
-  (validate-setq org-agenda-window-setup 'current-window
-                 org-agenda-block-separator nil)
-  (setq jcs/agenda-files (list jcs/projects-file jcs/tickler-file jcs/next-file))
-  (setq org-agenda-custom-commands
-        '(("c" "Agenda and tasks"
-           ((agenda ""
-                    ((org-agenda-files jcs/agenda-files)))
-            (todo ""
-                  ((org-agenda-overriding-header "To Refile")
-                   (org-agenda-files '("~/org/inbox.org"
-				       "~/org/refile-beorg.org"))))
-            (todo "WAITING"
-                  ((org-agenda-overriding-header "Waiting")
-		   (org-agenda-files jcs/agenda-files)))
-	    (todo "DOING"
-                  ((org-agenda-overriding-header "In Progress")
-		   (org-agenda-files jcs/agenda-files)))
-            (todo "NEXT"
-                  ((org-agenda-overriding-header "Next")
-		   (org-agenda-files jcs/agenda-files)))
-            (todo "TODO"
-                  ((org-agenda-overriding-header "Todo")
-		   (org-agenda-files jcs/agenda-files)))
-	    (todo "HOLD"
-                  ((org-agenda-overriding-header "On Hold")
-		   (org-agenda-files jcs/agenda-files))))))))
-
-(use-package org-capture
-  :ensure f
-  :after org
-  :bind ("C-c c" . org-capture)
-  :config
-  (setq org-capture-templates
-        '(("t" "Todo [inbox]" entry
-           (file "inbox.org")
-           "* TODO %i%?")
-          ("n" "Next task [inbox]" entry
-           (file "inbox.org")
-           "* NEXT %i%?")
-          ("T" "Tickler" entry
-           (file "tickler.org")
-           "* %i%? \n %U")
-          ("r" "Reference" entry
-           (file+headline "reference.org" "Reference")
-           "* %i%? \n %U"))))
-
-(use-package alert
-  :config
-  (setq alert-default-style 'libnotify))
-
-(use-package org-alert
-  :disabled
-  :config
-  (validate-setq org-alert-notification-title "Org Agenda")
-  (validate-setq org-alert-interval (* 60 60))
-  (org-alert-enable))
-
-(use-package org-wild-notifier
-  :disabled
-  :after alert
-  :config (org-wild-notifier-mode))
-
 (use-package go-mode)
 (use-package company-go)
 (use-package go-eldoc
@@ -674,7 +711,7 @@
 (use-package go-errcheck)
 (use-package csv-mode)
 (use-package sql-indent)
-(use-package eldoc :delight :ensure f)
+(use-package eldoc :delight :straight f)
 
 (use-package clojure-mode
   :delight
@@ -682,7 +719,6 @@
   (clojure-mode . rainbow-delimiters-mode)
   (clojure-mode . paredit-mode)
   :config
-
   ;; Add some goodies from Emacs Live
   (font-lock-add-keywords
    'clojure-mode `(("\\(#\\)("
@@ -713,6 +749,10 @@
 
 (use-package yasnippet :delight)
 
+;; Hack until we get to Emacs 26
+(use-package seq
+  :straight (seq :type git :host github :repo "NicolasPetton/seq.el"))
+
 (use-package clj-refactor
   :delight
   :hook (clojure-mode . (lambda ()
@@ -742,7 +782,7 @@
   (shell-pop-window-position "bottom"))
 
 (use-package browse-url
-  :ensure f
+  :straight f
   ;; browse-url decides not to use xdg-open if you don't use one of a
   ;; handful of desktop environments...
   :config (when (eq system-type 'gnu/linux)
@@ -781,5 +821,7 @@
   :after org
   :bind (:map org-mode-map
               ("C-M-y" . org-rich-yank)))
+
+
 
 ;;; init.el ends here
