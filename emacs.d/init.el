@@ -7,31 +7,32 @@
 
 ;;; Code:
 
-;; Bootstrap straight.el, if it's not already present
-(let ((bootstrap-file (concat user-emacs-directory "straight/repos/straight.el/bootstrap.el"))
-      (bootstrap-version 3))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-(straight-use-package 'use-package)
-
-(setq straight-use-package-by-default t)
-
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
+(require 'package)
+(setq package-archives
+      '(("gnu" . "https://elpa.gnu.org/packages/")
+        ("melpa" . "https://melpa.org/packages/")
+        ("melpa-stable" . "https://stable.melpa.org/packages/")
+        ("org" . "https://orgmode.org/elpa/")))
+(package-initialize)
+
 ;; Setup use-package
-(use-package validate)
-(validate-setq use-package-compute-statistics t
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+(eval-when-compile
+  (require 'use-package))
+(use-package validate :ensure t)
+(validate-setq use-package-always-ensure t
+	       use-package-compute-statistics t
                use-package-verbose t)
 (use-package delight)
 (use-package bind-key)
+
+(use-package no-littering)
 
 (setq source-directory "~/code/emacs")
 
@@ -100,48 +101,6 @@
 
 (use-package git)
 (use-package org
-  :init
-  ;; Borrowed from:
-  ;; https://github.com/raxod502/radian/blob/master/radian-emacs/radian-org.el
-
-  ;; The following is a temporary hack until straight.el supports
-  ;; building Org, see:
-  ;;
-  ;; * https://github.com/raxod502/straight.el/issues/211
-  ;; * https://github.com/raxod502/radian/issues/410
-  ;;
-  ;; There are three things missing from our version of Org: the
-  ;; functions `org-git-version' and `org-release', and the feature
-  ;; `org-version'. We provide all three of those ourself, therefore.
-
-  (defun org-git-version ()
-    "The Git version of org-mode.
-  Inserted by installing org-mode or when a release is made."
-    (require 'git)
-    (let ((git-repo (expand-file-name
-                     "straight/repos/org/" user-emacs-directory)))
-      (string-trim
-       (git-run "describe"
-                "--match=release\*"
-                "--abbrev=6"
-                "HEAD"))))
-
-  (defun org-release ()
-    "The release version of org-mode.
-  Inserted by installing org-mode or when a release is made."
-    (require 'git)
-    (let ((git-repo (expand-file-name
-                     "straight/repos/org/" user-emacs-directory)))
-      (string-trim
-       (string-remove-prefix
-        "release_"
-        (git-run "describe"
-                 "--match=release\*"
-                 "--abbrev=0"
-                 "HEAD")))))
-
-  (provide 'org-version)
-
   :config
   (validate-setq org-directory org-dir
                  org-log-done 'time
@@ -184,6 +143,13 @@
         org-todo-keywords
         (quote ((sequence "TODO(t)" "NEXT(n)" "DOING(o)" "|" "DONE(d)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
+  (org-babel-do-load-languages 'org-babel-load-languages
+                               '((clojure . t)
+                                 (sh . t)
+                                 (sql . t)
+                                 (emacs-lisp . t)
+                                 (elasticsearch . t)
+                                 (restclient . t)))
   (defun find-projects-file () (interactive) (find-file jcs/projects-file))
   (defun find-someday-file () (interactive) (find-file jcs/someday-file))
   (defun find-inbox-file () (interactive) (find-file jcs/inbox-file))
@@ -244,19 +210,21 @@
          ([remap backward-paragraph] . org-backward-paragraph)
 	 ([remap forward-paragraph] . org-forward-paragraph)))
 
-(use-package ox-md :straight org)
+(use-package ox-md :ensure org)
 
 (use-package restclient)
 (use-package ob-restclient
   :config (add-to-list 'org-babel-load-languages '(restclient . t)))
 
   ;; Use es-mode for ElasticSearch buffers
-(use-package es-mode
-  :mode "\\.es$"
+(use-package es-mode)
+(use-package ob-elasticsearch
+  :ensure es-mode
   :config (add-to-list 'org-babel-load-languages '(elasticsearch . t)))
 
-(use-package ob-core
-  :straight org
+;; org-babel
+(use-package ob
+  :ensure org
   :config
   (add-to-list 'org-babel-load-languages '(sh . t))
   (add-to-list 'org-babel-load-languages '(sql . t))
@@ -264,7 +232,7 @@
 			       org-babel-load-languages))
 
 (use-package org-agenda
-  :straight org
+  :ensure org
   :after org
   :bind (:map org-agenda-mode-map
 
@@ -311,7 +279,7 @@
 		   (org-agenda-files jcs/agenda-files))))))))
 
 (use-package org-capture
-  :straight org
+  :ensure org
   :after org
   :bind ("C-c c" . org-capture)
   :config
@@ -345,37 +313,44 @@
   :after alert
   :config (org-wild-notifier-mode))
 
-(use-package autorevert :straight nil)
+(use-package autorevert :ensure f
+  :config
+  (validate-setq global-auto-revert-non-file-buffers t ; Refresh dired buffers
+		 auto-revert-verbose nil))   ; but do it quietly
 
 (use-package saveplace
-  :straight f
+  :ensure f
   :config (save-place-mode))
 
 ;;; Misc settings
 (validate-setq inhibit-splash-screen t  ; Don't show the splash screen
                ring-bell-function 'ignore ; Just ignore error notifications
                vc-follow-symlinks t ; even when they're in version control
-               backup-directory-alist ; Save backups to a central location
-               `(("." . ,(expand-file-name
-                          (concat user-emacs-directory "backups"))))
-	       auto-save-file-name-transforms
-	       `((".*" ,(expand-file-name
-			 (concat user-emacs-directory "auto-saves")) t))
-               global-auto-revert-non-file-buffers t ; Refresh dired buffers,
-               auto-revert-verbose nil  ; but do it quietly
                indent-tabs-mode nil ; Don't use tabs unless buffer-local
                select-enable-primary t
                save-interprogram-paste-before-kill t
                mouse-yank-at-point t
-               save-place-file (concat user-emacs-directory "places")
-               ;; When scrolling, make sure to come back to the same spot
+	       ;; When scrolling, make sure to come back to the same spot
                scroll-preserve-screen-position 'always
                scroll-error-top-bottom t ; Scroll similar to vim
                )
 
 ;;; Packages
+(use-package recentf
+  :ensure f
+  :config
+  (add-to-list 'recentf-exclude no-littering-var-directory)
+  (add-to-list 'recentf-exclude no-littering-etc-directory))
+
+(use-package files
+  :ensure f
+  :config
+  (validate-setq backup-directory-alist ; Save backups to a central location
+                 `(("." . ,(no-littering-expand-var-file-name "backups/")))
+		 auto-save-file-name-transforms
+		 `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+
 (use-package paradox
-  :disabled
   :config
   (validate-setq paradox-execute-asynchronously t)
   (paradox-enable))
@@ -404,13 +379,13 @@
   :config (exec-path-from-shell-initialize))
 
 (use-package re-builder
-  :straight f
+  :ensure f
   :bind (("C-c R" . re-builder))
   :config (validate-setq reb-re-syntax 'string))
 
 ;; External user config
 (use-package init-funcs
-  :straight f
+  :ensure f
   :load-path "lisp")
 
 (use-package whitespace
@@ -424,7 +399,7 @@
   :config (validate-setq markdown-fontify-code-blocks-natively t))
 
 (use-package simple
-  :straight f
+  :ensure f
   :delight auto-fill-function
   :defer 2
   :config (column-number-mode)
@@ -453,7 +428,7 @@
     (server-start)))
 
 ;; Allow for seamless gpg interaction
-(use-package epa-file :straight f)
+(use-package epa-file :ensure f)
 
 ;; Work-specific code - should be encrypted!
 (defvar work-init (concat user-emacs-directory "lisp/init-work.el.gpg"))
@@ -585,7 +560,7 @@
 (use-package dash
   :config (dash-enable-font-lock))
 (use-package threatgrid
-  :straight f
+  :ensure f
   :commands (preq tg-insert-weekly-work-report tg-create-tb-issue)
   :load-path "lisp")
 
@@ -673,7 +648,7 @@
 
 (use-package tex
   :disabled
-  :straight auctex
+  :ensure auctex
   :hook
   (LaTeX-mode . turn-on-reftex)
   (LaTeX-mode . auto-fill-mode)
@@ -711,7 +686,7 @@
 (use-package go-errcheck)
 (use-package csv-mode)
 (use-package sql-indent)
-(use-package eldoc :delight :straight f)
+(use-package eldoc :delight :ensure f)
 
 (use-package clojure-mode
   :delight
@@ -741,17 +716,14 @@
   (cider-repl-mode . paredit-mode)
   :bind (:map clojure-mode-map
               ("C-c i" . cider-inspect-last-result))
-  :custom (cider-jdk-src-paths '("~/code/clojure-1.8" "~/code/java8"))
+  :custom (cider-jdk-src-paths '("~/code/clojure-1.8"
+				 "/usr/lib/jvm/java-8-openjdk/src.zip"))
   :config
   (validate-setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
                  cider-repl-display-help-banner nil
                  nrepl-log-messages t))
 
 (use-package yasnippet :delight)
-
-;; Hack until we get to Emacs 26
-(use-package seq
-  :straight (seq :type git :host github :repo "NicolasPetton/seq.el"))
 
 (use-package clj-refactor
   :delight
@@ -782,7 +754,7 @@
   (shell-pop-window-position "bottom"))
 
 (use-package browse-url
-  :straight f
+  :ensure f
   ;; browse-url decides not to use xdg-open if you don't use one of a
   ;; handful of desktop environments...
   :config (when (eq system-type 'gnu/linux)
@@ -822,6 +794,12 @@
   :bind (:map org-mode-map
               ("C-M-y" . org-rich-yank)))
 
+(use-package helpful
+  :bind (("C-h f" . helpful-callable)
+	 ("C-h v" . helpful-variable)
+	 ("C-h k" . helpful-key)
+	 :map emacs-lisp-mode-map
+	 ("C-c C-d" . helpful-at-point)))
 
 
 ;;; init.el ends here

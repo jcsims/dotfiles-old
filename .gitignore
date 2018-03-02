@@ -29,3 +29,4 @@ ido.last
 /emacs.d/.persistent-scratch
 /emacs.d/config.el
 /emacs.d/straight
+/emacs.d/var
