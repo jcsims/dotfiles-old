@@ -63,6 +63,13 @@ cabal-dev
 auto-save-list
 tramp
 .\#*
+*.elc
+*-autoloads.el
+*.info
+dir
+flycheck_*.el
+*-pkg.el
+
 
 # Org-mode
 .org-id-locations
