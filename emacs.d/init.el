@@ -29,10 +29,16 @@
 (validate-setq use-package-always-ensure t
 	       use-package-compute-statistics t
                use-package-verbose t)
-(use-package delight)
 (use-package bind-key)
 
-(use-package no-littering)
+(use-package no-littering
+  :config
+  (require 'files)
+  (validate-setq auto-save-file-name-transforms
+                 `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+
+(use-package init-wm
+  :load-path "lisp")
 
 (setq source-directory "~/code/emacs")
 
@@ -80,7 +86,12 @@
 (when (memq window-system '(x))
   (set-frame-font "Hack 9"))
 
-(global-prettify-symbols-mode 1)
+(use-package prog-mode
+  :ensure f
+  :config (global-prettify-symbols-mode)
+  (defun indicate-buffer-boundaries-left ()
+    (setq indicate-buffer-boundaries 'left))
+  (add-hook 'prog-mode-hook #'indicate-buffer-boundaries-left))
 
 ;; Quick access to a few files
 (defun find-init-file ()
@@ -99,7 +110,6 @@
 (defvar jcs/reference-file (expand-file-name "reference.org" org-dir))
 (defvar jcs/checklists-file (expand-file-name "checklists.org" org-dir))
 
-(use-package git)
 (use-package org
   :config
   (validate-setq org-directory org-dir
@@ -123,7 +133,7 @@
   (setq org-refile-targets '((jcs/projects-file . (:maxlevel . 2))
                              (jcs/someday-file . (:level . 0))
                              (jcs/next-file . (:level . 1))
-                             (jcs/tickler-file . (:level . 0))
+                             (jcs/tickler-file . (:level . 1))
                              (jcs/reference-file . (:level . 1)))
         org-tag-alist (quote (("@work" . ?w)
                               ("@errand" . ?E)
@@ -133,23 +143,17 @@
                               ("@kasey" . ?k)
                               ("@alex" . ?a)
                               (:newline)
-                              ("james" . ?j)
                               ("weekend" . ?W)
                               ("evening" . ?e)
+                              ("business_hours" . ?b)
+                              (:newline)
+                              ("james" . ?j)
                               ("workstation" . ?K)
                               ("server" . ?s)
-                              ("project_idea" . ?p)
-			      ("business_hours" . ?b)))
+                              ("project_idea" . ?p)))
         org-todo-keywords
         (quote ((sequence "TODO(t)" "NEXT(n)" "DOING(o)" "|" "DONE(d)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
-  (org-babel-do-load-languages 'org-babel-load-languages
-                               '((clojure . t)
-                                 (sh . t)
-                                 (sql . t)
-                                 (emacs-lisp . t)
-                                 (elasticsearch . t)
-                                 (restclient . t)))
   (defun find-projects-file () (interactive) (find-file jcs/projects-file))
   (defun find-someday-file () (interactive) (find-file jcs/someday-file))
   (defun find-inbox-file () (interactive) (find-file jcs/inbox-file))
@@ -213,8 +217,7 @@
 (use-package ox-md :ensure org)
 
 (use-package restclient)
-(use-package ob-restclient
-  :config (add-to-list 'org-babel-load-languages '(restclient . t)))
+(use-package ob-restclient)
 
   ;; Use es-mode for ElasticSearch buffers
 (use-package es-mode)
@@ -226,10 +229,13 @@
 (use-package ob
   :ensure org
   :config
-  (add-to-list 'org-babel-load-languages '(sh . t))
-  (add-to-list 'org-babel-load-languages '(sql . t))
   (org-babel-do-load-languages 'org-babel-load-languages
-			       org-babel-load-languages))
+                               '((clojure . t)
+                                 (sh . t)
+                                 (sql . t)
+                                 (emacs-lisp . t)
+                                 (elasticsearch . t)
+                                 (restclient . t))))
 
 (use-package org-agenda
   :ensure org
@@ -253,15 +259,15 @@
   ;; Use the current window to open the agenda
   (validate-setq org-agenda-window-setup 'current-window
                  org-agenda-block-separator nil)
-  (setq jcs/agenda-files (list jcs/projects-file jcs/tickler-file jcs/next-file))
+  (setq jcs/agenda-files (list jcs/projects-file jcs/tickler-file
+			       jcs/next-file jcs/inbox-file))
   (setq org-agenda-custom-commands
         '(("c" "Agenda and tasks"
            ((agenda ""
                     ((org-agenda-files jcs/agenda-files)))
             (todo ""
                   ((org-agenda-overriding-header "To Refile")
-                   (org-agenda-files '("~/org/inbox.org"
-				       "~/org/refile-beorg.org"))))
+                   (org-agenda-files '("~/org/inbox.org"))))
             (todo "WAITING"
                   ((org-agenda-overriding-header "Waiting")
 		   (org-agenda-files jcs/agenda-files)))
@@ -313,13 +319,21 @@
   :after alert
   :config (org-wild-notifier-mode))
 
-(use-package autorevert :ensure f
+(use-package autorevert
+  :ensure f
   :config
   (validate-setq global-auto-revert-non-file-buffers t ; Refresh dired buffers
-		 auto-revert-verbose nil))   ; but do it quietly
+                 auto-revert-verbose nil) ; but do it quietly
+  ;; Auto-refresh buffers
+  (global-auto-revert-mode))
+
+(use-package dired
+  :ensure f
+  :config (setq dired-listing-switches "-alhv"))
 
 (use-package saveplace
   :ensure f
+  :when (version< "25" emacs-version)
   :config (save-place-mode))
 
 ;;; Misc settings
@@ -339,6 +353,7 @@
 (use-package recentf
   :ensure f
   :config
+  (add-to-list 'recentf-exclude "^/\\(?:ssh\\|su\\|sudo\\)?:")
   (add-to-list 'recentf-exclude no-littering-var-directory)
   (add-to-list 'recentf-exclude no-littering-etc-directory))
 
@@ -389,19 +404,23 @@
   :load-path "lisp")
 
 (use-package whitespace
-  :delight whitespace-mode
   :config
   (validate-setq whitespace-line-column 80
                  whitespace-style '(face trailing lines-tail))
   :hook (prog-mode . whitespace-mode))
 
 (use-package markdown-mode
+  :commands (markdown-mode gfm-mode)
+  :mode (("README\\.md\\'" . gfm-mode)
+         ("\\.md\\'" . markdown-mode)
+         ("\\.markdown\\'" . markdown-mode))
   :config (validate-setq markdown-fontify-code-blocks-natively t))
+
+(use-package minions
+  :config (minions-mode))
 
 (use-package simple
   :ensure f
-  :delight auto-fill-function
-  :defer 2
   :config (column-number-mode)
   :bind ("M-SPC" . cycle-spacing)
   :hook ((text-mode org-mode markdown-mode) . turn-on-auto-fill))
@@ -410,16 +429,9 @@
 (use-package electric
   :config (electric-indent-mode))
 
-(use-package autorevert
-  :delight auto-revert-mode
-  :config
-  ;; Auto-refresh buffers
-  (global-auto-revert-mode))
-
 ;; Highlight matching parens
 (use-package paren
-  :config
-  (show-paren-mode))
+  :config (show-paren-mode))
 
 ;; Ensure that a server is running for quicker start times
 (use-package server
@@ -452,13 +464,21 @@
   :config (company-quickhelp-mode))
 
 (use-package elisp-slime-nav
-  :delight
   :config
   ;; Enable M-. and M-, along with C-c C-d {c,C-d} for elisp
   :hook ((emacs-lisp-mode ielm-mode) . turn-on-elisp-slime-nav-mode))
 
+(use-package highlight-symbol
+  :bind (:map mode-specific-map
+              ("h h" . highlight-symbol)
+              ("h r" . highlight-symbol-remove-all)
+              ("h l" . highlight-symbol-list-all)
+              ("h n" . highlight-symbol-next)
+              ("h p" . highlight-symbol-prev)
+              ("h a" . highlight-symbol-nav-mode)))
+
 (use-package idle-highlight-mode
-  :delight
+  :disabled
   :hook (prog-mode . idle-highlight-mode))
 
 (use-package ag
@@ -507,7 +527,6 @@
          ("M-X" . smex-major-mode-commands)))
 
 (use-package ivy
-  :delight
   :bind (("C-c C-r" . ivy-resume)) ; TODO: Find a binding that doesn't
                                         ; get overwritten...
   :config
@@ -523,21 +542,17 @@
          ("C-x C-f" . counsel-find-file)
          ("C-h f" . counsel-describe-function)
          ("C-h v" . counsel-describe-variable)
-         ("C-s" . counsel-grep-or-swiper))
+         ("C-s" . counsel-grep-or-swiper)
+         ("M-y" . counsel-yank-pop)
+         :map ivy-minibuffer-map
+         ("M-y" . ivy-next-line))
   :config
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
   (validate-setq counsel-grep-base-command
                  "rg -i -M 120 --no-heading --line-number --color never '%s' %s"))
 
 (use-package projectile
-  :delight
-  :config
-  (projectile-mode)
-  ;; Note: remove this once
-  ;; https://github.com/bbatsov/projectile/issues/1183 is resolved
-  (validate-setq projectile-mode-line
-                 '(:eval (format " Projectile[%s]"
-                                 (projectile-project-name)))))
+  :config (projectile-mode))
 
 (use-package counsel-projectile
   :config
@@ -547,13 +562,18 @@
   :mode "\\.js\\'")
 
 (use-package magit
+  :bind (("C-c g"   . magit-status)
+         ("C-c M-g" . magit-dispatch-popup))
+  :custom
+  (magit-branch-prefer-remote-upstream t)
+  (magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-")))
   :config
-  (validate-setq magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-"))
-                 magit-prefer-remote-upstream t)
-  :bind ("C-c g" . magit-status))
+  (magit-add-section-hook 'magit-status-sections-hook
+                          'magit-insert-modules
+                          'magit-insert-stashes
+                          'append))
 
-(use-package git-timemachine )
-(use-package git-gutter )
+(use-package git-timemachine)
 
 ;; ghub and dash are required by threatgrid.el
 (use-package ghub)
@@ -568,14 +588,12 @@
   :config (windmove-default-keybindings))
 
 (use-package winner
-  :config (winner-mode 1))
+  :config (winner-mode))
 
 (use-package paredit
-  :delight
   :hook (emacs-lisp-mode . paredit-mode))
 
 (use-package paredit-everywhere
-  :delight
   :hook (prog-mode . paredit-everywhere-mode))
 
 (use-package expand-region
@@ -592,14 +610,13 @@
   :config (dumb-jump-mode))
 
 (use-package smart-jump
-  :config
-  (smart-jump-setup-default-registers))
+  :config (smart-jump-setup-default-registers))
 
 (use-package yaml-mode
-  :mode "\\.yml.*\\'")
+  :mode (("\\.yml\\'" . yaml-mode)
+	 ("\\.sls\\'" . yaml-mode)))
 
 (use-package which-key
-  :delight
   :config (which-key-mode))
 
 ;; Some keybinds for this mode:
@@ -608,28 +625,61 @@
 ;; `diff-hl-previous-hunk'   C-x v [
 ;; `diff-hl-next-hunk'       C-x v ]
 (use-package diff-hl
-  :hook ((prog-mode vc-dir-mode) . turn-on-diff-hl-mode))
+  :config
+  (validate-setq diff-hl-draw-borders nil)
+  (global-diff-hl-mode)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh t))
 
 (use-package super-save
-  :delight
-  :init
-  (validate-setq auto-save-default nil)
+  :init (validate-setq auto-save-default nil)
   :config
-  (super-save-mode +1)
-  (validate-setq super-save-auto-save-when-idle t))
+  (validate-setq super-save-auto-save-when-idle t)
+  (super-save-mode +1))
 
-;; Set up the fancy mode-line
 (use-package smart-mode-line
-  :config
-  (sml/setup))
+  :disabled
+  :config (sml/setup))
 
 ;; Turn on line numbers everywhere
 (use-package nlinum
   :config (global-nlinum-mode))
 
 (use-package dired-collapse)
-(use-package salt-mode
-  :mode "\\.sls\\'")
+
+(use-package notmuch
+  :bind (("C-x m" . notmuch))
+  :custom
+  (message-sendmail-envelope-from 'header)
+  (send-mail-function (quote sendmail-send-it))
+  :config
+  (require 'gnus-art)
+  (require 'message)
+  (validate-setq mail-specify-envelope-from t)
+
+  ;; Borrowed from https://notmuchmail.org/emacstips/
+  (defun my-notmuch-show-view-as-patch ()
+    "View the the current message as a patch."
+    (interactive)
+    (let* ((id (notmuch-show-get-message-id))
+           (msg (notmuch-show-get-message-properties))
+           (part (notmuch-show-get-part-properties))
+           (subject (concat "Subject: " (notmuch-show-get-subject) "\n"))
+           (diff-default-read-only t)
+           (buf (get-buffer-create (concat "*notmuch-patch-" id "*")))
+           (map (make-sparse-keymap)))
+      (define-key map "q" 'notmuch-bury-or-kill-this-buffer)
+      (switch-to-buffer buf)
+      (let ((inhibit-read-only t))
+        (erase-buffer)
+        (insert subject)
+        (insert (notmuch-get-bodypart-text msg part nil)))
+      (set-buffer-modified-p nil)
+      (diff-mode)
+      (lexical-let ((new-ro-bind (cons 'buffer-read-only map)))
+        (add-to-list 'minor-mode-overriding-map-alist new-ro-bind))
+      (goto-char (point-min))))
+
+  (define-key 'notmuch-show-part-map "d" 'my-notmuch-show-view-as-patch))
 
 (use-package multiple-cursors
   :bind
@@ -686,10 +736,12 @@
 (use-package go-errcheck)
 (use-package csv-mode)
 (use-package sql-indent)
-(use-package eldoc :delight :ensure f)
+(use-package eldoc
+  :ensure f
+  :when (version< "25" emacs-version)
+  :config (global-eldoc-mode))
 
 (use-package clojure-mode
-  :delight
   :hook
   (clojure-mode . rainbow-delimiters-mode)
   (clojure-mode . paredit-mode)
@@ -708,7 +760,6 @@
 
 ;;; Cider
 (use-package cider
-  :delight
   :hook
   (clojure-mode . cider-mode)
   ((cider-mode cider-repl-mode) . eldoc-mode)
@@ -716,17 +767,18 @@
   (cider-repl-mode . paredit-mode)
   :bind (:map clojure-mode-map
               ("C-c i" . cider-inspect-last-result))
-  :custom (cider-jdk-src-paths '("~/code/clojure-1.8"
-				 "/usr/lib/jvm/java-8-openjdk/src.zip"))
+  :custom
+  (cider-jdk-src-paths '("~/code/clojure"
+			 "/usr/lib/jvm/java-8-openjdk/src.zip"))
+  (cider-save-file-on-load t)
   :config
   (validate-setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
                  cider-repl-display-help-banner nil
                  nrepl-log-messages t))
 
-(use-package yasnippet :delight)
+(use-package yasnippet)
 
 (use-package clj-refactor
-  :delight
   :hook (clojure-mode . (lambda ()
                           (clj-refactor-mode 1)
                           (yas-minor-mode 1)
@@ -737,7 +789,6 @@
                  ;; Lazily build ASTs, instead of immediately on REPL connect
                  cljr-eagerly-build-asts-on-startup nil))
 
-;; Try out a linter...
 (use-package flycheck-joker)
 
 ;; Seed the PRNG anew, from the system's entropy pool
@@ -782,6 +833,9 @@
   :hook ((rust-mode . racer-mode)
          (racer-mode . eldoc-mode)))
 
+(use-package savehist
+  :config (savehist-mode))
+
 (use-package atomic-chrome
   :config (atomic-chrome-start-server))
 
@@ -793,6 +847,10 @@
   :after org
   :bind (:map org-mode-map
               ("C-M-y" . org-rich-yank)))
+
+(use-package help
+  :ensure f
+  :config (temp-buffer-resize-mode))
 
 (use-package helpful
   :bind (("C-h f" . helpful-callable)

@@ -112,10 +112,9 @@ nil START or END will not bracket.  START and END are Emacs time structures."
 (defun tg-open-prs (username)
   "Return a list of PRs currently open by USERNAME."
   (let ((open-prs (--mapcat (ghub-get (concat "/repos/" it "/pulls")
-                                      nil
-                                      :query (list (cons 'state "open")
-                                                   (cons 'per_page "100"))
-                                      :host tg-gh-host)
+				      (list (cons 'state "open")
+					    (cons 'per_page "100"))
+				      :host tg-gh-host)
                             tg-work-repos)))
     (tg--prs-for-user open-prs username)))
 

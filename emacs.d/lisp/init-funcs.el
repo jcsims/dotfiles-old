@@ -123,10 +123,12 @@ Emacswiki."
 
 ;; Some functions carried over from the emacs starter kit
 (defun esk-local-comment-auto-fill ()
+  "Only auto-fill in comment strings, in prog-mode-derived buffers."
   (set (make-local-variable 'comment-auto-fill-only-comments) t)
   (auto-fill-mode t))
 
 (defun esk-pretty-lambdas ()
+  "Make the `lambda` keyword a pretty one."
   (font-lock-add-keywords
    nil `(("(?\\(lambda\\>\\)"
           (0 (progn (compose-region (match-beginning 1) (match-end 1)
@@ -134,6 +136,7 @@ Emacswiki."
                     nil))))))
 
 (defun esk-add-watchwords ()
+  "Highlight common `TODO`-like words in the buffer, so they stand out."
   (font-lock-add-keywords
    nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\)"
           1 font-lock-warning-face t))))
@@ -142,6 +145,8 @@ Emacswiki."
 (add-hook 'prog-mode-hook 'esk-pretty-lambdas)
 (add-hook 'prog-mode-hook 'esk-add-watchwords)
 
+(require 'magit-git)
+(require 'git-commit)
 (defun jcs/magit-commit-template (&rest _)
   "Ensure that commits on an issue- branch have the issue name in the commit as well."
   (let ((prefix (magit-get-current-branch)))
