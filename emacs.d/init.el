@@ -165,8 +165,9 @@
   (defun visit-todays-log ()
     "Visit buffer for a log file for today's date."
     (interactive)
-    (find-file (concat "~/org/log/" (format-time-string
-				     "%Y-%m-%d.org" (current-time)))))
+    ;; (find-file (concat "~/org/log/" (format-time-string
+    ;; 				     "%Y-%m-%d.org" (current-time))))
+    (find-file "~/org/log.org"))
 
   ;; These tend to modify files, so save after doing it
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
