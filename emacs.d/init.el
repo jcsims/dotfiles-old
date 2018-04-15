@@ -638,7 +638,6 @@
   (super-save-mode +1))
 
 (use-package smart-mode-line
-  :disabled
   :config (sml/setup))
 
 ;; Turn on line numbers everywhere
