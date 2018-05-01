@@ -371,10 +371,11 @@
   (validate-setq paradox-execute-asynchronously t)
   (paradox-enable))
 
+;;; Themes
 (use-package solarized-theme
   :init
   :disabled
-  (validate-setq jcs-active-theme 'solarized-dark)
+  (defvar jcs-active-theme 'solarized-light)
   (defun toggle-dark-light-theme ()
     "Toggle the current solarized theme between light and dark."
     (interactive)
@@ -385,7 +386,16 @@
   :config (load-theme jcs-active-theme t))
 
 (use-package monokai-theme
+  ;;:disabled
   :config (load-theme 'monokai t))
+
+(use-package srcery-theme
+  :disabled
+  :config (load-theme 'srcery t))
+
+(use-package doneburn-theme
+  :disabled
+  :config (load-theme 'doneburn t))
 
 (use-package macrostep
   :bind ("C-c m" . macrostep-expand))
@@ -487,8 +497,9 @@
   (validate-setq ag-highlight-search t
                  ag-reuse-buffers t))
 
-(use-package rainbow-delimiters
-  :hook (emacs-lisp-mode . rainbow-delimiters-mode))
+(use-package paren-face
+  :custom (paren-face-regexp "[][{}()]")
+  :config (global-paren-face-mode))
 
 (use-package flycheck
   :config (global-flycheck-mode))
@@ -638,7 +649,10 @@
   (super-save-mode +1))
 
 (use-package smart-mode-line
-  :config (sml/setup))
+  :disabled
+  :config
+  ;;(setq sml/theme 'respectful)
+  (sml/setup))
 
 ;; Turn on line numbers everywhere
 (use-package nlinum
@@ -743,7 +757,6 @@
 
 (use-package clojure-mode
   :hook
-  (clojure-mode . rainbow-delimiters-mode)
   (clojure-mode . paredit-mode)
   :config
   ;; Add some goodies from Emacs Live
@@ -763,7 +776,6 @@
   :hook
   (clojure-mode . cider-mode)
   ((cider-mode cider-repl-mode) . eldoc-mode)
-  (cider-repl-mode . rainbow-delimiters-mode)
   (cider-repl-mode . paredit-mode)
   :bind (:map clojure-mode-map
               ("C-c i" . cider-inspect-last-result))
