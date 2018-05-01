@@ -45,10 +45,6 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     alias pac-list-files-in-package='pacman -Ql'
     alias pac-leaves='pacman -Qet'
 
-    ## Add completion support for my emacsclient helpers
-    complete -F _fzf_path_completion -o default -o bashdefault e
-    complete -F _fzf_path_completion -o default -o bashdefault ec
-
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Add GOROOT bin path to PATH
     export PATH=/usr/local/go/bin:$PATH
