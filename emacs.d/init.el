@@ -40,7 +40,7 @@
 (use-package init-wm
   :load-path "lisp")
 
-(setq source-directory "~/code/emacs")
+(validate-setq source-directory "~/code/emacs")
 
 ;;; Personal info
 (validate-setq user-full-name "Chris Sims"
@@ -51,6 +51,9 @@
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
+;; Black scratch buffer
+(validate-setq initial-scratch-message nil)
+
 ;; y/n keypresses instead of typing out yes or no
 (defalias 'yes-or-no-p 'y-or-n-p)
 
@@ -58,7 +61,7 @@
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
 
-;; Increase the GC threshold
+;; Increase the GC threshold for startup
 (validate-setq gc-cons-threshold 20000000)
 
 ;; Get rid of the insert key. I never use it, and I turn it on
@@ -88,10 +91,7 @@
 
 (use-package prog-mode
   :ensure f
-  :config (global-prettify-symbols-mode)
-  (defun indicate-buffer-boundaries-left ()
-    (setq indicate-buffer-boundaries 'left))
-  (add-hook 'prog-mode-hook #'indicate-buffer-boundaries-left))
+  :config (global-prettify-symbols-mode))
 
 ;; Quick access to a few files
 (defun find-init-file ()
@@ -162,12 +162,16 @@
   (defun find-reference-file () (interactive) (find-file jcs/reference-file))
   (defun find-checklists-file () (interactive) (find-file jcs/checklists-file))
 
+  ;; TODO: Write some helpers for this, e.g.:
+  ;; - Search across logs
+  ;; - List top-level headings across logs
   (defun visit-todays-log ()
     "Visit buffer for a log file for today's date."
     (interactive)
-    ;; (find-file (concat "~/org/log/" (format-time-string
-    ;; 				     "%Y-%m-%d.org" (current-time))))
-    (find-file "~/org/log.org"))
+    (find-file (concat "~/org/log/" (format-time-string
+    				     "%Y-%m-%d.org" (current-time))))
+    ;;(find-file "~/org/log.org")
+    )
 
   ;; These tend to modify files, so save after doing it
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
@@ -871,5 +875,7 @@
 	 :map emacs-lisp-mode-map
 	 ("C-c C-d" . helpful-at-point)))
 
+;; Set the GC threshold back to default
+(validate-setq gc-cons-threshold 800000)
 
 ;;; init.el ends here
