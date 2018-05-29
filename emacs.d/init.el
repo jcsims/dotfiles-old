@@ -51,7 +51,7 @@
 (set-keyboard-coding-system 'utf-8)
 (prefer-coding-system 'utf-8)
 
-;; Black scratch buffer
+;; Blank scratch buffer
 (validate-setq initial-scratch-message nil)
 
 ;; y/n keypresses instead of typing out yes or no
@@ -87,7 +87,7 @@
 (when (memq window-system '(mac ns))
   (set-frame-font "-*-Menlo-normal-normal-normal-*-11-*-*-*-m-0-iso10646-1"))
 (when (memq window-system '(x))
-  (set-frame-font "Hack 9"))
+  (set-frame-font "-SRC-Hack-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1"))
 
 (use-package prog-mode
   :ensure f
@@ -176,6 +176,8 @@
   ;; These tend to modify files, so save after doing it
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
   (advice-add 'org-archive-subtree-default :after 'org-save-all-org-buffers)
+  (advice-add 'org-agenda-archive-default-with-confirmation :after 'org-save-all-org-buffers)
+  (advice-add 'org-agenda-todo :after 'org-save-all-org-buffers)
 
   :bind (("C-c l" . org-store-link)
          ("C-c a" . org-agenda)
@@ -236,7 +238,7 @@
   :config
   (org-babel-do-load-languages 'org-babel-load-languages
                                '((clojure . t)
-                                 (sh . t)
+                                 (shell . t)
                                  (sql . t)
                                  (emacs-lisp . t)
                                  (elasticsearch . t)
@@ -377,9 +379,9 @@
 
 ;;; Themes
 (use-package solarized-theme
-  :init
   :disabled
-  (defvar jcs-active-theme 'solarized-light)
+  :init
+  (defvar jcs-active-theme 'solarized-dark)
   (defun toggle-dark-light-theme ()
     "Toggle the current solarized theme between light and dark."
     (interactive)
@@ -396,10 +398,6 @@
 (use-package srcery-theme
   :disabled
   :config (load-theme 'srcery t))
-
-(use-package doneburn-theme
-  :disabled
-  :config (load-theme 'doneburn t))
 
 (use-package macrostep
   :bind ("C-c m" . macrostep-expand))
@@ -432,7 +430,15 @@
   :config (validate-setq markdown-fontify-code-blocks-natively t))
 
 (use-package minions
-  :config (minions-mode))
+  :config
+  (validate-setq minions-direct '(flycheck-mode cider-mode))
+  (minions-mode))
+
+(use-package moody
+  :disabled
+  :config
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode))
 
 (use-package simple
   :ensure f
@@ -507,40 +513,6 @@
 
 (use-package flycheck
   :config (global-flycheck-mode))
-
-(use-package ido
-  :disabled
-  :hook (ido-setup . (lambda () (define-key ido-completion-map [up]
-                             'previous-history-element)))
-  :config
-  (validate-setq ido-use-filename-at-point nil
-                 ido-auto-merge-work-directories-length 0
-                 ido-use-virtual-buffers t
-                 ido-default-buffer-method 'selected-window
-                 ido-use-faces nil
-                 ido-enable-flex-matching t)
-  (ido-mode t)
-  (ido-everywhere t))
-
-(use-package idomenu
-  :disabled)
-
-(use-package ido-completing-read+
-  :disabled
-  :config
-  (validate-setq ido-ubiquitous-auto-update-overrides t)
-  (ido-ubiquitous-mode t))
-
-(use-package flx-ido
-  :disabled
-  :config (flx-ido-mode t))
-
-(use-package smex
-  :init
-  :disabled
-  (validate-setq smex-save-file (expand-file-name ".smex-items" user-emacs-directory))
-  :bind (("M-x" . smex)
-         ("M-X" . smex-major-mode-commands)))
 
 (use-package ivy
   :bind (("C-c C-r" . ivy-resume)) ; TODO: Find a binding that doesn't
@@ -626,7 +598,8 @@
   :config (dumb-jump-mode))
 
 (use-package smart-jump
-  :config (smart-jump-setup-default-registers))
+  :config (smart-jump-setup-default-registers)
+  :custom (smart-jump-refs-key "C-M-?"))
 
 (use-package yaml-mode
   :mode (("\\.yml\\'" . yaml-mode)
@@ -653,10 +626,7 @@
   (super-save-mode +1))
 
 (use-package smart-mode-line
-  :disabled
-  :config
-  ;;(setq sml/theme 'respectful)
-  (sml/setup))
+  :config (sml/setup))
 
 ;; Turn on line numbers everywhere
 (use-package nlinum
@@ -803,7 +773,9 @@
   (validate-setq cljr-suppress-middleware-warnings t
                  cljr-favor-prefix-notation nil
                  ;; Lazily build ASTs, instead of immediately on REPL connect
-                 cljr-eagerly-build-asts-on-startup nil))
+                 cljr-eagerly-build-asts-on-startup nil)
+  (add-to-list 'cljr-magic-require-namespaces '("json" . "cheshire.core"))
+  (add-to-list 'cljr-magic-require-namespaces '("string" . "clojure.string")))
 
 (use-package flycheck-joker)
 
@@ -874,6 +846,18 @@
 	 ("C-h k" . helpful-key)
 	 :map emacs-lisp-mode-map
 	 ("C-c C-d" . helpful-at-point)))
+
+(use-package git-link
+  :config
+  (add-to-list 'git-link-remote-alist
+               '("github\\.threatbuild\\.com" git-link-github)))
+
+
+;; Local personalization
+(let ((file (expand-file-name (concat (user-real-login-name) ".el")
+			      user-emacs-directory)))
+  (when (file-exists-p file)
+    (load file)))
 
 ;; Set the GC threshold back to default
 (validate-setq gc-cons-threshold 800000)

@@ -30,3 +30,5 @@ ido.last
 /emacs.d/config.el
 /emacs.d/straight
 /emacs.d/var
+/emacs.d/chrsims.el
+/emacs.d/jcsims.el
