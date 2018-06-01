@@ -38,6 +38,7 @@
                  `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
 (use-package init-wm
+  :ensure f
   :load-path "lisp")
 
 (validate-setq source-directory "~/code/emacs")
@@ -99,7 +100,6 @@
   (interactive)
   (find-file "~/.emacs.d/init.el"))
 (global-set-key (kbd "C-c e e") 'find-init-file)
-
 
 (defvar org-dir "~/org/")
 (defvar jcs/projects-file (expand-file-name "projects.org" org-dir))
@@ -300,9 +300,9 @@
         '(("t" "Todo [inbox]" entry
            (file "inbox.org")
            "* TODO %i%?")
-          ("n" "Next task [inbox]" entry
+          ("w" "Work task [inbox]" entry
            (file "inbox.org")
-           "* NEXT %i%?")
+           "* TODO %i%?      :@work:")
           ("T" "Tickler" entry
            (file "tickler.org")
            "* %i%? \n %U")
@@ -630,7 +630,13 @@
 
 ;; Turn on line numbers everywhere
 (use-package nlinum
+  :when (version<  emacs-version "26")
   :config (global-nlinum-mode))
+
+(use-package display-line-numbers
+  :ensure f
+  :when (version< "26" emacs-version)
+  :config (global-display-line-numbers-mode))
 
 (use-package dired-collapse)
 

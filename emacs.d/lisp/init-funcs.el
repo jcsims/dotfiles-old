@@ -145,8 +145,9 @@ Emacswiki."
 (add-hook 'prog-mode-hook 'esk-pretty-lambdas)
 (add-hook 'prog-mode-hook 'esk-add-watchwords)
 
-(require 'magit-git)
-(require 'git-commit)
+
+(use-package magit-git :ensure magit)
+(use-package git-commit :ensure magit)
 (defun jcs/magit-commit-template (&rest _)
   "Ensure that commits on an issue- branch have the issue name in the commit as well."
   (let ((prefix (magit-get-current-branch)))
