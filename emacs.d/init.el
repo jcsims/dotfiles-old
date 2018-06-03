@@ -169,9 +169,11 @@
     "Visit buffer for a log file for today's date."
     (interactive)
     (find-file (concat "~/org/log/" (format-time-string
-    				     "%Y-%m-%d.org" (current-time))))
-    ;;(find-file "~/org/log.org")
-    )
+    				     "%Y-%m-%d.org" (current-time)))))
+
+  (defun jcs/find-log-file ()
+    (interactive)
+    (find-file (expand-file-name "log.org" org-dir)))
 
   ;; These tend to modify files, so save after doing it
   (advice-add 'org-refile :after 'org-save-all-org-buffers)
@@ -188,9 +190,9 @@
          ("C-c e t" . find-tickler-file)
          ("C-c e r" . find-reference-file)
          ("C-c e c" . find-checklists-file)
-         ("C-c e l" . visit-todays-log)
+         ("C-c e l" . jcs/find-log-file)
 
-	 ;; Below stolen from
+         ;; Below stolen from
 	 ;; https://github.com/raxod502/radian/blob/ee92ea6cb0473bf7d20c6d381753011312ef4a52/radian-emacs/radian-org.el
          :map org-mode-map
 
@@ -514,6 +516,9 @@
 (use-package flycheck
   :config (global-flycheck-mode))
 
+;; Require'ing this gives most-recently-used M-x commands in ivy
+(use-package smex)
+
 (use-package ivy
   :bind (("C-c C-r" . ivy-resume)) ; TODO: Find a binding that doesn't
                                         ; get overwritten...
@@ -535,9 +540,7 @@
          :map ivy-minibuffer-map
          ("M-y" . ivy-next-line))
   :config
-  (define-key read-expression-map (kbd "C-r") 'counsel-expression-history)
-  (validate-setq counsel-grep-base-command
-                 "rg -i -M 120 --no-heading --line-number --color never '%s' %s"))
+  (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
 
 (use-package projectile
   :config (projectile-mode))
