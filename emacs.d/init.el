@@ -86,7 +86,7 @@
 ;; (insert "\n(set-frame-font \"" (cdr (assoc 'font (frame-parameters))) "\")")
 
 (when (memq window-system '(mac ns))
-  (set-frame-font "-*-Menlo-normal-normal-normal-*-11-*-*-*-m-0-iso10646-1"))
+  (set-frame-font "-SRC-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
 (when (memq window-system '(x))
   (set-frame-font "-SRC-Hack-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1"))
 
