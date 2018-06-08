@@ -146,6 +146,7 @@
                               ("weekend" . ?W)
                               ("evening" . ?e)
                               ("business_hours" . ?b)
+			      ("reading" . ?r)
                               (:newline)
                               ("james" . ?j)
                               ("workstation" . ?K)
@@ -514,7 +515,8 @@
   :config (global-paren-face-mode))
 
 (use-package flycheck
-  :config (global-flycheck-mode))
+  :config (global-flycheck-mode)
+  :custom (flycheck-global-modes '(not org-mode)))
 
 ;; Require'ing this gives most-recently-used M-x commands in ivy
 (use-package smex)
@@ -861,6 +863,7 @@
   (add-to-list 'git-link-remote-alist
                '("github\\.threatbuild\\.com" git-link-github)))
 
+(use-package define-word)
 
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")
