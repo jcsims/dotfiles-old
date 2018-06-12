@@ -63,6 +63,8 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     export PATH=/usr/local/pgsql/bin:$PATH
     export MANPATH=/usr/local/pgsql/share/man:$MANPATH
 
+    alias stay-awake='caffeinate -di'
+
 fi
 
 export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle:$HOME/code/tg/ops
@@ -76,15 +78,11 @@ shopt -s checkwinsize
 # Automatically trim long paths in the prompt (requires Bash 4.x)
 PROMPT_DIRTRIM=2
 
+## Bind a few things in interactive shells only
+if [[ $- == *i* ]]; then
 # Enable history expansion with space
 # E.g. typing !!<space> will replace the !! with your last command
 bind Space:magic-space
-
-# Turn on recursive globbing (enables ** to recurse all directories)
-shopt -s globstar 2> /dev/null
-
-# Case-insensitive globbing (used in pathname expansion)
-shopt -s nocaseglob;
 
 # Perform file completion in a case insensitive fashion
 bind "set completion-ignore-case on"
@@ -97,6 +95,23 @@ bind "set show-all-if-ambiguous on"
 
 # Immediately add a trailing slash when autocompleting symlinks to directories
 bind "set mark-symlinked-directories on"
+
+# Enable incremental history search with up/down arrows (also Readline goodness)
+# Learn more about this here: http://codeinthehole.com/writing/the-most-important-command-line-tip-incremental-history-searching-with-inputrc/
+bind '"\e[A": history-search-backward'
+bind '"\e[B": history-search-forward'
+bind '"\e[C": forward-char'
+bind '"\e[D": backward-char'
+bind '"\e\e[D": backward-word'
+bind '"\e\e[C": forward-word'
+
+fi
+
+# Turn on recursive globbing (enables ** to recurse all directories)
+shopt -s globstar 2> /dev/null
+
+# Case-insensitive globbing (used in pathname expansion)
+shopt -s nocaseglob;
 
 # Append to the history file, don't overwrite it
 shopt -s histappend
@@ -121,15 +136,6 @@ export HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear"
 # %F equivalent to %Y-%m-%d
 # %T equivalent to %H:%M:%S (24-hours format)
 HISTTIMEFORMAT='%F %T '
-
-# Enable incremental history search with up/down arrows (also Readline goodness)
-# Learn more about this here: http://codeinthehole.com/writing/the-most-important-command-line-tip-incremental-history-searching-with-inputrc/
-bind '"\e[A": history-search-backward'
-bind '"\e[B": history-search-forward'
-bind '"\e[C": forward-char'
-bind '"\e[D": backward-char'
-bind '"\e\e[D": backward-word'
-bind '"\e\e[C": forward-word'
 
 # Prepend cd to directory names automatically
 shopt -s autocd 2> /dev/null
