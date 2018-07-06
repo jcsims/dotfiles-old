@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 
 ## Basic bash config
-export CLICOLOR=true
+export CLICOLOR=1
 export EDITOR='emacsclient'
 export TERM=xterm-256color
+export LSCOLORS='exfxcxdxbxegedabagacad'
 
 if [[ -x /usr/bin/dircolors ]] ; then
     eval "$(dircolors)"
@@ -151,11 +152,6 @@ shopt -s cdspell 2> /dev/null
 # CDPATH=".:~/code"
 
 alias grep='grep --color=auto'
-if which gls &> /dev/null ; then
-    alias ls='gls'
-else
-    alias ls='ls --color=auto'
-fi
 
 alias reload!='. ~/.bashrc'
 alias tree='tree -C'
