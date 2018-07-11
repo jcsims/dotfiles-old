@@ -473,7 +473,9 @@
 
 ;; Flyspell mode
 (use-package flyspell
-  :hook (text-mode . flyspell-mode))
+  :hook
+  (text-mode . flyspell-mode)
+  (prog-mode . flyspell-prog-mode))
 
 ;; Config other packages
 (use-package company
