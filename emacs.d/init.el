@@ -382,9 +382,9 @@
 
 ;;; Themes
 (use-package solarized-theme
-  :disabled
+  ;;:disabled
   :init
-  (defvar jcs-active-theme 'solarized-dark)
+  (defvar jcs-active-theme 'solarized-light)
   (defun toggle-dark-light-theme ()
     "Toggle the current solarized theme between light and dark."
     (interactive)
@@ -395,7 +395,7 @@
   :config (load-theme jcs-active-theme t))
 
 (use-package monokai-theme
-  ;;:disabled
+  :disabled
   :config (load-theme 'monokai t))
 
 (use-package srcery-theme
