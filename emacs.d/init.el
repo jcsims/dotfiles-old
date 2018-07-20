@@ -557,6 +557,7 @@
   :mode "\\.js\\'")
 
 (use-package magit
+  :pin melpa-stable
   :bind (("C-c g"   . magit-status)
          ("C-c M-g" . magit-dispatch-popup))
   :custom
@@ -571,7 +572,8 @@
 (use-package git-timemachine)
 
 ;; ghub and dash are required by threatgrid.el
-(use-package ghub)
+(use-package ghub
+  :pin melpa-stable)
 (use-package dash
   :config (dash-enable-font-lock))
 (use-package threatgrid
@@ -648,6 +650,7 @@
 (use-package dired-collapse)
 
 (use-package notmuch
+  :disabled
   :bind (("C-x m" . notmuch))
   :custom
   (message-sendmail-envelope-from 'header)
@@ -687,15 +690,6 @@
   (("C->"     . mc/mark-next-like-this)
    ("C-<"     . mc/mark-previous-like-this)
    ("C-c C-<" . mc/mark-all-like-this)))
-
-(use-package alchemist
-  :disabled
-  :config
-  ;; Run the whole test suite with alchemist-mix-test after saving a buffer.
-  (validate-setq alchemist-hooks-test-on-save t)
-  ;; Compile your project with alchemist-mix-compile after saving a
-  ;; buffer.
-  (validate-setq alchemist-hooks-compile-on-save t))
 
 (use-package tex
   :disabled
@@ -745,6 +739,7 @@
 (use-package clojure-mode
   :hook
   (clojure-mode . paredit-mode)
+  :mode (("\\.edn\\'" . clojure-mode))
   :config
   ;; Add some goodies from Emacs Live
   (font-lock-add-keywords
