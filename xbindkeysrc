@@ -66,11 +66,11 @@
 #  Control + b:2 + Release
 
 # Increase volume
-"pactl set-sink-mute alsa_output.pci-0000_00_1f.3.analog-stereo false ; pactl set-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo +5%"
+"pactl set-sink-mute alsa_output.pci-0000_00_1f.3.analog-stereo false ; pactl set-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo +1%"
    XF86AudioRaiseVolume
 
 # Decrease volume
-"pactl set-sink-mute alsa_output.pci-0000_00_1f.3.analog-stereo false ; pactl set-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo -5%"
+"pactl set-sink-mute alsa_output.pci-0000_00_1f.3.analog-stereo false ; pactl set-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo -1%"
    XF86AudioLowerVolume
 
 # Mute
@@ -94,19 +94,31 @@
 # "pianoctl +"
 #    Control+Mod4 + equal
 
-# Spotify controls
-## Play/pause
-"playerctl play-pause"
-   XF86AudioPlay
+# # Spotify controls
+# ## Play/pause
+# "playerctl play-pause"
+#    XF86AudioPlay
+
+# ## Next track
+# "playerctl next"
+#    Control+Mod4 + n
+
+# # Previous track
+# "playerctl previous"
+# Control+Mod4 + p
+
+# Plexamp controls
+# Play/pause
+"curl http://127.0.0.1:36000/player/playback/playPause"
+  XF86AudioPlay
 
 ## Next track
-"playerctl next"
-   Control+Mod4 + n
+"curl -Ss http://127.0.0.1:36000/player/playback/skipNext"
+  Control+Mod4 + n
 
-# Previous track
-"playerctl previous"
-   Control+Mod4 + p
-
+## Previous track
+"curl -Ss http://127.0.0.1:36000/player/playback/skipPrevious"
+  Control+Mod4 + p
 ##################################
 # End of xbindkeys configuration #
 ##################################

@@ -88,7 +88,7 @@
 (when (memq window-system '(mac ns))
   (set-frame-font "-SRC-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
 (when (memq window-system '(x))
-  (set-frame-font "-SRC-Hack-normal-normal-normal-*-14-*-*-*-m-0-iso10646-1"))
+  (set-frame-font "-SRC-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
 
 (use-package prog-mode
   :ensure f
@@ -147,6 +147,7 @@
                               ("evening" . ?e)
                               ("business_hours" . ?b)
 			      ("reading" . ?r)
+			      ("askFromAlex" . ?A)
                               (:newline)
                               ("james" . ?j)
                               ("workstation" . ?K)
@@ -382,9 +383,9 @@
 
 ;;; Themes
 (use-package solarized-theme
-  ;;:disabled
+  :disabled
   :init
-  (defvar jcs-active-theme 'solarized-light)
+  (defvar jcs-active-theme 'solarized-dark)
   (defun toggle-dark-light-theme ()
     "Toggle the current solarized theme between light and dark."
     (interactive)
@@ -397,6 +398,10 @@
 (use-package monokai-theme
   :disabled
   :config (load-theme 'monokai t))
+
+(use-package zenburn-theme
+  ;:disabled
+  :config (load-theme 'zenburn t))
 
 (use-package srcery-theme
   :disabled
@@ -520,6 +525,42 @@
   :config (global-flycheck-mode)
   :custom (flycheck-global-modes '(not org-mode)))
 
+
+(use-package ido
+  :disabled
+  :hook (ido-setup . (lambda () (define-key ido-completion-map [up]
+                             'previous-history-element)))
+  :config
+  (validate-setq ido-use-filename-at-point 'guess
+                 ido-auto-merge-work-directories-length 0
+                 ido-use-virtual-buffers t
+                 ido-default-buffer-method 'selected-window
+                 ;;ido-use-faces nil
+                 ido-enable-flex-matching t)
+  (ido-mode t)
+  (ido-everywhere t))
+
+(use-package idomenu
+  :disabled
+  )
+
+(require 'magit-utils)
+(use-package ido-completing-read+
+  :disabled
+  :config
+  (ido-ubiquitous-mode t)
+  ;:custom (magit-completing-read-function 'magit-ido-completing-read)
+  )
+
+(use-package flx-ido
+  :disabled
+  :config (flx-ido-mode t))
+
+(use-package smex
+  ;; :bind (("M-x" . smex)
+  ;;  ("M-X" . smex-major-mode-commands))
+  )
+
 ;; Require'ing this gives most-recently-used M-x commands in ivy
 (use-package smex)
 
@@ -547,11 +588,12 @@
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
 
 (use-package projectile
-  :config (projectile-mode))
+  :config
+  (validate-setq projectile-keymap-prefix (kbd "C-c p"))
+  (projectile-mode))
 
 (use-package counsel-projectile
-  :config
-  (counsel-projectile-mode))
+  :config (counsel-projectile-mode))
 
 (use-package js2-mode
   :mode "\\.js\\'")
@@ -737,6 +779,7 @@
   :config (global-eldoc-mode))
 
 (use-package clojure-mode
+  :pin melpa-stable
   :hook
   (clojure-mode . paredit-mode)
   :mode (("\\.edn\\'" . clojure-mode))
@@ -755,6 +798,7 @@
 
 ;;; Cider
 (use-package cider
+  :pin melpa-stable
   :hook
   (clojure-mode . cider-mode)
   ((cider-mode cider-repl-mode) . eldoc-mode)
