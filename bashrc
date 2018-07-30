@@ -37,8 +37,9 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
         fi
     fi
 
-    ## SSH and GPG agent helper
-    eval $(keychain --eval --quiet --agents gpg,ssh id_rsa)
+    # keychain keeps track of ssh-agents
+    [ -f $HOME/.keychain/$HOSTNAME-sh ] \
+	&& . $HOME/.keychain/$HOSTNAME-sh
 
     # Add an "alert" alias for long running commands.  Use like so:
     #   sleep 10; alert

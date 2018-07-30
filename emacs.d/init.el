@@ -471,6 +471,11 @@
 ;; Allow for seamless gpg interaction
 (use-package epa-file :ensure f)
 
+;; Handles ssh-agent and gpg-agent configuration fro `keychain`
+(use-package keychain-environment
+  :if (memq window-system '(x))
+  :config (keychain-refresh-environment))
+
 ;; Work-specific code - should be encrypted!
 (defvar work-init (concat user-emacs-directory "lisp/init-work.el.gpg"))
 (if (file-exists-p work-init)
