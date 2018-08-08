@@ -88,7 +88,9 @@
 (when (memq window-system '(mac ns))
   (set-frame-font "-SRC-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
 (when (memq window-system '(x))
-  (set-frame-font "-SRC-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
+  (set-frame-font "-CYEL-Iosevka-normal-normal-normal-*-14-*-*-*-d-0-iso10646-1")
+  ;;(set-frame-font "-SRC-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
+  )
 
 (use-package prog-mode
   :ensure f
@@ -400,12 +402,14 @@
   :config (load-theme 'monokai t))
 
 (use-package zenburn-theme
-  ;:disabled
+  ;;:disabled
   :config (load-theme 'zenburn t))
 
-(use-package srcery-theme
+(use-package doom-themes
   :disabled
-  :config (load-theme 'srcery t))
+  :config (load-theme 'doom-one t))
+
+(use-package all-the-icons)
 
 (use-package macrostep
   :bind ("C-c m" . macrostep-expand))
@@ -682,7 +686,40 @@
   (super-save-mode +1))
 
 (use-package smart-mode-line
+  ;;:disabled
   :config (sml/setup))
+
+(use-package spaceline
+  :disabled
+  :init
+  (require 'powerline)
+  (validate-setq powerline-default-separator 'slant)
+  :config
+  (spaceline-spacemacs-theme)
+  (spaceline-toggle-buffer-size-off)
+  (spaceline-toggle-evil-state-on)
+  (spaceline-toggle-flycheck-info-on)
+  (spaceline-toggle-anzu-off)
+  (spaceline-toggle-minor-modes-off))
+
+;; Vim config
+(use-package evil
+  :disabled
+  :config
+  (evil-mode 1))
+
+(use-package evil-escape
+  :disabled
+  :init
+  (setq-default evil-escape-key-sequence "jk")
+  :config
+  (evil-escape-mode 1))
+
+(use-package anzu
+  :config
+  (global-anzu-mode)
+  (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
+  (global-set-key [remap query-replace] 'anzu-query-replace))
 
 ;; Turn on line numbers everywhere
 (use-package nlinum
@@ -866,6 +903,23 @@
   :config (validate-setq jsons-path-printer 'jsons-print-path-jq))
 
 (use-package json-mode)
+
+;; LSP
+(use-package lsp-mode
+  :init
+  (add-hook 'prog-major-mode #'lsp-prog-major-mode-enable))
+
+(use-package lsp-ui
+  :init
+  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+
+(use-package company-lsp
+  :init
+  (push 'company-lsp company-backends))
+
+(use-package lsp-sh
+  :disabled ;; Not in MELPA yet Mon 06 Aug 2018
+  )
 
 (use-package rust-mode
   :custom (rust-format-on-save t))
