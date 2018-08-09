@@ -2,7 +2,7 @@
 
 ## Basic bash config
 export CLICOLOR=1
-export EDITOR='emacsclient'
+export EDITOR='vim'
 export TERM=xterm-256color
 export LSCOLORS='exfxcxdxbxegedabagacad'
 
