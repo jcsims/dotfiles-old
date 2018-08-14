@@ -39,7 +39,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     # keychain keeps track of ssh-agents
     [ -f $HOME/.keychain/$HOSTNAME-sh ] \
-	&& . $HOME/.keychain/$HOSTNAME-sh
+        && . $HOME/.keychain/$HOSTNAME-sh
 
     # Add an "alert" alias for long running commands.  Use like so:
     #   sleep 10; alert
@@ -87,30 +87,30 @@ PROMPT_DIRTRIM=2
 
 ## Bind a few things in interactive shells only
 if [[ $- == *i* ]]; then
-# Enable history expansion with space
-# E.g. typing !!<space> will replace the !! with your last command
-bind Space:magic-space
+    # Enable history expansion with space
+    # E.g. typing !!<space> will replace the !! with your last command
+    bind Space:magic-space
 
-# Perform file completion in a case insensitive fashion
-bind "set completion-ignore-case on"
+    # Perform file completion in a case insensitive fashion
+    bind "set completion-ignore-case on"
 
-# Treat hyphens and underscores as equivalent
-bind "set completion-map-case on"
+    # Treat hyphens and underscores as equivalent
+    bind "set completion-map-case on"
 
-# Display matches for ambiguous patterns at first tab press
-bind "set show-all-if-ambiguous on"
+    # Display matches for ambiguous patterns at first tab press
+    bind "set show-all-if-ambiguous on"
 
-# Immediately add a trailing slash when autocompleting symlinks to directories
-bind "set mark-symlinked-directories on"
+    # Immediately add a trailing slash when autocompleting symlinks to directories
+    bind "set mark-symlinked-directories on"
 
-# Enable incremental history search with up/down arrows (also Readline goodness)
-# Learn more about this here: http://codeinthehole.com/writing/the-most-important-command-line-tip-incremental-history-searching-with-inputrc/
-bind '"\e[A": history-search-backward'
-bind '"\e[B": history-search-forward'
-bind '"\e[C": forward-char'
-bind '"\e[D": backward-char'
-bind '"\e\e[D": backward-word'
-bind '"\e\e[C": forward-word'
+    # Enable incremental history search with up/down arrows (also Readline goodness)
+    # Learn more about this here: http://codeinthehole.com/writing/the-most-important-command-line-tip-incremental-history-searching-with-inputrc/
+    bind '"\e[A": history-search-backward'
+    bind '"\e[B": history-search-forward'
+    bind '"\e[C": forward-char'
+    bind '"\e[D": backward-char'
+    bind '"\e\e[D": backward-word'
+    bind '"\e\e[C": forward-word'
 
 fi
 
@@ -180,13 +180,13 @@ for f in $HOME/.functions/*; do source "$f"; done
 ## http://boredzo.org/blog/archives/2016-08-15/colorized-man-pages-understood-and-customized
 man() {
     env \
-	LESS_TERMCAP_md=$'\e[1;36m' \
-	LESS_TERMCAP_me=$'\e[0m' \
-	LESS_TERMCAP_se=$'\e[0m' \
-	LESS_TERMCAP_so=$'\e[1;40;92m' \
-	LESS_TERMCAP_ue=$'\e[0m' \
-	LESS_TERMCAP_us=$'\e[1;32m' \
-	man "$@"
+        LESS_TERMCAP_md=$'\e[1;36m' \
+        LESS_TERMCAP_me=$'\e[0m' \
+        LESS_TERMCAP_se=$'\e[0m' \
+        LESS_TERMCAP_so=$'\e[1;40;92m' \
+        LESS_TERMCAP_ue=$'\e[0m' \
+        LESS_TERMCAP_us=$'\e[1;32m' \
+        man "$@"
 }
 
 ## Prompt
