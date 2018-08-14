@@ -65,16 +65,30 @@
 #"rxvt"
 #  Control + b:2 + Release
 
+## Headphones
+# # Increase volume
+# "pactl set-sink-mute alsa_output.usb-Sennheiser_Sennheiser_3D_G4ME1-00.iec958-stereo false ; pactl set-sink-volume alsa_output.usb-Sennheiser_Sennheiser_3D_G4ME1-00.iec958-stereo +5%"
+#    XF86AudioRaiseVolume
+
+# # Decrease volume
+# "pactl set-sink-mute alsa_output.usb-Sennheiser_Sennheiser_3D_G4ME1-00.iec958-stereo false ; pactl set-sink-volume alsa_output.usb-Sennheiser_Sennheiser_3D_G4ME1-00.iec958-stereo -5%"
+#    XF86AudioLowerVolume
+
+# # Mute
+# "pactl set-sink-mute alsa_output.usb-Sennheiser_Sennheiser_3D_G4ME1-00.iec958-stereo toggle"
+# XF86AudioMute
+
+## Speakers
 # Increase volume
-"pactl set-sink-mute alsa_output.usb-Sennheiser_Sennheiser_3D_G4ME1-00.iec958-stereo false ; pactl set-sink-volume alsa_output.usb-Sennheiser_Sennheiser_3D_G4ME1-00.iec958-stereo +1%"
+"pactl set-sink-mute alsa_output.pci-0000_00_1f.3.analog-stereo false ; pactl set-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo +5%"
    XF86AudioRaiseVolume
 
 # Decrease volume
-"pactl set-sink-mute alsa_output.usb-Sennheiser_Sennheiser_3D_G4ME1-00.iec958-stereo false ; pactl set-sink-volume alsa_output.usb-Sennheiser_Sennheiser_3D_G4ME1-00.iec958-stereo -1%"
+"pactl set-sink-mute alsa_output.pci-0000_00_1f.3.analog-stereo false ; pactl set-sink-volume alsa_output.pci-0000_00_1f.3.analog-stereo -5%"
    XF86AudioLowerVolume
 
 # Mute
-"pactl set-sink-mute alsa_output.usb-Sennheiser_Sennheiser_3D_G4ME1-00.iec958-stereo toggle"
+"pactl set-sink-mute alsa_output.pci-0000_00_1f.3.analog-stereo toggle"
    XF86AudioMute
 
 # # Pandora Controls
@@ -107,18 +121,32 @@
 # "playerctl previous"
 # Control+Mod4 + p
 
-# Plexamp controls
-# Play/pause
-"curl http://127.0.0.1:36000/player/playback/playPause"
+# # Plexamp controls
+# # Play/pause
+# "curl http://127.0.0.1:36000/player/playback/playPause"
+#   XF86AudioPlay
+
+# ## Next track
+# "curl -Ss http://127.0.0.1:36000/player/playback/skipNext"
+#   Control+Mod4 + n
+
+# ## Previous track
+# "curl -Ss http://127.0.0.1:36000/player/playback/skipPrevious"
+#   Control+Mod4 + p
+
+# Generic
+## Play/pause
+"play-or-pause-playback"
   XF86AudioPlay
 
 ## Next track
-"curl -Ss http://127.0.0.1:36000/player/playback/skipNext"
+"next-track"
   Control+Mod4 + n
 
 ## Previous track
-"curl -Ss http://127.0.0.1:36000/player/playback/skipPrevious"
+"previous-track"
   Control+Mod4 + p
+
 ##################################
 # End of xbindkeys configuration #
 ##################################
