@@ -88,8 +88,8 @@
 (when (memq window-system '(mac ns))
   (set-frame-font "-SRC-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
 (when (memq window-system '(x))
-  (set-frame-font "-CYEL-Iosevka-normal-normal-normal-*-14-*-*-*-d-0-iso10646-1")
-  ;;(set-frame-font "-SRC-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
+  ;;(set-frame-font "-CYEL-Iosevka-normal-normal-normal-*-14-*-*-*-d-0-iso10646-1")
+  (set-frame-font "-SRC-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
   )
 
 (use-package prog-mode
@@ -727,6 +727,7 @@
   :config (global-nlinum-mode))
 
 (use-package display-line-numbers
+  :disabled
   :ensure f
   :when (version< "26" emacs-version)
   :config (global-display-line-numbers-mode))
