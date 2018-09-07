@@ -165,6 +165,8 @@ alias tree='tree -C'
 alias e='emacsclient -t -a ""'
 alias ec='emacsclient -c -a ""'
 
+alias cat='bat'
+
 ## Git aliases
 alias gl="git log --graph --abbrev-commit --date=relative --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 alias gp='git push origin HEAD'

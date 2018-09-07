@@ -16,6 +16,7 @@
   ui = true
 [core]
   excludesfile = ~/.gitignore
+  pager = diff-so-fancy | less --tabs=4 -RFX
 [apply]
   whitespace = nowarn
 [mergetool]
@@ -36,9 +37,9 @@
 [rebase]
   autostash = true
 [pager]
-  log = diff-highlight | less
-  show = diff-highlight | less
-  diff = diff-highlight | less
+  diff = diff-so-fancy | less --tabs=1,5 -RFX
+  show = diff-so-fancy | less --tabs=1,5 -RFX
+  log = diff-so-fancy | less --tabs=1,5 -RFX
 [interactive]
   diffFilter = diff-highlight
 [magit]

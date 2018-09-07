@@ -402,11 +402,11 @@
   :config (load-theme 'monokai t))
 
 (use-package zenburn-theme
-  ;;:disabled
+  :disabled
   :config (load-theme 'zenburn t))
 
 (use-package doom-themes
-  :disabled
+  ;;:disabled
   :config (load-theme 'doom-one t))
 
 (use-package all-the-icons)
@@ -597,9 +597,9 @@
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
 
 (use-package projectile
-  :config
-  (validate-setq projectile-keymap-prefix (kbd "C-c p"))
-  (projectile-mode))
+  :bind (:map projectile-mode-map
+              ("C-c p" . projectile-command-map))
+  :config (projectile-mode))
 
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
@@ -607,6 +607,7 @@
 (use-package js2-mode
   :mode "\\.js\\'")
 
+(require 'ivy)
 (use-package magit
   :pin melpa-stable
   :bind (("C-c g"   . magit-status)
@@ -614,11 +615,20 @@
   :custom
   (magit-branch-prefer-remote-upstream t)
   (magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-")))
+  (magit-save-repository-buffers 'dontask)
   :config
+  (validate-setq ;magit-diff-refine-hunk t ; show word-granularity on selected hunk
+                 magit-completing-read-function #'ivy-completing-read)
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules
                           'magit-insert-stashes
                           'append))
+
+(use-package magit-todos
+  :disabled
+  :hook (magit-mode . magit-todos-mode)
+  :config
+  (validate-setq magit-todos-require-colon nil))
 
 (use-package git-timemachine)
 
@@ -686,8 +696,12 @@
   (super-save-mode +1))
 
 (use-package smart-mode-line
-  ;;:disabled
+  :disabled
   :config (sml/setup))
+
+(use-package doom-modeline
+  :defer t
+  :hook (after-init . doom-modeline-init))
 
 (use-package spaceline
   :disabled
@@ -852,14 +866,21 @@
   (cider-jdk-src-paths '("~/code/clojure"
 			 "/usr/lib/jvm/java-8-openjdk/src.zip"))
   (cider-save-file-on-load t)
+  (cider-repl-use-pretty-printing t)
   :config
   (validate-setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
                  cider-repl-display-help-banner nil
-                 nrepl-log-messages t))
+                 nrepl-log-messages t
+		 cider-known-endpoints '(("Face" "localhost" "4242")
+					 ("Remote" "localhost" "8842")
+					 ("Threatbrain Server" "localhost" "4243")
+					 ("Integration Service" "localhost" "4244")
+					 ("GUNDAM" "localhost" "4245"))))
 
 (use-package yasnippet)
 
 (use-package clj-refactor
+  :pin melpa-stable
   :hook (clojure-mode . (lambda ()
                           (clj-refactor-mode 1)
                           (yas-minor-mode 1)
@@ -965,6 +986,25 @@
                '("github\\.threatbuild\\.com" git-link-github)))
 
 (use-package define-word)
+
+(use-package goto-addr
+  :ensure f
+  :hook ((compilation-mode . goto-address-mode)
+         (prog-mode . goto-address-prog-mode)
+         (eshell-mode . goto-address-mode)
+         (shell-mode . goto-address-mode))
+  :bind (:map goto-address-highlight-keymap
+              ("C-c C-o" . goto-address-at-point))
+  :commands (goto-address-prog-mode
+             goto-address-mode))
+
+(use-package buffer-move
+  :bind (("C-S-<up>" . buf-move-up)
+	 ("C-S-<down>" . buf-move-down)
+	 ("C-S-<right>" . buf-move-right)
+	 ("C-S-<left>" . buf-move-left)))
+
+(use-package rotate)
 
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")
