@@ -56,15 +56,12 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Add GOROOT bin path to PATH
     export PATH=/usr/local/go/bin:$PATH
 
-    if [ -f /opt/local/etc/profile.d/bash_completion.sh ]; then
-        . /opt/local/etc/profile.d/bash_completion.sh
+    if [ -f /usr/local/share/bash-completion/bash_completion ]; then
+	. /usr/local/share/bash-completion/bash_completion
     fi
 
     # Brew-installed paths
     export PATH=/usr/local/bin:/usr/local/sbin:$PATH
-
-    # Add pkgsrc bin directory
-    export PATH=/opt/pkg/bin:$PATH
 
     # Add installed-from-source Postgres binary and manpage paths
     export PATH=/usr/local/pgsql/bin:$PATH
