@@ -82,16 +82,6 @@
 (when (fboundp 'menu-bar-mode)
   (menu-bar-mode -1))
 
-;; Handy to get the current font/size that you've got:
-;; (insert "\n(set-frame-font \"" (cdr (assoc 'font (frame-parameters))) "\")")
-
-(when (memq window-system '(mac ns))
-  (set-frame-font "-SRC-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1"))
-(when (memq window-system '(x))
-  ;;(set-frame-font "-CYEL-Iosevka-normal-normal-normal-*-14-*-*-*-d-0-iso10646-1")
-  (set-frame-font "-SRC-Hack-normal-normal-normal-*-12-*-*-*-m-0-iso10646-1")
-  )
-
 (use-package prog-mode
   :ensure f
   :config (global-prettify-symbols-mode))
@@ -113,6 +103,10 @@
 (defvar jcs/checklists-file (expand-file-name "checklists.org" org-dir))
 
 (use-package org
+  :custom
+  (org-highest-priority ?A)
+  (org-lowest-priority ?D)
+  (org-default-priority ?C)
   :config
   (validate-setq org-directory org-dir
                  org-log-done 'time
@@ -149,7 +143,7 @@
                               ("evening" . ?e)
                               ("business_hours" . ?b)
 			      ("reading" . ?r)
-			      ("askFromAlex" . ?A)
+			      ("learning" . ?l)
                               (:newline)
                               ("james" . ?j)
                               ("workstation" . ?K)
@@ -314,7 +308,14 @@
            "* %i%? \n %U")
           ("r" "Reference" entry
            (file+headline "reference.org" "Reference")
-           "* %i%? \n %U"))))
+           "* %i%? \n %U")
+	  ("W" "Review: Weekly Review" entry
+	   ;; Destination
+	   (file+datetree "~/org/weekly-reviews.org")
+	   ;; Capture template
+	   (file "~/org/weekly-review-template.org"))
+	  ("h" "Housework log" entry
+	   (file+datetree "~/org/housework-log.org")))))
 
 (use-package alert
   :config
@@ -1005,6 +1006,8 @@
 	 ("C-S-<left>" . buf-move-left)))
 
 (use-package rotate)
+
+(use-package hy-mode)
 
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")
