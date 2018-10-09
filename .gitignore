@@ -7,12 +7,6 @@ nickserv.auth
 saved_colors
         
 # Emacs
-**elpa**
-**backups**
-**eshell**
-**url**
-**auto-save-list**
-**.cask**
 .smex-items
 smex-items
 ac-comphist.dat
@@ -32,3 +26,6 @@ ido.last
 /emacs.d/var
 /emacs.d/chrsims.el
 /emacs.d/jcsims.el
+/emacs.d/elpa/*
+/emacs.d/eshell
+/emacs.d/url
