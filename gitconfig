@@ -15,7 +15,7 @@
   branch = auto
   ui = true
 [core]
-  excludesfile = ~/.gitignore
+	excludesfile = /Users/jcsims/.gitignore
   pager = diff-so-fancy | less --tabs=4 -RFX
 [apply]
   whitespace = nowarn
@@ -52,3 +52,5 @@
   textconv = gpg --no-tty --decrypt
 [includeIf "gitdir:~/code/tg/"]
     path = ~/code/tg/.gitconfig
+[includeIf "gitdir:~/dev/tg/"]
+    path = ~/dev/tg/.gitconfig

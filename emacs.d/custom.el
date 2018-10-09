@@ -20,9 +20,12 @@
    (quote
     ("--graph" "--color" "--decorate" "--show-signature" "-n1024")))
  '(menu-bar-mode nil)
+ '(org-default-priority 67)
+ '(org-highest-priority 65)
+ '(org-lowest-priority 68)
  '(package-selected-packages
    (quote
-    (hy-mode rotate emacs-rotate buffer-move doom-modeline magit-todos evil-escape evil lsp-mode all-the-icons lsp-sh company-lsp lsp-ui doom-theme doom-themes anzu spaceline exwm keychain-environment zenburn-theme clj-refactor cider clojure-mode define-word swiper no-littering git-link moody paren-face srcery-theme helpful org help notmuch highlight-symbol minions yasnippet smart-jump org-rich-yank crux json-snatcher alert auto-compile grab-x-link org-wild-notifier racer atomic-chrome lsp-rust flycheck-rust rust-mode magithub dimmer go-errcheck go-eldoc company-go json-mode nov wgrep rg validate shell-pop counsel-rg counsel-projectile counsel ivy org-alert ghub-plus ghub+ ghub solarized-theme groovy-mode systemd ob-sql-mode flycheck-joker sql-indent csv-mode go-mode ob-restclient restclient company-auctex latex-extra auctex alchemist multiple-cursors es-mode salt-mode dired-collapse nlinum smart-mode-line super-save diff-hl which-key yaml-mode dumb-jump dockerfile-mode browse-kill-ring expand-region projectile paredit-everywhere paredit git-gutter git-timemachine magit js2-mode smex flx-ido ido-completing-read+ idomenu flycheck rainbow-delimiters ag idle-highlight-mode elisp-slime-nav company-quickhelp company markdown-mode f exec-path-from-shell macrostep monokai-theme paradox delight use-package)))
+    (libgit hy-mode rotate emacs-rotate buffer-move doom-modeline magit-todos evil-escape evil lsp-mode all-the-icons lsp-sh company-lsp lsp-ui doom-theme doom-themes anzu spaceline exwm keychain-environment zenburn-theme clj-refactor cider clojure-mode define-word swiper no-littering git-link moody paren-face srcery-theme helpful org help notmuch highlight-symbol minions yasnippet smart-jump org-rich-yank crux json-snatcher alert auto-compile grab-x-link org-wild-notifier racer atomic-chrome lsp-rust flycheck-rust rust-mode magithub dimmer go-errcheck go-eldoc company-go json-mode nov wgrep rg validate shell-pop counsel-rg counsel-projectile counsel ivy org-alert ghub-plus ghub+ ghub solarized-theme groovy-mode systemd ob-sql-mode flycheck-joker sql-indent csv-mode go-mode ob-restclient restclient company-auctex latex-extra auctex alchemist multiple-cursors es-mode salt-mode dired-collapse nlinum smart-mode-line super-save diff-hl which-key yaml-mode dumb-jump dockerfile-mode browse-kill-ring expand-region projectile paredit-everywhere paredit git-gutter git-timemachine magit js2-mode smex flx-ido ido-completing-read+ idomenu flycheck rainbow-delimiters ag idle-highlight-mode elisp-slime-nav company-quickhelp company markdown-mode f exec-path-from-shell macrostep monokai-theme paradox delight use-package)))
  '(paradox-automatically-star t)
  '(paradox-github-token t)
  '(paren-face-regexp "[][{}()]")
@@ -41,4 +44,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(default ((t (:family "Hack" :foundry "SRC" :slant normal :weight normal :height 90 :width normal)))))
+ '(default ((t (:family "Hack" :foundry "SRC" :slant normal :weight normal :height 110 :width normal)))))

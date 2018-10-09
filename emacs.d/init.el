@@ -353,8 +353,7 @@
 ;;; Misc settings
 (validate-setq inhibit-splash-screen t  ; Don't show the splash screen
                ring-bell-function 'ignore ; Just ignore error notifications
-               vc-follow-symlinks t ; even when they're in version control
-               indent-tabs-mode nil ; Don't use tabs unless buffer-local
+	       indent-tabs-mode nil ; Don't use tabs unless buffer-local
                select-enable-primary t
                save-interprogram-paste-before-kill t
                mouse-yank-at-point t
@@ -364,6 +363,12 @@
                )
 
 ;;; Packages
+(use-package vc-hooks
+  :ensure f
+  :config (validate-setq vc-handled-backends nil ;; turn off vc-mode - I have Magit
+		 vc-follow-symlinks t ; even when they're in version control
+		 ))
+
 (use-package recentf
   :ensure f
   :config
@@ -609,6 +614,7 @@
   :mode "\\.js\\'")
 
 (require 'ivy)
+(use-package libgit)
 (use-package magit
   :pin melpa-stable
   :bind (("C-c g"   . magit-status)

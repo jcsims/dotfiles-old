@@ -171,6 +171,7 @@ alias gpl='git pull --rebase --prune'
 alias gd='git diff'
 alias gc='git commit'
 alias gco='git checkout'
+alias ga='git add'
 alias gs='git status -sb' # upgrade your git if -sb breaks for # you. it's fun.
 
 for f in $HOME/.functions/*; do source "$f"; done
