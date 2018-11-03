@@ -624,8 +624,7 @@
   (magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-")))
   (magit-save-repository-buffers 'dontask)
   :config
-  (validate-setq ;magit-diff-refine-hunk t ; show word-granularity on selected hunk
-                 magit-completing-read-function #'ivy-completing-read)
+  (validate-setq magit-completing-read-function #'ivy-completing-read)
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules
                           'magit-insert-stashes
