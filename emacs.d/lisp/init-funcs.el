@@ -174,7 +174,18 @@ Emacswiki."
                     (buffer-substring-no-properties
                      (region-beginning) (region-end)))))
       (kill-new unhexed)
-      (message unhexed))))
+      (message "%s" unhexed))))
+
+(defun urlencode ()
+  "Call `url-hexify-string` on the active region."
+  (interactive)
+  (if (not (use-region-p))
+      (message "`urlencode` only works with an active region!")
+    (let ((hexed (url-hexify-string
+                    (buffer-substring-no-properties
+                     (region-beginning) (region-end)))))
+      (kill-new hexed)
+      (message "%s" hexed))))
 
 (defun random-lowercase-char ()
   "Return a random lowercase character, from a-z."

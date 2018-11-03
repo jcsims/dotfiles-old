@@ -69,8 +69,8 @@
 ;; accidentally all the time
 (global-set-key (kbd "<insert>") nil)
 
-;; (global-set-key (kbd "C-s") 'isearch-forward-regexp)
-;; (global-set-key (kbd "C-r") 'isearch-backward-regexp)
+(global-set-key (kbd "C-S") 'isearch-forward-regexp)
+(global-set-key (kbd "C-R") 'isearch-backward-regexp)
 ;; (global-set-key (kbd "C-M-s") 'isearch-forward)
 ;; (global-set-key (kbd "C-M-r") 'isearch-backward)
 
@@ -315,7 +315,8 @@
 	   ;; Capture template
 	   (file "~/org/weekly-review-template.org"))
 	  ("h" "Housework log" entry
-	   (file+datetree "~/org/housework-log.org")))))
+	   (file+datetree "~/org/housework-log.org")
+	   "* %i%? \n %U"))))
 
 (use-package alert
   :config
@@ -386,7 +387,9 @@
 
 (use-package paradox
   :config
-  (validate-setq paradox-execute-asynchronously t)
+  (validate-setq paradox-execute-asynchronously t
+		 paradox-github-token (cadr (auth-source-user-and-password
+					     "api.github.com" "jcsims^paradox")))
   (paradox-enable))
 
 ;;; Themes
@@ -404,7 +407,7 @@
   :config (load-theme jcs-active-theme t))
 
 (use-package monokai-theme
-  :disabled
+  ;;:disabled
   :config (load-theme 'monokai t))
 
 (use-package zenburn-theme
@@ -412,7 +415,7 @@
   :config (load-theme 'zenburn t))
 
 (use-package doom-themes
-  ;;:disabled
+  :disabled
   :config (load-theme 'doom-one t))
 
 (use-package all-the-icons)
@@ -994,6 +997,7 @@
 (use-package define-word)
 
 (use-package goto-addr
+  :disabled
   :ensure f
   :hook ((compilation-mode . goto-address-mode)
          (prog-mode . goto-address-prog-mode)
@@ -1014,6 +1018,10 @@
 
 (use-package hy-mode)
 
+(use-package pacfiles-mode)
+
+(use-package groovy-mode)
+
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")
 			      user-emacs-directory)))
@@ -1022,5 +1030,7 @@
 
 ;; Set the GC threshold back to default
 (validate-setq gc-cons-threshold 800000)
+
+
 
 ;;; init.el ends here
