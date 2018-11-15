@@ -385,6 +385,11 @@
 		 auto-save-file-name-transforms
 		 `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
+;; Allow for seamless gpg interaction
+(use-package epa-file
+  :ensure f
+  :config (epa-file-enable))
+
 (use-package paradox
   :config
   (validate-setq paradox-execute-asynchronously t
@@ -407,7 +412,7 @@
   :config (load-theme jcs-active-theme t))
 
 (use-package monokai-theme
-  ;;:disabled
+  :disabled
   :config (load-theme 'monokai t))
 
 (use-package zenburn-theme
@@ -415,7 +420,7 @@
   :config (load-theme 'zenburn t))
 
 (use-package doom-themes
-  :disabled
+  ;;:disabled
   :config (load-theme 'doom-one t))
 
 (use-package all-the-icons)
@@ -481,10 +486,7 @@
   (unless (server-running-p)
     (server-start)))
 
-;; Allow for seamless gpg interaction
-(use-package epa-file :ensure f)
-
-;; Handles ssh-agent and gpg-agent configuration fro `keychain`
+;; Handles ssh-agent and gpg-agent configuration from `keychain`
 (use-package keychain-environment
   :if (memq window-system '(x))
   :config (keychain-refresh-environment))
@@ -639,6 +641,11 @@
   :config
   (validate-setq magit-todos-require-colon nil))
 
+(use-package magithub
+  :config
+  (magithub-feature-autoinject t)
+  (setq magithub-github-hosts '("github.threatbuild.com/api/v3")))
+
 (use-package git-timemachine)
 
 ;; ghub and dash are required by threatgrid.el
@@ -682,7 +689,7 @@
 
 (use-package yaml-mode
   :mode (("\\.yml\\'" . yaml-mode)
-	 ("\\.sls\\'" . yaml-mode)))
+         ("\\.sls\\'" . yaml-mode)))
 
 (use-package which-key
   :config (which-key-mode))
@@ -867,24 +874,23 @@
   :pin melpa-stable
   :hook
   (clojure-mode . cider-mode)
-  ((cider-mode cider-repl-mode) . eldoc-mode)
   (cider-repl-mode . paredit-mode)
   :bind (:map clojure-mode-map
               ("C-c i" . cider-inspect-last-result))
   :custom
   (cider-jdk-src-paths '("~/code/clojure"
-			 "/usr/lib/jvm/java-8-openjdk/src.zip"))
+                         "/usr/lib/jvm/java-8-openjdk/src.zip"))
   (cider-save-file-on-load t)
   (cider-repl-use-pretty-printing t)
   :config
   (validate-setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
                  cider-repl-display-help-banner nil
                  nrepl-log-messages t
-		 cider-known-endpoints '(("Face" "localhost" "4242")
-					 ("Remote" "localhost" "8842")
-					 ("Threatbrain Server" "localhost" "4243")
-					 ("Integration Service" "localhost" "4244")
-					 ("GUNDAM" "localhost" "4245"))))
+                 cider-known-endpoints '(("Face" "localhost" "4242")
+                                         ("Remote" "localhost" "8842")
+                                         ("Threatbrain Server" "localhost" "4243")
+                                         ("Integration Service" "localhost" "4244")
+                                         ("GUNDAM" "localhost" "4245"))))
 
 (use-package yasnippet)
 
@@ -960,8 +966,7 @@
   :hook (rust-mode . lsp-rust-enable))
 
 (use-package racer
-  :hook ((rust-mode . racer-mode)
-         (racer-mode . eldoc-mode)))
+  :hook ((rust-mode . racer-mode)))
 
 (use-package savehist
   :config (savehist-mode))
@@ -984,10 +989,10 @@
 
 (use-package helpful
   :bind (("C-h f" . helpful-callable)
-	 ("C-h v" . helpful-variable)
-	 ("C-h k" . helpful-key)
-	 :map emacs-lisp-mode-map
-	 ("C-c C-d" . helpful-at-point)))
+         ("C-h v" . helpful-variable)
+         ("C-h k" . helpful-key)
+         :map emacs-lisp-mode-map
+         ("C-c C-d" . helpful-at-point)))
 
 (use-package git-link
   :config
@@ -1010,9 +1015,9 @@
 
 (use-package buffer-move
   :bind (("C-S-<up>" . buf-move-up)
-	 ("C-S-<down>" . buf-move-down)
-	 ("C-S-<right>" . buf-move-right)
-	 ("C-S-<left>" . buf-move-left)))
+         ("C-S-<down>" . buf-move-down)
+         ("C-S-<right>" . buf-move-right)
+         ("C-S-<left>" . buf-move-left)))
 
 (use-package rotate)
 
@@ -1021,6 +1026,19 @@
 (use-package pacfiles-mode)
 
 (use-package groovy-mode)
+
+(use-package flymd
+  :custom (flymd-close-buffer-delete-temp-files t)
+  :config
+  ;; Used from https://github.com/mola-T/flymd/blob/master/browser.md#user-content-chrome-macos
+  (defun my-flymd-browser-function (url)
+    (let ((process-environment (browse-url-process-environment)))
+      (apply 'start-process
+             (concat "firefox " url)
+             nil
+             "/usr/bin/open"
+             (list "-a" "firefox" url))))
+  (setq flymd-browser-open-function 'my-flymd-browser-function))
 
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")
