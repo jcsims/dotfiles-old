@@ -196,3 +196,5 @@ man() {
 #PS1="[\u@\h \W]\$ " # Default prompt
 
 PS1="[\u@\h \w]\$ "
+
+[ -f ~/.fzf.bash ] && source ~/.fzf.bash
