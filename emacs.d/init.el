@@ -27,7 +27,7 @@
   (require 'use-package))
 (use-package validate :ensure t)
 (validate-setq use-package-always-ensure t
-	       use-package-compute-statistics t
+               use-package-compute-statistics t
                use-package-verbose t)
 (use-package bind-key)
 
@@ -142,8 +142,8 @@
                               ("weekend" . ?W)
                               ("evening" . ?e)
                               ("business_hours" . ?b)
-			      ("reading" . ?r)
-			      ("learning" . ?l)
+                              ("reading" . ?r)
+                              ("learning" . ?l)
                               (:newline)
                               ("james" . ?j)
                               ("workstation" . ?K)
@@ -167,7 +167,7 @@
     "Visit buffer for a log file for today's date."
     (interactive)
     (find-file (concat "~/org/log/" (format-time-string
-    				     "%Y-%m-%d.org" (current-time)))))
+                                     "%Y-%m-%d.org" (current-time)))))
 
   (defun jcs/find-log-file ()
     (interactive)
@@ -191,7 +191,7 @@
          ("C-c e l" . jcs/find-log-file)
 
          ;; Below stolen from
-	 ;; https://github.com/raxod502/radian/blob/ee92ea6cb0473bf7d20c6d381753011312ef4a52/radian-emacs/radian-org.el
+         ;; https://github.com/raxod502/radian/blob/ee92ea6cb0473bf7d20c6d381753011312ef4a52/radian-emacs/radian-org.el
          :map org-mode-map
 
          ;; Prevent Org from overriding the bindings for windmove. By
@@ -219,14 +219,14 @@
          ;; otherwise there would be no easy way to invoke
          ;; `org-backward-paragraph' and `org-forward-paragraph'.)
          ([remap backward-paragraph] . org-backward-paragraph)
-	 ([remap forward-paragraph] . org-forward-paragraph)))
+         ([remap forward-paragraph] . org-forward-paragraph)))
 
 (use-package ox-md :ensure org)
 
 (use-package restclient)
 (use-package ob-restclient)
 
-  ;; Use es-mode for ElasticSearch buffers
+;; Use es-mode for ElasticSearch buffers
 (use-package es-mode)
 (use-package ob-elasticsearch
   :ensure es-mode
@@ -249,25 +249,25 @@
   :after org
   :bind (:map org-agenda-mode-map
 
-	      ;; Prevent Org Agenda from overriding the bindings for
-	      ;; windmove.
-	      ("S-<up>" . nil)
-	      ("S-<down>" . nil)
-	      ("S-<left>" . nil)
-	      ("S-<right>" . nil)
+              ;; Prevent Org Agenda from overriding the bindings for
+              ;; windmove.
+              ("S-<up>" . nil)
+              ("S-<down>" . nil)
+              ("S-<left>" . nil)
+              ("S-<right>" . nil)
 
-	      ;; Same routine as above. Now for Org Agenda, we could use
-	      ;; C-up and C-down because M-{ and M-} are bound to the same
-	      ;; commands. But I think it's best to take the same approach
-	      ;; as before, for consistency.
-	      ("C-<left>" . org-agenda-do-date-earlier)
-	      ("C-<right>" . org-agenda-do-date-later))
+              ;; Same routine as above. Now for Org Agenda, we could use
+              ;; C-up and C-down because M-{ and M-} are bound to the same
+              ;; commands. But I think it's best to take the same approach
+              ;; as before, for consistency.
+              ("C-<left>" . org-agenda-do-date-earlier)
+              ("C-<right>" . org-agenda-do-date-later))
   :config
   ;; Use the current window to open the agenda
   (validate-setq org-agenda-window-setup 'current-window
                  org-agenda-block-separator nil)
   (setq jcs/agenda-files (list jcs/projects-file jcs/tickler-file
-			       jcs/next-file jcs/inbox-file))
+                               jcs/next-file jcs/inbox-file))
   (setq org-agenda-custom-commands
         '(("c" "Agenda and tasks"
            ((agenda ""
@@ -277,19 +277,19 @@
                    (org-agenda-files '("~/org/inbox.org"))))
             (todo "WAITING"
                   ((org-agenda-overriding-header "Waiting")
-		   (org-agenda-files jcs/agenda-files)))
-	    (todo "DOING"
+                   (org-agenda-files jcs/agenda-files)))
+            (todo "DOING"
                   ((org-agenda-overriding-header "In Progress")
-		   (org-agenda-files jcs/agenda-files)))
+                   (org-agenda-files jcs/agenda-files)))
             (todo "NEXT"
                   ((org-agenda-overriding-header "Next")
-		   (org-agenda-files jcs/agenda-files)))
+                   (org-agenda-files jcs/agenda-files)))
             (todo "TODO"
                   ((org-agenda-overriding-header "Todo")
-		   (org-agenda-files jcs/agenda-files)))
-	    (todo "HOLD"
+                   (org-agenda-files jcs/agenda-files)))
+            (todo "HOLD"
                   ((org-agenda-overriding-header "On Hold")
-		   (org-agenda-files jcs/agenda-files))))))))
+                   (org-agenda-files jcs/agenda-files))))))))
 
 (use-package org-capture
   :ensure org
@@ -309,14 +309,14 @@
           ("r" "Reference" entry
            (file+headline "reference.org" "Reference")
            "* %i%? \n %U")
-	  ("W" "Review: Weekly Review" entry
-	   ;; Destination
-	   (file+datetree "~/org/weekly-reviews.org")
-	   ;; Capture template
-	   (file "~/org/weekly-review-template.org"))
-	  ("h" "Housework log" entry
-	   (file+datetree "~/org/housework-log.org")
-	   "* %i%? \n %U"))))
+          ("W" "Review: Weekly Review" entry
+           ;; Destination
+           (file+datetree "~/org/weekly-reviews.org")
+           ;; Capture template
+           (file "~/org/weekly-review-template.org"))
+          ("h" "Housework log" entry
+           (file+datetree "~/org/housework-log.org")
+           "* %i%? \n %U"))))
 
 (use-package alert
   :config
@@ -354,11 +354,11 @@
 ;;; Misc settings
 (validate-setq inhibit-splash-screen t  ; Don't show the splash screen
                ring-bell-function 'ignore ; Just ignore error notifications
-	       indent-tabs-mode nil ; Don't use tabs unless buffer-local
+               indent-tabs-mode nil ; Don't use tabs unless buffer-local
                select-enable-primary t
                save-interprogram-paste-before-kill t
                mouse-yank-at-point t
-	       ;; When scrolling, make sure to come back to the same spot
+               ;; When scrolling, make sure to come back to the same spot
                scroll-preserve-screen-position 'always
                scroll-error-top-bottom t ; Scroll similar to vim
                )
@@ -367,8 +367,8 @@
 (use-package vc-hooks
   :ensure f
   :config (validate-setq vc-handled-backends nil ;; turn off vc-mode - I have Magit
-		 vc-follow-symlinks t ; even when they're in version control
-		 ))
+                         vc-follow-symlinks t ; even when they're in version control
+                         ))
 
 (use-package recentf
   :ensure f
@@ -382,8 +382,8 @@
   :config
   (validate-setq backup-directory-alist ; Save backups to a central location
                  `(("." . ,(no-littering-expand-var-file-name "backups/")))
-		 auto-save-file-name-transforms
-		 `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+                 auto-save-file-name-transforms
+                 `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
 ;; Allow for seamless gpg interaction
 (use-package epa-file
@@ -393,8 +393,8 @@
 (use-package paradox
   :config
   (validate-setq paradox-execute-asynchronously t
-		 paradox-github-token (cadr (auth-source-user-and-password
-					     "api.github.com" "jcsims^paradox")))
+                 paradox-github-token (cadr (auth-source-user-and-password
+                                             "api.github.com" "jcsims^paradox")))
   (paradox-enable))
 
 ;;; Themes
@@ -569,7 +569,7 @@
   :disabled
   :config
   (ido-ubiquitous-mode t)
-  ;:custom (magit-completing-read-function 'magit-ido-completing-read)
+  ;;:custom (magit-completing-read-function 'magit-ido-completing-read)
   )
 
 (use-package flx-ido
@@ -635,6 +635,14 @@
                           'magit-insert-stashes
                           'append))
 
+(use-package forge
+  :pin melpa-stable
+  :config (add-to-list 'forge-alist
+                       '("github.threatbuild.com"
+                         "github.threatbuild.com/api/v3"
+                         "github.threatbuild.com"
+                         forge-github-repository)))
+
 (use-package magit-todos
   :disabled
   :hook (magit-mode . magit-todos-mode)
@@ -642,6 +650,7 @@
   (validate-setq magit-todos-require-colon nil))
 
 (use-package magithub
+  :disabled
   :config
   (magithub-feature-autoinject t)
   (setq magithub-github-hosts '("github.threatbuild.com/api/v3")))
@@ -976,7 +985,7 @@
 
 (use-package crux
   :bind (("C-x 4 t" . crux-transpose-windows)
-         ("C-c n". crux-cleanup-buffer-or-region)))
+         ("C-c n". cleanup-buffer)))
 
 (use-package org-rich-yank
   :after org
@@ -1042,7 +1051,7 @@
 
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")
-			      user-emacs-directory)))
+                              user-emacs-directory)))
   (when (file-exists-p file)
     (load file)))
 

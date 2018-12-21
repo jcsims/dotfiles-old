@@ -105,8 +105,8 @@ If region is active, apply to active region instead."
     (eshell-send-input)))
 
 (add-hook 'eshell-mode-hook
-      '(lambda()
-          (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
+	  '(lambda()
+             (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
 (defun dired-do-ispell (&optional arg)
   "Check all marked files ARG with ispell.  Borrowed from the
@@ -182,14 +182,40 @@ Emacswiki."
   (if (not (use-region-p))
       (message "`urlencode` only works with an active region!")
     (let ((hexed (url-hexify-string
-                    (buffer-substring-no-properties
-                     (region-beginning) (region-end)))))
+                  (buffer-substring-no-properties
+                   (region-beginning) (region-end)))))
       (kill-new hexed)
       (message "%s" hexed))))
 
 (defun random-lowercase-char ()
   "Return a random lowercase character, from a-z."
   (format "%c" (+ 97 (random 26))))
+
+;; Taken from technomancy's emacs.d
+(global-set-key (kbd "C-c n")
+                (defun pnh-cleanup-buffer ()
+                  (interactive)
+                  (delete-trailing-whitespace)
+                  (untabify (point-min) (point-max))
+                  (indent-region (point-min) (point-max))))
+
+(defvar jcs/tab-sensitive-modes '(makefile-bsdmake-mode))
+(defvar jcs/indent-sensitive-modes '(conf-mode
+                                     coffee-mode
+                                     haml-mode
+                                     python-mode
+                                     slim-mode
+                                     yaml-mode))
+
+;; Slightly  modified from crux's version
+(defun cleanup-buffer ()
+  "Cleanup the buffer, including whitespace and indentation."
+  (interactive)
+  (unless (member major-mode jcs/tab-sensitive-modes)
+    (untabify (point-min) (point-max)))
+  (unless (member major-mode jcs/indent-sensitive-modes)
+    (indent-region (point-min) (point-max)))
+  (whitespace-cleanup))
 
 (provide 'init-funcs)
 ;;; init-funcs.el ends here
