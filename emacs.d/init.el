@@ -123,7 +123,7 @@
                  org-confirm-babel-evaluate nil
                  org-agenda-files (list jcs/projects-file
                                         jcs/inbox-file
-                                        jcs/someday-file
+					jcs/someday-file
                                         jcs/next-file
                                         jcs/tickler-file))
   (setq org-refile-targets '((jcs/projects-file . (:maxlevel . 2))
@@ -135,6 +135,7 @@
                               ("@errand" . ?E)
                               ("@home" . ?h)
                               ("@computer" . ?c)
+			      ("@phone" . ?p)
                               (:newline)
                               ("@kasey" . ?k)
                               ("@alex" . ?a)
@@ -146,9 +147,8 @@
                               ("learning" . ?l)
                               (:newline)
                               ("james" . ?j)
-                              ("workstation" . ?K)
                               ("server" . ?s)
-                              ("project_idea" . ?p)))
+                              ("project_idea" . ?i)))
         org-todo-keywords
         (quote ((sequence "TODO(t)" "NEXT(n)" "DOING(o)" "|" "DONE(d)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
@@ -184,7 +184,7 @@
          ("C-c e p" . find-projects-file)
          ("C-c e s" . find-someday-file)
          ("C-c e i" . find-inbox-file)
-         ("C-c e n" . find-next-file)
+	 ("C-c e n" . find-next-file)
          ("C-c e t" . find-tickler-file)
          ("C-c e r" . find-reference-file)
          ("C-c e c" . find-checklists-file)
@@ -267,7 +267,8 @@
   (validate-setq org-agenda-window-setup 'current-window
                  org-agenda-block-separator nil)
   (setq jcs/agenda-files (list jcs/projects-file jcs/tickler-file
-                               jcs/next-file jcs/inbox-file))
+                               jcs/next-file jcs/inbox-file
+			       (expand-file-name "log.org" org-dir)))
   (setq org-agenda-custom-commands
         '(("c" "Agenda and tasks"
            ((agenda ""
@@ -391,6 +392,7 @@
   :config (epa-file-enable))
 
 (use-package paradox
+  :requires (auth-source epa-file epg)
   :config
   (validate-setq paradox-execute-asynchronously t
                  paradox-github-token (cadr (auth-source-user-and-password
@@ -636,6 +638,7 @@
                           'append))
 
 (use-package forge
+  :disabled
   :pin melpa-stable
   :config (add-to-list 'forge-alist
                        '("github.threatbuild.com"
@@ -721,10 +724,10 @@
   (super-save-mode +1))
 
 (use-package smart-mode-line
-  :disabled
   :config (sml/setup))
 
 (use-package doom-modeline
+  :disabled
   :defer t
   :hook (after-init . doom-modeline-init))
 
@@ -1049,6 +1052,14 @@
              (list "-a" "firefox" url))))
   (setq flymd-browser-open-function 'my-flymd-browser-function))
 
+(use-package pixel-scroll
+  :disabled
+  :ensure f
+  :config (pixel-scroll-mode))
+
+(use-package hl-todo
+  :config (global-hl-todo-mode))
+
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")
                               user-emacs-directory)))
@@ -1057,7 +1068,5 @@
 
 ;; Set the GC threshold back to default
 (validate-setq gc-cons-threshold 800000)
-
-
 
 ;;; init.el ends here

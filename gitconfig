@@ -15,7 +15,7 @@
   branch = auto
   ui = true
 [core]
-	excludesfile = /Users/jcsims/.gitignore
+  excludesfile = /Users/jcsims/.gitignore
   pager = diff-so-fancy | less --tabs=4 -RFX
 [apply]
   whitespace = nowarn
@@ -44,10 +44,6 @@
   diffFilter = diff-highlight
 [magit]
   hideCampaign = true
-[github "github.threatbuild.com"]
-  user = chrsims
-[github "github.threatbuild.com/api/v3"]
-  user = chrsims
 [diff "gpg"]
   textconv = gpg --no-tty --decrypt
 [includeIf "gitdir:~/code/tg/"]
@@ -55,7 +51,9 @@
 [includeIf "gitdir:~/dev/tg/"]
     path = ~/dev/tg/.gitconfig
 [filter "lfs"]
-	clean = git-lfs clean -- %f
-	smudge = git-lfs smudge -- %f
-	process = git-lfs filter-process
-	required = true
+  clean = git-lfs clean -- %f
+  smudge = git-lfs smudge -- %f
+  process = git-lfs filter-process
+  required = true
+[github]
+  user = jcsims

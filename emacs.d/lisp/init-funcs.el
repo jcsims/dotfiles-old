@@ -109,8 +109,7 @@ If region is active, apply to active region instead."
              (local-set-key (kbd "C-l") 'eshell-clear-buffer)))
 
 (defun dired-do-ispell (&optional arg)
-  "Check all marked files ARG with ispell.  Borrowed from the
-Emacswiki."
+  "Check all marked files ARG with ispell. Borrowed from the Emacswiki."
   (interactive "P")
   (dolist (file (dired-get-marked-files
                  nil arg
@@ -135,16 +134,15 @@ Emacswiki."
                                     ,(make-char 'greek-iso8859-7 107))
                     nil))))))
 
-(defun esk-add-watchwords ()
-  "Highlight common `TODO`-like words in the buffer, so they stand out."
-  (font-lock-add-keywords
-   nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\)"
-          1 font-lock-warning-face t))))
+;; (defun esk-add-watchwords ()
+;;   "Highlight common `TODO`-like words in the buffer, so they stand out."
+;;   (font-lock-add-keywords
+;;    nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\)"
+;;           1 font-lock-warning-face t))))
 
 (add-hook 'prog-mode-hook 'esk-local-comment-auto-fill)
 (add-hook 'prog-mode-hook 'esk-pretty-lambdas)
-(add-hook 'prog-mode-hook 'esk-add-watchwords)
-
+;; (add-hook 'prog-mode-hook 'esk-add-watchwords)
 
 (use-package magit-git :ensure magit)
 (use-package git-commit :ensure magit)
