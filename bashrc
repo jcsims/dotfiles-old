@@ -50,6 +50,9 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     alias ls='ls --color=auto'
 
+    [ -f /usr/share/fzf/key-bindings.bash ] && source /usr/share/fzf/key-bindings.bash
+    [ -f /usr/share/fzf/completion.bash ] && source /usr/share/fzf/completion.bash
+
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Add GOROOT bin path to PATH
     export PATH=/usr/local/go/bin:$PATH
@@ -69,6 +72,8 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     alias quiet!='osascript -e "set Volume 0.01"'
 
     alias alert='terminal-notifier -activate "com.googlecode.iterm2" -message "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+    [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
 fi
 
@@ -194,5 +199,3 @@ man() {
 #PS1="[\u@\h \W]\$ " # Default prompt
 
 PS1="[\u@\h \w]\$ "
-
-[ -f ~/.fzf.bash ] && source ~/.fzf.bash
