@@ -123,7 +123,7 @@
                  org-confirm-babel-evaluate nil
                  org-agenda-files (list jcs/projects-file
                                         jcs/inbox-file
-					jcs/someday-file
+                                        jcs/someday-file
                                         jcs/next-file
                                         jcs/tickler-file))
   (setq org-refile-targets '((jcs/projects-file . (:maxlevel . 2))
@@ -135,7 +135,7 @@
                               ("@errand" . ?E)
                               ("@home" . ?h)
                               ("@computer" . ?c)
-			      ("@phone" . ?p)
+                              ("@phone" . ?p)
                               (:newline)
                               ("@kasey" . ?k)
                               ("@alex" . ?a)
@@ -147,6 +147,7 @@
                               ("learning" . ?l)
                               (:newline)
                               ("james" . ?j)
+                              ("workstation" . ?K)
                               ("server" . ?s)
                               ("project_idea" . ?i)))
         org-todo-keywords
@@ -184,7 +185,7 @@
          ("C-c e p" . find-projects-file)
          ("C-c e s" . find-someday-file)
          ("C-c e i" . find-inbox-file)
-	 ("C-c e n" . find-next-file)
+         ("C-c e n" . find-next-file)
          ("C-c e t" . find-tickler-file)
          ("C-c e r" . find-reference-file)
          ("C-c e c" . find-checklists-file)
@@ -268,7 +269,7 @@
                  org-agenda-block-separator nil)
   (setq jcs/agenda-files (list jcs/projects-file jcs/tickler-file
                                jcs/next-file jcs/inbox-file
-			       (expand-file-name "log.org" org-dir)))
+                               (expand-file-name "log.org" org-dir)))
   (setq org-agenda-custom-commands
         '(("c" "Agenda and tasks"
            ((agenda ""
@@ -385,6 +386,10 @@
                  `(("." . ,(no-littering-expand-var-file-name "backups/")))
                  auto-save-file-name-transforms
                  `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+
+(use-package keychain-environment
+  :config (when (eq system-type 'gnu/linux)
+            (keychain-refresh-environment)))
 
 ;; Allow for seamless gpg interaction
 (use-package epa-file
@@ -1059,6 +1064,8 @@
 
 (use-package hl-todo
   :config (global-hl-todo-mode))
+
+(use-package pkgbuild-mode)
 
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")

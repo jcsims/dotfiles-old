@@ -57,3 +57,5 @@
   required = true
 [github]
   user = jcsims
+[sendmail]
+	verify = off
