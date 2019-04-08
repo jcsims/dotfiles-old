@@ -2,7 +2,8 @@
 
 ## Basic bash config
 export CLICOLOR=1
-export EDITOR='vim'
+export EDITOR='emacsclient -t -a ""'
+export VISUAL='emacsclient -c -a ""'
 export TERM=xterm-256color
 export LSCOLORS='exfxcxdxbxegedabagacad'
 
@@ -43,22 +44,36 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     #   sleep 10; alert
     alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
-    ## Pacman aliases
-    alias pac-list-orphans='pacman -Qdt'
-    alias pac-list-files-in-package='pacman -Ql'
-    alias pac-leaves='pacman -Qet'
-
     alias ls='ls --color=auto'
+
+    alias open='xdg-open'
 
     [ -f /usr/share/fzf/key-bindings.bash ] && source /usr/share/fzf/key-bindings.bash
     [ -f /usr/share/fzf/completion.bash ] && source /usr/share/fzf/completion.bash
+
+    export XDG_DESKTOP_DIR="$HOME"
+    export XDG_DOWNLOAD_DIR="$HOME/downloads"
+    export XDG_DOCUMENTS_DIR="$HOME/documents"
+    export XDG_MUSIC_DIR="$HOME/music"
+    export XDG_PICTURES_DIR="$HOME/pictures"
+    export XDG_VIDEOS_DIR="$HOME/videos"
+    export _JAVA_AWT_WM_NONREPARENTING=1
+
+
+    if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
+        export CLUTTER_BACKEND=wayland
+        export QT_QPA_PLATFORM=wayland
+        export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+        export SDL_VIDEODRIVER=wayland
+        exec sway
+    fi
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Add GOROOT bin path to PATH
     export PATH=/usr/local/go/bin:$PATH
 
     if [ -f /usr/local/share/bash-completion/bash_completion ]; then
-	. /usr/local/share/bash-completion/bash_completion
+        . /usr/local/share/bash-completion/bash_completion
     fi
 
     # Brew-installed paths
@@ -79,6 +94,9 @@ fi
 
 export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle:$HOME/code/tg/ops
 export GOBIN=$HOME/bin
+
+# Cargo's bin path
+export PATH=$PATH:$HOME/.cargo/bin
 
 # Sensible options, borrowed from
 # https://github.com/mrzool/bash-sensible
@@ -130,7 +148,6 @@ shopt -s histappend
 shopt -s cmdhist
 
 PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'history -a'
-PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
 
 # Huge history. Doesn't appear to slow things down, so why not?
 HISTSIZE=500000
@@ -145,7 +162,7 @@ export HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear"
 # Use standard ISO 8601 timestamp
 # %F equivalent to %Y-%m-%d
 # %T equivalent to %H:%M:%S (24-hours format)
-HISTTIMEFORMAT='%F %T '
+HISTTIMEFORMAT='%FT%T '
 
 # Prepend cd to directory names automatically
 shopt -s autocd 2> /dev/null

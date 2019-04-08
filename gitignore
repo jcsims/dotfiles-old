@@ -69,6 +69,7 @@ tramp
 dir
 flycheck_*.el
 *-pkg.el
+*-autoloads.el
 
 
 # Org-mode

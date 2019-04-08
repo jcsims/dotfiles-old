@@ -15,7 +15,7 @@
   branch = auto
   ui = true
 [core]
-  excludesfile = /Users/jcsims/.gitignore
+  excludesfile = ~/.gitignore
   pager = diff-so-fancy | less --tabs=4 -RFX
 [apply]
   whitespace = nowarn
