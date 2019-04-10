@@ -147,8 +147,6 @@ shopt -s histappend
 # Save multi-line commands as one command
 shopt -s cmdhist
 
-PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'history -a'
-
 # Huge history. Doesn't appear to slow things down, so why not?
 HISTSIZE=500000
 HISTFILESIZE=100000
@@ -157,7 +155,7 @@ HISTFILESIZE=100000
 HISTCONTROL="erasedups:ignoreboth"
 
 # Don't record some commands
-export HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear"
+HISTIGNORE="&:[ ]*:exit:ls:bg:fg:history:clear"
 
 # Use standard ISO 8601 timestamp
 # %F equivalent to %Y-%m-%d
