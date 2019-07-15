@@ -7,6 +7,9 @@
 
 ;;; Code:
 
+;; Prefer the newer version of a file, whether it's compiled or not.
+(setq load-prefer-newer t)
+
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
@@ -37,11 +40,7 @@
   (validate-setq auto-save-file-name-transforms
                  `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
-(use-package init-wm
-  :ensure f
-  :load-path "lisp")
-
-(validate-setq source-directory "~/code/emacs")
+(validate-setq source-directory "~/dev/emacs")
 
 ;;; Personal info
 (validate-setq user-full-name "Chris Sims"
@@ -69,6 +68,7 @@
 ;; accidentally all the time
 (global-set-key (kbd "<insert>") nil)
 
+(setq isearch-allow-scroll t)
 (global-set-key (kbd "C-S") 'isearch-forward-regexp)
 (global-set-key (kbd "C-R") 'isearch-backward-regexp)
 ;; (global-set-key (kbd "C-M-s") 'isearch-forward)
@@ -82,9 +82,43 @@
 (when (fboundp 'menu-bar-mode)
   (menu-bar-mode -1))
 
+;;; Themes
+(defvar jcs-active-theme)
+(defvar jcs-light-theme)
+(defvar jcs-dark-theme)
+
+;;; Themes
+(use-package solarized-theme
+  :disabled
+  :init
+  (setq jcs-active-theme 'solarized-dark
+        jcs-light-theme 'solarized-light
+        jcs-dark-theme 'solarized-dark)
+  :config (load-theme jcs-active-theme t))
+
+(use-package color-theme-sanityinc-tomorrow
+  ;;:disabled
+  :init   (setq jcs-active-theme 'sanityinc-tomorrow-eighties
+                jcs-light-theme 'sanityinc-tomorrow-day
+                jcs-dark-theme 'sanityinc-tomorrow-eighties)
+  :config (load-theme jcs-active-theme t))
+
+(defun toggle-dark-light-theme ()
+  "Toggle the current theme between light and dark."
+  (interactive)
+  (if (eq jcs-active-theme jcs-light-theme)
+      (validate-setq jcs-active-theme jcs-dark-theme)
+    (validate-setq jcs-active-theme jcs-light-theme))
+  (load-theme jcs-active-theme t)
+  (sml/setup))
+
 (use-package prog-mode
   :ensure f
-  :config (global-prettify-symbols-mode))
+  :config
+  (global-prettify-symbols-mode)
+  (defun indicate-buffer-boundaries-left ()
+    (setq indicate-buffer-boundaries 'left))
+  (add-hook 'prog-mode-hook #'indicate-buffer-boundaries-left))
 
 ;; Quick access to a few files
 (defun find-init-file ()
@@ -320,22 +354,6 @@
            (file+datetree "~/org/housework-log.org")
            "* %i%? \n %U"))))
 
-(use-package alert
-  :config
-  (setq alert-default-style 'libnotify))
-
-(use-package org-alert
-  :disabled
-  :config
-  (validate-setq org-alert-notification-title "Org Agenda")
-  (validate-setq org-alert-interval (* 60 60))
-  (org-alert-enable))
-
-(use-package org-wild-notifier
-  :disabled
-  :after alert
-  :config (org-wild-notifier-mode))
-
 (use-package autorevert
   :ensure f
   :config
@@ -383,13 +401,14 @@
   :ensure f
   :config
   (validate-setq backup-directory-alist ; Save backups to a central location
-                 `(("." . ,(no-littering-expand-var-file-name "backups/")))
+                 `(("." . ,(no-littering-expand-var-file-name "backup/")))
                  auto-save-file-name-transforms
                  `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
+;; Handles ssh-agent and gpg-agent configuration from `keychain`
 (use-package keychain-environment
-  :config (when (eq system-type 'gnu/linux)
-            (keychain-refresh-environment)))
+  :if (eq system-type 'gnu/linux)
+  :config (keychain-refresh-environment))
 
 ;; Allow for seamless gpg interaction
 (use-package epa-file
@@ -397,40 +416,13 @@
   :config (epa-file-enable))
 
 (use-package paradox
-  :requires (auth-source epa-file epg)
+  :after (auth-source epa-file epg exec-path-from-shell)
+  :commands (paradox-list-packages)
   :config
   (validate-setq paradox-execute-asynchronously t
                  paradox-github-token (cadr (auth-source-user-and-password
                                              "api.github.com" "jcsims^paradox")))
   (paradox-enable))
-
-;;; Themes
-(use-package solarized-theme
-  :disabled
-  :init
-  (defvar jcs-active-theme 'solarized-dark)
-  (defun toggle-dark-light-theme ()
-    "Toggle the current solarized theme between light and dark."
-    (interactive)
-    (if (eq jcs-active-theme 'solarized-light)
-        (validate-setq jcs-active-theme 'solarized-dark)
-      (validate-setq jcs-active-theme 'solarized-light))
-    (load-theme jcs-active-theme))
-  :config (load-theme jcs-active-theme t))
-
-(use-package monokai-theme
-  :disabled
-  :config (load-theme 'monokai t))
-
-(use-package zenburn-theme
-  :disabled
-  :config (load-theme 'zenburn t))
-
-(use-package doom-themes
-  ;;:disabled
-  :config (load-theme 'doom-one t))
-
-(use-package all-the-icons)
 
 (use-package macrostep
   :bind ("C-c m" . macrostep-expand))
@@ -452,6 +444,7 @@
 (use-package whitespace
   :config
   (validate-setq whitespace-line-column 80
+		 fill-column 80
                  whitespace-style '(face trailing lines-tail))
   :hook (prog-mode . whitespace-mode))
 
@@ -464,20 +457,27 @@
 
 (use-package minions
   :config
-  (validate-setq minions-direct '(flycheck-mode cider-mode))
+  (validate-setq minions-direct '(flycheck-mode cider-mode vlf-mode))
   (minions-mode))
-
-(use-package moody
-  :disabled
-  :config
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode))
 
 (use-package simple
   :ensure f
   :config (column-number-mode)
   :bind ("M-SPC" . cycle-spacing)
   :hook ((text-mode org-mode markdown-mode) . turn-on-auto-fill))
+
+(use-package text-mode
+  :ensure f
+  :hook (text-mode-hook . indicate-buffer-boundaries-left))
+
+(use-package tramp
+  :ensure f
+  :defer t
+  :config
+  (add-to-list 'tramp-default-proxies-alist '(nil "\\`root\\'" "/ssh:%h:"))
+  (add-to-list 'tramp-default-proxies-alist '("localhost" nil nil))
+  (add-to-list 'tramp-default-proxies-alist
+               (list (regexp-quote (system-name)) nil nil)))
 
 ;; Ensure that when we go to a new line, it's indented properly
 (use-package electric
@@ -536,7 +536,7 @@
               ("h a" . highlight-symbol-nav-mode)))
 
 (use-package idle-highlight-mode
-  :disabled
+  ;;:disabled
   :hook (prog-mode . idle-highlight-mode))
 
 (use-package ag
@@ -551,42 +551,6 @@
 (use-package flycheck
   :config (global-flycheck-mode)
   :custom (flycheck-global-modes '(not org-mode)))
-
-
-(use-package ido
-  :disabled
-  :hook (ido-setup . (lambda () (define-key ido-completion-map [up]
-                             'previous-history-element)))
-  :config
-  (validate-setq ido-use-filename-at-point 'guess
-                 ido-auto-merge-work-directories-length 0
-                 ido-use-virtual-buffers t
-                 ido-default-buffer-method 'selected-window
-                 ;;ido-use-faces nil
-                 ido-enable-flex-matching t)
-  (ido-mode t)
-  (ido-everywhere t))
-
-(use-package idomenu
-  :disabled
-  )
-
-(require 'magit-utils)
-(use-package ido-completing-read+
-  :disabled
-  :config
-  (ido-ubiquitous-mode t)
-  ;;:custom (magit-completing-read-function 'magit-ido-completing-read)
-  )
-
-(use-package flx-ido
-  :disabled
-  :config (flx-ido-mode t))
-
-(use-package smex
-  ;; :bind (("M-x" . smex)
-  ;;  ("M-X" . smex-major-mode-commands))
-  )
 
 ;; Require'ing this gives most-recently-used M-x commands in ivy
 (use-package smex)
@@ -642,34 +606,15 @@
                           'magit-insert-stashes
                           'append))
 
-(use-package forge
-  :disabled
-  :pin melpa-stable
-  :config (add-to-list 'forge-alist
-                       '("github.threatbuild.com"
-                         "github.threatbuild.com/api/v3"
-                         "github.threatbuild.com"
-                         forge-github-repository)))
-
-(use-package magit-todos
-  :disabled
-  :hook (magit-mode . magit-todos-mode)
-  :config
-  (validate-setq magit-todos-require-colon nil))
-
-(use-package magithub
-  :disabled
-  :config
-  (magithub-feature-autoinject t)
-  (setq magithub-github-hosts '("github.threatbuild.com/api/v3")))
-
 (use-package git-timemachine)
 
 ;; ghub and dash are required by threatgrid.el
 (use-package ghub
   :pin melpa-stable)
+
 (use-package dash
   :config (dash-enable-font-lock))
+
 (use-package threatgrid
   :ensure f
   :commands (preq tg-insert-weekly-work-report tg-create-tb-issue)
@@ -689,9 +634,6 @@
 
 (use-package expand-region
   :bind ("C-=" . er/expand-region))
-
-(use-package browse-kill-ring
-  :config (browse-kill-ring-default-keybindings))
 
 (use-package dockerfile-mode
   :mode "Dockerfile")
@@ -729,38 +671,8 @@
   (super-save-mode +1))
 
 (use-package smart-mode-line
+  :custom (sml/theme 'automatic)
   :config (sml/setup))
-
-(use-package doom-modeline
-  :disabled
-  :defer t
-  :hook (after-init . doom-modeline-init))
-
-(use-package spaceline
-  :disabled
-  :init
-  (require 'powerline)
-  (validate-setq powerline-default-separator 'slant)
-  :config
-  (spaceline-spacemacs-theme)
-  (spaceline-toggle-buffer-size-off)
-  (spaceline-toggle-evil-state-on)
-  (spaceline-toggle-flycheck-info-on)
-  (spaceline-toggle-anzu-off)
-  (spaceline-toggle-minor-modes-off))
-
-;; Vim config
-(use-package evil
-  :disabled
-  :config
-  (evil-mode 1))
-
-(use-package evil-escape
-  :disabled
-  :init
-  (setq-default evil-escape-key-sequence "jk")
-  :config
-  (evil-escape-mode 1))
 
 (use-package anzu
   :config
@@ -768,93 +680,18 @@
   (global-set-key [remap query-replace-regexp] 'anzu-query-replace-regexp)
   (global-set-key [remap query-replace] 'anzu-query-replace))
 
-;; Turn on line numbers everywhere
-(use-package nlinum
-  :when (version<  emacs-version "26")
-  :config (global-nlinum-mode))
-
 (use-package display-line-numbers
   :disabled
   :ensure f
-  :when (version< "26" emacs-version)
   :config (global-display-line-numbers-mode))
 
 (use-package dired-collapse)
-
-(use-package notmuch
-  :disabled
-  :bind (("C-x m" . notmuch))
-  :custom
-  (message-sendmail-envelope-from 'header)
-  (send-mail-function (quote sendmail-send-it))
-  :config
-  (require 'gnus-art)
-  (require 'message)
-  (validate-setq mail-specify-envelope-from t)
-
-  ;; Borrowed from https://notmuchmail.org/emacstips/
-  (defun my-notmuch-show-view-as-patch ()
-    "View the the current message as a patch."
-    (interactive)
-    (let* ((id (notmuch-show-get-message-id))
-           (msg (notmuch-show-get-message-properties))
-           (part (notmuch-show-get-part-properties))
-           (subject (concat "Subject: " (notmuch-show-get-subject) "\n"))
-           (diff-default-read-only t)
-           (buf (get-buffer-create (concat "*notmuch-patch-" id "*")))
-           (map (make-sparse-keymap)))
-      (define-key map "q" 'notmuch-bury-or-kill-this-buffer)
-      (switch-to-buffer buf)
-      (let ((inhibit-read-only t))
-        (erase-buffer)
-        (insert subject)
-        (insert (notmuch-get-bodypart-text msg part nil)))
-      (set-buffer-modified-p nil)
-      (diff-mode)
-      (lexical-let ((new-ro-bind (cons 'buffer-read-only map)))
-        (add-to-list 'minor-mode-overriding-map-alist new-ro-bind))
-      (goto-char (point-min))))
-
-  (define-key 'notmuch-show-part-map "d" 'my-notmuch-show-view-as-patch))
 
 (use-package multiple-cursors
   :bind
   (("C->"     . mc/mark-next-like-this)
    ("C-<"     . mc/mark-previous-like-this)
    ("C-c C-<" . mc/mark-all-like-this)))
-
-(use-package tex
-  :disabled
-  :ensure auctex
-  :hook
-  (LaTeX-mode . turn-on-reftex)
-  (LaTeX-mode . auto-fill-mode)
-  (LaTeX-mode . flyspell-mode)
-  :config
-  (validate-setq TeX-auto-save t
-                 TeX-parse-self t
-                 TeX-master nil
-                 TeX-PDF-mode t)
-  (when (eq system-type 'darwin) ;; mac-specific settings
-    (add-hook 'LaTeX-mode-hook 'TeX-source-correlate-mode)
-    (validate-setq TeX-source-correlate-method 'synctex)
-    (validate-setq TeX-view-program-list
-                   '(("Skim" "/Applications/Skim.app/Contents/SharedSupport/displayline -b -g %n %o %b")))
-    (validate-setq TeX-view-program-selection '((output-pdf "Skim")))
-    (add-hook 'TeX-mode-hook
-              (lambda ()
-                (add-to-list
-                 'TeX-output-view-style
-                 '("^pdf$" "."
-                   "/Applications/Skim.app/Contents/SharedSupport/displayline -b %n %o %b"))))))
-
-;; Use latex-extra package
-(use-package latex-extra
-  :disabled
-  :commands latex-extra-mode
-  :hook (LaTeX-mode . latex-extra-mode))
-
-(use-package company-auctex :disabled)
 
 (use-package go-mode)
 (use-package company-go)
@@ -899,6 +736,8 @@
                          "/usr/lib/jvm/java-8-openjdk/src.zip"))
   (cider-save-file-on-load t)
   (cider-repl-use-pretty-printing t)
+  (nrepl-use-ssh-fallback-for-remote-hosts t)
+  (cider-repl-print-length nil)
   :config
   (validate-setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
                  cider-repl-display-help-banner nil
@@ -930,7 +769,7 @@
 ;; Seed the PRNG anew, from the system's entropy pool
 (random t)
 
-(use-package systemd)
+(use-package systemd :if (eq system-type 'gnu/linux))
 
 (use-package shell-pop
   :custom
@@ -951,8 +790,6 @@
 
 (use-package wgrep)
 
-(use-package nov)
-
 (use-package json-snatcher
   :config (validate-setq jsons-path-printer 'jsons-print-path-jq))
 
@@ -961,9 +798,10 @@
 ;; LSP
 (use-package lsp-mode
   :init
-  (add-hook 'prog-major-mode #'lsp-prog-major-mode-enable))
+  (add-hook 'prog-major-mode #'lsp))
 
 (use-package lsp-ui
+  :commands lsp-ui-mode
   :init
   (add-hook 'lsp-mode-hook 'lsp-ui-mode))
 
@@ -993,12 +831,8 @@
 
 (use-package crux
   :bind (("C-x 4 t" . crux-transpose-windows)
-         ("C-c n". cleanup-buffer)))
-
-(use-package org-rich-yank
-  :after org
-  :bind (:map org-mode-map
-              ("C-M-y" . org-rich-yank)))
+         ("C-c n". cleanup-buffer)
+	 ("C-a" . crux-move-beginning-of-line)))
 
 (use-package help
   :ensure f
@@ -1018,44 +852,17 @@
 
 (use-package define-word)
 
-(use-package goto-addr
-  :disabled
-  :ensure f
-  :hook ((compilation-mode . goto-address-mode)
-         (prog-mode . goto-address-prog-mode)
-         (eshell-mode . goto-address-mode)
-         (shell-mode . goto-address-mode))
-  :bind (:map goto-address-highlight-keymap
-              ("C-c C-o" . goto-address-at-point))
-  :commands (goto-address-prog-mode
-             goto-address-mode))
-
 (use-package buffer-move
   :bind (("C-S-<up>" . buf-move-up)
          ("C-S-<down>" . buf-move-down)
          ("C-S-<right>" . buf-move-right)
          ("C-S-<left>" . buf-move-left)))
 
-(use-package rotate)
-
-(use-package hy-mode)
-
-(use-package pacfiles-mode)
-
-(use-package groovy-mode)
-
-(use-package flymd
-  :custom (flymd-close-buffer-delete-temp-files t)
-  :config
-  ;; Used from https://github.com/mola-T/flymd/blob/master/browser.md#user-content-chrome-macos
-  (defun my-flymd-browser-function (url)
-    (let ((process-environment (browse-url-process-environment)))
-      (apply 'start-process
-             (concat "firefox " url)
-             nil
-             "/usr/bin/open"
-             (list "-a" "firefox" url))))
-  (setq flymd-browser-open-function 'my-flymd-browser-function))
+(use-package groovy-mode
+  :hook (groovy-mode . (lambda ()
+                         (setq indent-tabs-mode nil)
+                         (setq tab-width 2)))
+  :custom (groovy-indent-offset 2))
 
 (use-package pixel-scroll
   :disabled
@@ -1065,7 +872,19 @@
 (use-package hl-todo
   :config (global-hl-todo-mode))
 
-(use-package pkgbuild-mode)
+(use-package pkgbuild-mode :if (eq system-type 'gnu/linux))
+
+(use-package scpaste
+  :config
+  (validate-setq scpaste-http-destination "https://paste.jcsi.ms"
+                 scpaste-scp-destination "paste.jcsi.ms:/srv/paste"
+                 scpaste-user-name "jcsims"
+                 scpaste-user-address "https://www.jcsi.ms/"))
+
+(use-package vlf
+  :config (require 'vlf-setup))
+
+(use-package deadgrep)
 
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")

@@ -47,7 +47,7 @@ See: https://developer.github.com/v3/pulls/#alternative-input"
         (message "branch-name should be of the format `issue-<issue number>`.")
       (let ((repo "threatgrid/threatbrain")
             (upstream (or upstream (tg-get-current-upstream-branch) "master"))
-            (issue-number (substring branch-name 6))
+            (issue-number (string-to-number (substring branch-name 6)))
             (pr-head (concat tg-gh-username ":" branch-name)))
         (ghub-post (concat "/repos/" repo "/pulls")
 		   nil
