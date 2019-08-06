@@ -28,23 +28,22 @@
   (package-install 'use-package))
 (eval-when-compile
   (require 'use-package))
-(use-package validate :ensure t)
-(validate-setq use-package-always-ensure t
-               use-package-compute-statistics t
-               use-package-verbose t)
+(setq use-package-always-ensure t
+      use-package-compute-statistics t
+      use-package-verbose t)
 (use-package bind-key)
 
 (use-package no-littering
   :config
   (require 'files)
-  (validate-setq auto-save-file-name-transforms
-                 `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+  (setq auto-save-file-name-transforms
+	`((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
-(validate-setq source-directory "~/dev/emacs")
+(setq source-directory "~/dev/emacs")
 
 ;;; Personal info
-(validate-setq user-full-name "Chris Sims"
-               user-mail-address "chris@jcsi.ms")
+(setq user-full-name "Chris Sims"
+      user-mail-address "chris@jcsi.ms")
 
 ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
@@ -52,7 +51,7 @@
 (prefer-coding-system 'utf-8)
 
 ;; Blank scratch buffer
-(validate-setq initial-scratch-message nil)
+(setq initial-scratch-message nil)
 
 ;; y/n keypresses instead of typing out yes or no
 (defalias 'yes-or-no-p 'y-or-n-p)
@@ -62,7 +61,7 @@
 (put 'downcase-region 'disabled nil)
 
 ;; Increase the GC threshold for startup
-(validate-setq gc-cons-threshold 20000000)
+(setq gc-cons-threshold 20000000)
 
 ;; Get rid of the insert key. I never use it, and I turn it on
 ;; accidentally all the time
@@ -107,8 +106,8 @@
   "Toggle the current theme between light and dark."
   (interactive)
   (if (eq jcs-active-theme jcs-light-theme)
-      (validate-setq jcs-active-theme jcs-dark-theme)
-    (validate-setq jcs-active-theme jcs-light-theme))
+      (setq jcs-active-theme jcs-dark-theme)
+    (setq jcs-active-theme jcs-light-theme))
   (load-theme jcs-active-theme t)
   (sml/setup))
 
@@ -142,24 +141,24 @@
   (org-lowest-priority ?D)
   (org-default-priority ?C)
   :config
-  (validate-setq org-directory org-dir
-                 org-log-done 'time
-                 org-log-into-drawer t
-                 org-startup-indented t
-                 org-startup-folded t
-                 org-default-notes-file jcs/inbox-file
-                 org-src-fontify-natively t
-                 org-use-fast-todo-selection t
-                 org-refile-allow-creating-parent-nodes t
-                 org-refile-use-outline-path 'file
-                 org-outline-path-complete-in-steps nil
-                 ;; Don't ask every time before evaluating an org source block
-                 org-confirm-babel-evaluate nil
-                 org-agenda-files (list jcs/projects-file
-                                        jcs/inbox-file
-                                        jcs/someday-file
-                                        jcs/next-file
-                                        jcs/tickler-file))
+  (setq org-directory org-dir
+	org-log-done 'time
+	org-log-into-drawer t
+	org-startup-indented t
+	org-startup-folded t
+	org-default-notes-file jcs/inbox-file
+	org-src-fontify-natively t
+	org-use-fast-todo-selection t
+	org-refile-allow-creating-parent-nodes t
+	org-refile-use-outline-path 'file
+	org-outline-path-complete-in-steps nil
+	;; Don't ask every time before evaluating an org source block
+	org-confirm-babel-evaluate nil
+	org-agenda-files (list jcs/projects-file
+			       jcs/inbox-file
+			       jcs/someday-file
+			       jcs/next-file
+			       jcs/tickler-file))
   (setq org-refile-targets '((jcs/projects-file . (:maxlevel . 2))
                              (jcs/someday-file . (:level . 0))
                              (jcs/next-file . (:level . 1))
@@ -299,8 +298,8 @@
               ("C-<right>" . org-agenda-do-date-later))
   :config
   ;; Use the current window to open the agenda
-  (validate-setq org-agenda-window-setup 'current-window
-                 org-agenda-block-separator nil)
+  (setq org-agenda-window-setup 'current-window
+	org-agenda-block-separator nil)
   (setq jcs/agenda-files (list jcs/projects-file jcs/tickler-file
                                jcs/next-file jcs/inbox-file
                                (expand-file-name "log.org" org-dir)))
@@ -357,8 +356,8 @@
 (use-package autorevert
   :ensure f
   :config
-  (validate-setq global-auto-revert-non-file-buffers t ; Refresh dired buffers
-                 auto-revert-verbose nil) ; but do it quietly
+  (setq global-auto-revert-non-file-buffers t ; Refresh dired buffers
+	auto-revert-verbose nil) ; but do it quietly
   ;; Auto-refresh buffers
   (global-auto-revert-mode))
 
@@ -372,23 +371,23 @@
   :config (save-place-mode))
 
 ;;; Misc settings
-(validate-setq inhibit-splash-screen t  ; Don't show the splash screen
-               ring-bell-function 'ignore ; Just ignore error notifications
-               indent-tabs-mode nil ; Don't use tabs unless buffer-local
-               select-enable-primary t
-               save-interprogram-paste-before-kill t
-               mouse-yank-at-point t
-               ;; When scrolling, make sure to come back to the same spot
-               scroll-preserve-screen-position 'always
-               scroll-error-top-bottom t ; Scroll similar to vim
-               )
+(setq inhibit-splash-screen t  ; Don't show the splash screen
+      ring-bell-function 'ignore ; Just ignore error notifications
+      indent-tabs-mode nil ; Don't use tabs unless buffer-local
+      select-enable-primary t
+      save-interprogram-paste-before-kill t
+      mouse-yank-at-point t
+      ;; When scrolling, make sure to come back to the same spot
+      scroll-preserve-screen-position 'always
+      scroll-error-top-bottom t ; Scroll similar to vim
+      )
 
 ;;; Packages
 (use-package vc-hooks
   :ensure f
-  :config (validate-setq vc-handled-backends nil ;; turn off vc-mode - I have Magit
-                         vc-follow-symlinks t ; even when they're in version control
-                         ))
+  :config (setq vc-handled-backends nil ;; turn off vc-mode - I have Magit
+		vc-follow-symlinks t ; even when they're in version control
+		))
 
 (use-package recentf
   :ensure f
@@ -400,10 +399,10 @@
 (use-package files
   :ensure f
   :config
-  (validate-setq backup-directory-alist ; Save backups to a central location
-                 `(("." . ,(no-littering-expand-var-file-name "backup/")))
-                 auto-save-file-name-transforms
-                 `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+  (setq backup-directory-alist ; Save backups to a central location
+	`(("." . ,(no-littering-expand-var-file-name "backup/")))
+	auto-save-file-name-transforms
+	`((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
 ;; Handles ssh-agent and gpg-agent configuration from `keychain`
 (use-package keychain-environment
@@ -419,9 +418,9 @@
   :after (auth-source epa-file epg exec-path-from-shell)
   :commands (paradox-list-packages)
   :config
-  (validate-setq paradox-execute-asynchronously t
-                 paradox-github-token (cadr (auth-source-user-and-password
-                                             "api.github.com" "jcsims^paradox")))
+  (setq paradox-execute-asynchronously t
+	paradox-github-token (cadr (auth-source-user-and-password
+				    "api.github.com" "jcsims^paradox")))
   (paradox-enable))
 
 (use-package macrostep
@@ -434,7 +433,7 @@
 (use-package re-builder
   :ensure f
   :bind (("C-c R" . re-builder))
-  :config (validate-setq reb-re-syntax 'string))
+  :config (setq reb-re-syntax 'string))
 
 ;; External user config
 (use-package init-funcs
@@ -443,9 +442,9 @@
 
 (use-package whitespace
   :config
-  (validate-setq whitespace-line-column 80
-		 fill-column 80
-                 whitespace-style '(face trailing lines-tail))
+  (setq whitespace-line-column 80
+	fill-column 80
+	whitespace-style '(face trailing lines-tail))
   :hook (prog-mode . whitespace-mode))
 
 (use-package markdown-mode
@@ -453,11 +452,11 @@
   :mode (("README\\.md\\'" . gfm-mode)
          ("\\.md\\'" . markdown-mode)
          ("\\.markdown\\'" . markdown-mode))
-  :config (validate-setq markdown-fontify-code-blocks-natively t))
+  :config (setq markdown-fontify-code-blocks-natively t))
 
 (use-package minions
   :config
-  (validate-setq minions-direct '(flycheck-mode cider-mode vlf-mode))
+  (setq minions-direct '(flycheck-mode cider-mode vlf-mode))
   (minions-mode))
 
 (use-package simple
@@ -541,8 +540,8 @@
 
 (use-package ag
   :config
-  (validate-setq ag-highlight-search t
-                 ag-reuse-buffers t))
+  (setq ag-highlight-search t
+	ag-reuse-buffers t))
 
 (use-package paren-face
   :custom (paren-face-regexp "[][{}()]")
@@ -559,9 +558,9 @@
   :bind (("C-c C-r" . ivy-resume)) ; TODO: Find a binding that doesn't
                                         ; get overwritten...
   :config
-  (validate-setq ivy-use-virtual-buffers t
-                 enable-recursive-minibuffers t
-                 ivy-use-selectable-prompt t)
+  (setq ivy-use-virtual-buffers t
+	enable-recursive-minibuffers t
+	ivy-use-selectable-prompt t)
   (ivy-mode 1))
 
 (use-package swiper)
@@ -600,7 +599,7 @@
   (magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-")))
   (magit-save-repository-buffers 'dontask)
   :config
-  (validate-setq magit-completing-read-function #'ivy-completing-read)
+  (setq magit-completing-read-function #'ivy-completing-read)
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules
                           'magit-insert-stashes
@@ -660,14 +659,14 @@
 ;; `diff-hl-next-hunk'       C-x v ]
 (use-package diff-hl
   :config
-  (validate-setq diff-hl-draw-borders nil)
+  (setq diff-hl-draw-borders nil)
   (global-diff-hl-mode)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh t))
 
 (use-package super-save
-  :init (validate-setq auto-save-default nil)
+  :init (setq auto-save-default nil)
   :config
-  (validate-setq super-save-auto-save-when-idle t)
+  (setq super-save-auto-save-when-idle t)
   (super-save-mode +1))
 
 (use-package smart-mode-line
@@ -739,14 +738,14 @@
   (nrepl-use-ssh-fallback-for-remote-hosts t)
   (cider-repl-print-length nil)
   :config
-  (validate-setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
-                 cider-repl-display-help-banner nil
-                 nrepl-log-messages t
-                 cider-known-endpoints '(("Face" "localhost" "4242")
-                                         ("Remote" "localhost" "8842")
-                                         ("Threatbrain Server" "localhost" "4243")
-                                         ("Integration Service" "localhost" "4244")
-                                         ("GUNDAM" "localhost" "4245"))))
+  (setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
+	cider-repl-display-help-banner nil
+	nrepl-log-messages t
+	cider-known-endpoints '(("Face" "localhost" "4242")
+				("Remote" "localhost" "8842")
+				("Threatbrain Server" "localhost" "4243")
+				("Integration Service" "localhost" "4244")
+				("GUNDAM" "localhost" "4245"))))
 
 (use-package yasnippet)
 
@@ -757,10 +756,10 @@
                           (yas-minor-mode 1)
                           (cljr-add-keybindings-with-prefix "C-c r")))
   :config
-  (validate-setq cljr-suppress-middleware-warnings t
-                 cljr-favor-prefix-notation nil
-                 ;; Lazily build ASTs, instead of immediately on REPL connect
-                 cljr-eagerly-build-asts-on-startup nil)
+  (setq cljr-suppress-middleware-warnings t
+	cljr-favor-prefix-notation nil
+	;; Lazily build ASTs, instead of immediately on REPL connect
+	cljr-eagerly-build-asts-on-startup nil)
   (add-to-list 'cljr-magic-require-namespaces '("json" . "cheshire.core"))
   (add-to-list 'cljr-magic-require-namespaces '("string" . "clojure.string")))
 
@@ -784,14 +783,14 @@
   ;; browse-url decides not to use xdg-open if you don't use one of a
   ;; handful of desktop environments...
   :config (when (eq system-type 'gnu/linux)
-            (validate-setq browse-url-browser-function 'browse-url-xdg-open)))
+            (setq browse-url-browser-function 'browse-url-xdg-open)))
 
 (use-package rg)
 
 (use-package wgrep)
 
 (use-package json-snatcher
-  :config (validate-setq jsons-path-printer 'jsons-print-path-jq))
+  :config (setq jsons-path-printer 'jsons-print-path-jq))
 
 (use-package json-mode)
 
@@ -832,7 +831,7 @@
 (use-package crux
   :bind (("C-x 4 t" . crux-transpose-windows)
          ("C-c n". cleanup-buffer)
-	 ("C-a" . crux-move-beginning-of-line)))
+         ("C-a" . crux-move-beginning-of-line)))
 
 (use-package help
   :ensure f
@@ -876,10 +875,10 @@
 
 (use-package scpaste
   :config
-  (validate-setq scpaste-http-destination "https://paste.jcsi.ms"
-                 scpaste-scp-destination "paste.jcsi.ms:/srv/paste"
-                 scpaste-user-name "jcsims"
-                 scpaste-user-address "https://www.jcsi.ms/"))
+  (setq scpaste-http-destination "https://paste.jcsi.ms"
+	scpaste-scp-destination "paste.jcsi.ms:/srv/paste"
+	scpaste-user-name "jcsims"
+	scpaste-user-address "https://www.jcsi.ms/"))
 
 (use-package vlf
   :config (require 'vlf-setup))
@@ -893,6 +892,6 @@
     (load file)))
 
 ;; Set the GC threshold back to default
-(validate-setq gc-cons-threshold 800000)
+(setq gc-cons-threshold 800000)
 
 ;;; init.el ends here
