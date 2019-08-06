@@ -90,6 +90,10 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 
     [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
+    ## Set up jenv for Java switching
+    export PATH="$HOME/.jenv/bin:$PATH"
+    eval "$(jenv init -)"
+
 fi
 
 export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle:$HOME/code/tg/ops
