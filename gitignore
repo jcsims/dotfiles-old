@@ -5,7 +5,6 @@ vim/**/bundle
 tags
 viminfo
 
-
 # Haskell files
 dist
 cabal-dev
@@ -63,7 +62,6 @@ cabal-dev
 auto-save-list
 tramp
 .\#*
-*.elc
 *-autoloads.el
 *.info
 dir
