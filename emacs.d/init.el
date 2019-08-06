@@ -733,7 +733,7 @@
               ("C-c i" . cider-inspect-last-result))
   :custom
   (cider-jdk-src-paths '("~/code/clojure"
-                         "/usr/lib/jvm/java-8-openjdk/src.zip"))
+                         "~/.jenv/versions/11.0/lib/src.zip"))
   (cider-save-file-on-load t)
   (cider-repl-use-pretty-printing t)
   (nrepl-use-ssh-fallback-for-remote-hosts t)
