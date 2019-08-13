@@ -51,6 +51,9 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     [ -f /usr/share/fzf/key-bindings.bash ] && source /usr/share/fzf/key-bindings.bash
     [ -f /usr/share/fzf/completion.bash ] && source /usr/share/fzf/completion.bash
 
+    export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle:$HOME/code/tg/ops
+    export GOBIN=$HOME/bin
+
     export XDG_DESKTOP_DIR="$HOME"
     export XDG_DOWNLOAD_DIR="$HOME/downloads"
     export XDG_DOCUMENTS_DIR="$HOME/documents"
@@ -94,10 +97,11 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     export PATH="$HOME/.jenv/bin:$PATH"
     eval "$(jenv init -)"
 
+    export GOPATH=$HOME/dev/go:$HOME/dev/tg/sandcastle:$HOME/dev/tg/ops
+    export GOBIN=$HOME/bin
+
 fi
 
-export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle:$HOME/code/tg/ops
-export GOBIN=$HOME/bin
 
 # Cargo's bin path
 export PATH=$PATH:$HOME/.cargo/bin
