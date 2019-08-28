@@ -777,14 +777,6 @@
 
 (use-package systemd :if (eq system-type 'gnu/linux))
 
-(use-package shell-pop
-  :custom
-  (shell-pop-shell-type (quote ("eshell" "*eshell*" (lambda nil (eshell)))) "Use eshell.")
-  (shell-pop-universal-key "C-t")
-  (shell-pop-window-size 30)
-  (shell-pop-full-span t)
-  (shell-pop-window-position "bottom"))
-
 (use-package browse-url
   :ensure f
   ;; browse-url decides not to use xdg-open if you don't use one of a
