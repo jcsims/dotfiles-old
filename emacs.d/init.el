@@ -463,7 +463,7 @@
 
 (use-package minions
   :config
-  (setq minions-direct '(flycheck-mode cider-mode vlf-mode))
+  (setq minions-direct '(flycheck-mode cider-mode vlf-mode lsp-mode))
   (minions-mode))
 
 (use-package simple
@@ -687,7 +687,6 @@
   (global-set-key [remap query-replace] 'anzu-query-replace))
 
 (use-package display-line-numbers
-  :disabled
   :ensure f
   :config (global-display-line-numbers-mode))
 
@@ -795,28 +794,20 @@
 
 ;; LSP
 (use-package lsp-mode
-  :init
-  (add-hook 'prog-major-mode #'lsp))
+  :pin melpa-stable
+  :hook (prog-mode-hook . lsp)
+  :commands lsp)
 
 (use-package lsp-ui
+  :pin melpa-stable
   :commands lsp-ui-mode
-  :init
-  (add-hook 'lsp-mode-hook 'lsp-ui-mode))
+  :hook (lsp-mode-hook . lsp-ui-mode))
 
 (use-package company-lsp
-  :init
-  (push 'company-lsp company-backends))
-
-(use-package lsp-sh
-  :disabled ;; Not in MELPA yet Mon 06 Aug 2018
-  )
+  :commands company-lsp)
 
 (use-package rust-mode
   :custom (rust-format-on-save t))
-
-(use-package lsp-rust
-  :config (setq lsp-rust-rls-command '("rls"))
-  :hook (rust-mode . lsp-rust-enable))
 
 (use-package racer
   :hook ((rust-mode . racer-mode)))
@@ -894,3 +885,4 @@
 (setq gc-cons-threshold 800000)
 
 ;;; init.el ends here
+(put 'narrow-to-region 'disabled nil)
