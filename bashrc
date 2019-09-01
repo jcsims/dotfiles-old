@@ -75,9 +75,9 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Add GOROOT bin path to PATH
     export PATH=/usr/local/go/bin:$PATH
 
-    if [ -f /usr/local/share/bash-completion/bash_completion ]; then
-        . /usr/local/share/bash-completion/bash_completion
-    fi
+    export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
+
+    [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 
     # Brew-installed paths
     export PATH=/usr/local/bin:/usr/local/sbin:$PATH
