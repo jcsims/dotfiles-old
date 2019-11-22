@@ -499,11 +499,6 @@
   (unless (server-running-p)
     (server-start)))
 
-;; Handles ssh-agent and gpg-agent configuration from `keychain`
-(use-package keychain-environment
-  :if (memq window-system '(x))
-  :config (keychain-refresh-environment))
-
 ;; Work-specific code - should be encrypted!
 (defvar work-init (concat user-emacs-directory "lisp/init-work.el.gpg"))
 (if (file-exists-p work-init)
@@ -698,11 +693,11 @@
    ("C-<"     . mc/mark-previous-like-this)
    ("C-c C-<" . mc/mark-all-like-this)))
 
-(use-package go-mode)
-(use-package company-go)
-(use-package go-eldoc
-  :hook (go-mode . go-eldoc-setup))
-(use-package go-errcheck)
+;; (use-package go-mode)
+;; (use-package company-go)
+;; (use-package go-eldoc
+;;   :hook (go-mode . go-eldoc-setup))
+;; (use-package go-errcheck)
 (use-package csv-mode)
 (use-package sql-indent)
 (use-package eldoc
@@ -738,7 +733,7 @@
               ("C-c i" . cider-inspect-last-result))
   :custom
   (cider-jdk-src-paths '("~/code/clojure"
-                         "~/.jenv/versions/11.0/lib/src.zip"))
+			 "/usr/lib/jvm/java-11-openjdk/lib/src.zip"))
   (cider-save-file-on-load t)
   (cider-repl-use-pretty-printing t)
   (nrepl-use-ssh-fallback-for-remote-hosts t)
@@ -791,6 +786,8 @@
   :config (setq jsons-path-printer 'jsons-print-path-jq))
 
 (use-package json-mode)
+
+(use-package jq-mode)
 
 ;; LSP
 (use-package lsp-mode
@@ -874,6 +871,8 @@
   :config (require 'vlf-setup))
 
 (use-package deadgrep)
+
+(use-package nix-mode)
 
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")
