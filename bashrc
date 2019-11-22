@@ -38,7 +38,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
         fi
     fi
 
-    eval `keychain --eval --quiet --agents gpg,ssh id_rsa 98662236EE64EFAF0BE9973025FF041622DE3AFB`
+    eval "$(keychain --eval --quiet --agents gpg,ssh id_rsa 98662236EE64EFAF0BE9973025FF041622DE3AFB)"
 
     # Add an "alert" alias for long running commands.  Use like so:
     #   sleep 10; alert
