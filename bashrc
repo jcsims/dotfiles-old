@@ -62,6 +62,8 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     export XDG_VIDEOS_DIR="$HOME/videos"
     export _JAVA_AWT_WM_NONREPARENTING=1
 
+    ## Nix support
+    [ -f /etc/profile.d/nix.sh ] && source /etc/profile.d/nix.sh
 
     if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
         export CLUTTER_BACKEND=wayland
