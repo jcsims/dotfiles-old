@@ -516,7 +516,8 @@
   (setq company-tooltip-limit 20)                       ; bigger popup window
   (setq company-idle-delay .3)                          ; decrease delay before autocompletion popup shows
   (setq company-echo-delay 0)                           ; remove annoying blinking
-  (setq company-begin-commands '(self-insert-command)) ; start autocompletion only after typing)
+  (setq company-begin-commands '(self-insert-command))  ; start autocompletion only after typing)
+  (setq company-tooltip-align-annotations t)
   (global-company-mode))
 
 (use-package company-quickhelp
@@ -791,23 +792,25 @@
 
 ;; LSP
 (use-package lsp-mode
-  :pin melpa-stable
   :hook (prog-mode-hook . lsp)
   :commands lsp)
 
 (use-package lsp-ui
-  :pin melpa-stable
-  :commands lsp-ui-mode
-  :hook (lsp-mode-hook . lsp-ui-mode))
+  :commands lsp-ui-mode)
 
 (use-package company-lsp
   :commands company-lsp)
 
 (use-package rust-mode
+  :hook (rust-mode . (lambda () (setq indent-tabs-mode nil)))
   :custom (rust-format-on-save t))
 
 (use-package racer
   :hook ((rust-mode . racer-mode)))
+
+(use-package flycheck-rust
+  :after rust-mode
+  :hook (flycheck-mode . flycheck-rust-setup))
 
 (use-package savehist
   :config (savehist-mode))
