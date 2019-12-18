@@ -786,7 +786,8 @@
 (use-package json-snatcher
   :config (setq jsons-path-printer 'jsons-print-path-jq))
 
-(use-package json-mode)
+(use-package json-mode
+  :custom (json-reformat:indent-width 2))
 
 (use-package jq-mode)
 
