@@ -793,7 +793,7 @@
 
 ;; LSP
 (use-package lsp-mode
-  :hook (prog-mode-hook . lsp)
+  :hook (rust-mode . lsp)
   :commands lsp)
 
 (use-package lsp-ui
@@ -803,6 +803,7 @@
   :commands company-lsp)
 
 (use-package rust-mode
+  :after lsp-mode
   :hook (rust-mode . (lambda () (setq indent-tabs-mode nil)))
   :custom (rust-format-on-save t))
 
