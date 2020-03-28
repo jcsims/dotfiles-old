@@ -98,23 +98,16 @@ If region is active, apply to active region instead."
   (set (make-local-variable 'comment-auto-fill-only-comments) t)
   (auto-fill-mode t))
 
-(defun esk-pretty-lambdas ()
-  "Make the `lambda` keyword a pretty one."
-  (font-lock-add-keywords
-   nil `(("(?\\(lambda\\>\\)"
-          (0 (progn (compose-region (match-beginning 1) (match-end 1)
-                                    ,(make-char 'greek-iso8859-7 107))
-                    nil))))))
-
-;; (defun esk-add-watchwords ()
-;;   "Highlight common `TODO`-like words in the buffer, so they stand out."
+;; (defun esk-pretty-lambdas ()
+;;   "Make the `lambda` keyword a pretty one."
 ;;   (font-lock-add-keywords
-;;    nil '(("\\<\\(FIX\\(ME\\)?\\|TODO\\|HACK\\|REFACTOR\\|NOCOMMIT\\)"
-;;           1 font-lock-warning-face t))))
+;;    nil `(("(?\\(lambda\\>\\)"
+;;           (0 (progn (compose-region (match-beginning 1) (match-end 1)
+;;                                     ,(make-char 'greek-iso8859-7 107))
+;;                     nil))))))
 
 (add-hook 'prog-mode-hook 'esk-local-comment-auto-fill)
-(add-hook 'prog-mode-hook 'esk-pretty-lambdas)
-;; (add-hook 'prog-mode-hook 'esk-add-watchwords)
+;;(add-hook 'prog-mode-hook 'esk-pretty-lambdas)
 
 (use-package magit-git :ensure magit)
 (use-package git-commit :ensure magit)

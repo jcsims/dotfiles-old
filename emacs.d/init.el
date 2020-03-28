@@ -48,14 +48,24 @@
 
 (setq source-directory "~/dev/emacs")
 
+(use-package auth-source
+  :ensure f
+  :custom (auth-sources '("~/.authinfo.gpg")))
+
 ;;; Personal info
 (setq user-full-name "Chris Sims"
       user-mail-address "chris@jcsi.ms")
 
-;; Always use UTF-8
+ ;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
+(set-default-coding-systems 'utf-8)
 (prefer-coding-system 'utf-8)
+(set-language-environment 'utf-8)
+(setq locale-coding-system 'utf-8)
+(set-selection-coding-system 'utf-8)
+;; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
+(setq utf-translate-cjk-mode nil)
 
 ;; Blank scratch buffer
 (setq initial-scratch-message nil)
@@ -128,7 +138,6 @@
 (use-package prog-mode
   :ensure f
   :config
-  (global-prettify-symbols-mode)
   (defun indicate-buffer-boundaries-left ()
     (setq indicate-buffer-boundaries 'left))
   (add-hook 'prog-mode-hook #'indicate-buffer-boundaries-left))
@@ -554,6 +563,7 @@
 	ag-reuse-buffers t))
 
 (use-package paren-face
+  :disabled
   :custom (paren-face-regexp "[][{}()]")
   :config (global-paren-face-mode))
 
@@ -566,7 +576,7 @@
 
 (use-package ivy
   :bind (("C-c C-r" . ivy-resume)) ; TODO: Find a binding that doesn't
-                                        ; get overwritten...
+                                   ; get overwritten...
   :config
   (setq ivy-use-virtual-buffers t
 	enable-recursive-minibuffers t
@@ -718,27 +728,31 @@
   :hook
   (clojure-mode . paredit-mode)
   :mode (("\\.edn\\'" . clojure-mode))
-  :config
-  ;; Add some goodies from Emacs Live
-  (font-lock-add-keywords
-   'clojure-mode `(("\\(#\\)("
-                    (0 (progn (compose-region (match-beginning 1)
-                                              (match-end 1) "ƒ")
-                              nil)))))
-  (font-lock-add-keywords
-   'clojure-mode `(("\\(#\\){"
-                    (0 (progn (compose-region (match-beginning 1)
-                                              (match-end 1) "∈")
-                              nil))))))
+  ;; :config
+  ;; ;; Add some goodies from Emacs Live
+  ;; (font-lock-add-keywords
+  ;;  'clojure-mode `(("\\(#\\)("
+  ;;                   (0 (progn (compose-region (match-beginning 1)
+  ;;                                             (match-end 1) "ƒ")
+  ;;                             nil)))))
+  ;; (font-lock-add-keywords
+  ;;  'clojure-mode `(("\\(#\\){"
+  ;;                   (0 (progn (compose-region (match-beginning 1)
+  ;;                                             (match-end 1) "∈")
+  ;;                             nil)))))
+  )
 
 ;;; Cider
 (use-package cider
   :pin melpa-stable
   :hook
-  (clojure-mode . cider-mode)
-  (cider-repl-mode . paredit-mode)
+  ((clojure-mode . cider-mode)
+   (cider-repl-mode . paredit-mode)
+   (cider-repl-mode . cider-company-enable-fuzzy-completion)
+   (cider-mode . cider-company-enable-fuzzy-completion))
   :bind (:map clojure-mode-map
-              ("C-c i" . cider-inspect-last-result))
+              ("C-c i" . cider-inspect-last-result)
+	      ("C-M-." . cider-xref-fn-refs-select))
   :custom
   (cider-jdk-src-paths '("~/code/clojure"
 			 "/usr/lib/jvm/java-11-openjdk/lib/src.zip"))
@@ -754,9 +768,9 @@
 				("Remote" "localhost" "8842")
 				("Threatbrain Server" "localhost" "4243")
 				("Integration Service" "localhost" "4244")
-				("GUNDAM" "localhost" "4245"))))
+				("GUNDAM" "localhost" "4245")))
 
-(use-package yasnippet)
+  (use-package yasnippet))
 
 (use-package clj-refactor
   :pin melpa-stable
@@ -772,7 +786,8 @@
   (add-to-list 'cljr-magic-require-namespaces '("json" . "cheshire.core"))
   (add-to-list 'cljr-magic-require-namespaces '("string" . "clojure.string")))
 
-(use-package flycheck-joker)
+;;(use-package flycheck-joker)
+(use-package flycheck-clj-kondo)
 
 ;; Seed the PRNG anew, from the system's entropy pool
 (random t)
@@ -800,7 +815,9 @@
 
 ;; LSP
 (use-package lsp-mode
-  :hook (rust-mode . lsp)
+  :hook ((rust-mode . lsp)
+	 ;;(clojure-mode . lsp)
+	 )
   :commands lsp)
 
 (use-package lsp-ui

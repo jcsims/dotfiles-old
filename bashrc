@@ -89,8 +89,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     export MANPATH=/usr/local/pgsql/share/man:$MANPATH
 
     alias stay-awake='caffeinate -di'
-    alias quiet!='osascript -e "set Volume 0.01"'
-
+    
     alias alert='terminal-notifier -activate "com.googlecode.iterm2" -message "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
     [ -f ~/.fzf.bash ] && source ~/.fzf.bash
@@ -199,7 +198,7 @@ alias gd='git diff'
 alias gc='git commit'
 alias gco='git checkout'
 alias ga='git add'
-alias gs='git status -sb' # upgrade your git if -sb breaks for # you. it's fun.
+alias gs='git status -sb'
 
 for f in $HOME/.functions/*; do source "$f"; done
 
