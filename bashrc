@@ -51,8 +51,14 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     [ -f /usr/share/fzf/key-bindings.bash ] && source /usr/share/fzf/key-bindings.bash
     [ -f /usr/share/fzf/completion.bash ] && source /usr/share/fzf/completion.bash
 
-    export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle:$HOME/code/tg/ops
+    export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle
     export GOBIN=$HOME/bin
+
+    # Base16 Shell
+    BASE16_SHELL="$HOME/.config/base16-shell/"
+    [ -n "$PS1" ] && \
+	[ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+        eval "$("$BASE16_SHELL/profile_helper.sh")"
 
     export XDG_DESKTOP_DIR="$HOME"
     export XDG_DOWNLOAD_DIR="$HOME/downloads"
@@ -89,7 +95,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     export MANPATH=/usr/local/pgsql/share/man:$MANPATH
 
     alias stay-awake='caffeinate -di'
-    
+
     alias alert='terminal-notifier -activate "com.googlecode.iterm2" -message "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
     [ -f ~/.fzf.bash ] && source ~/.fzf.bash
@@ -99,6 +105,8 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 
 fi
 
+# Set the theme for `bat`
+export BAT_THEME="base16"
 
 # Cargo's bin path
 export PATH=$PATH:$HOME/.cargo/bin

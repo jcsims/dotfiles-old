@@ -113,17 +113,24 @@
   :config (load-theme jcs-active-theme t))
 
 (use-package color-theme-sanityinc-tomorrow
-  :disabled
+  ;;:disabled
   :init   (setq jcs-active-theme 'sanityinc-tomorrow-eighties
                 jcs-light-theme 'sanityinc-tomorrow-day
                 jcs-dark-theme 'sanityinc-tomorrow-eighties)
   :config (load-theme jcs-active-theme t))
 
 (use-package nord-theme
-  ;;:disabled
+  :disabled
   :init   (setq jcs-active-theme 'nord
                 jcs-light-theme 'nord
                 jcs-dark-theme 'nord)
+  :config (load-theme jcs-active-theme t))
+
+(use-package base16-theme
+  :disabled
+  :init   (setq jcs-active-theme 'base16-atelier-dune
+                jcs-light-theme 'base16-atelier-dune-light
+                jcs-dark-theme 'base16-atelier-dune)
   :config (load-theme jcs-active-theme t))
 
 (defun toggle-dark-light-theme ()
@@ -690,7 +697,7 @@
   (super-save-mode +1))
 
 (use-package smart-mode-line
-  :custom (sml/theme 'respectful)
+  :custom (sml/theme 'dark)
   :config (sml/setup))
 
 (use-package anzu
