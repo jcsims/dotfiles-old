@@ -618,7 +618,6 @@
 (require 'ivy)
 (use-package libgit)
 (use-package magit
-  :pin melpa-stable
   :bind (("C-c g"   . magit-status)
          ("C-c M-g" . magit-dispatch-popup))
   :custom
@@ -631,6 +630,9 @@
                           'magit-insert-modules
                           'magit-insert-stashes
                           'append))
+
+(use-package forge
+  :after magit)
 
 (use-package git-timemachine)
 
@@ -669,6 +671,7 @@
   :config (dumb-jump-mode))
 
 (use-package smart-jump
+  :disabled
   :config (smart-jump-setup-default-registers)
   :custom (smart-jump-refs-key "C-M-?"))
 
@@ -761,12 +764,13 @@
               ("C-c i" . cider-inspect-last-result)
 	      ("C-M-." . cider-xref-fn-refs-select))
   :custom
-  (cider-jdk-src-paths '("~/code/clojure"
+  (cider-jdk-src-paths '("~/code/clojure-sources"
 			 "/usr/lib/jvm/java-11-openjdk/lib/src.zip"))
   (cider-save-file-on-load t)
   (cider-repl-use-pretty-printing t)
   (nrepl-use-ssh-fallback-for-remote-hosts t)
   (cider-repl-print-length nil)
+  (cider-auto-jump-to-error 'errors-only)
   :config
   (setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
 	cider-repl-display-help-banner nil
@@ -825,6 +829,8 @@
   :hook ((rust-mode . lsp)
 	 ;;(clojure-mode . lsp)
 	 )
+  ;; We'll see if this bites me later on... default is 1000
+  :custom (lsp-file-watch-threshold 15000)
   :commands lsp)
 
 (use-package lsp-ui

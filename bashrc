@@ -55,10 +55,14 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     export GOBIN=$HOME/bin
 
     # Base16 Shell
+    # https://github.com/chriskempson/base16-shell
     BASE16_SHELL="$HOME/.config/base16-shell/"
     [ -n "$PS1" ] && \
 	[ -s "$BASE16_SHELL/profile_helper.sh" ] && \
         eval "$("$BASE16_SHELL/profile_helper.sh")"
+
+    ## Set the terminal theme
+    [ -f $HOME/.base16_theme ] && source $HOME/.base16_theme
 
     export XDG_DESKTOP_DIR="$HOME"
     export XDG_DOWNLOAD_DIR="$HOME/downloads"
@@ -72,6 +76,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     [ -f /etc/profile.d/nix.sh ] && source /etc/profile.d/nix.sh
 
     if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
+	export XDG_CURRENT_DESKTOP=Unity
         export CLUTTER_BACKEND=wayland
         export QT_QPA_PLATFORM=wayland
         export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
