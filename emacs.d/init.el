@@ -113,7 +113,7 @@
   :config (load-theme jcs-active-theme t))
 
 (use-package color-theme-sanityinc-tomorrow
-  ;;:disabled
+  :disabled
   :init   (setq jcs-active-theme 'sanityinc-tomorrow-eighties
                 jcs-light-theme 'sanityinc-tomorrow-day
                 jcs-dark-theme 'sanityinc-tomorrow-eighties)
@@ -127,10 +127,10 @@
   :config (load-theme jcs-active-theme t))
 
 (use-package base16-theme
-  :disabled
-  :init   (setq jcs-active-theme 'base16-atelier-dune
-                jcs-light-theme 'base16-atelier-dune-light
-                jcs-dark-theme 'base16-atelier-dune)
+  ;;:disabled
+  :init   (setq jcs-active-theme 'base16-tomorrow-night-eighties
+                jcs-light-theme 'base16-gruvbox-light-hard
+                jcs-dark-theme 'base16-tomorrow-night-eighties)
   :config (load-theme jcs-active-theme t))
 
 (defun toggle-dark-light-theme ()
@@ -561,7 +561,7 @@
               ("h a" . highlight-symbol-nav-mode)))
 
 (use-package idle-highlight-mode
-  ;;:disabled
+  :disabled
   :hook (prog-mode . idle-highlight-mode))
 
 (use-package ag
@@ -827,6 +827,8 @@
 ;; LSP
 (use-package lsp-mode
   :hook ((rust-mode . lsp)
+	 ;; This messes up basic editing when combined with
+	 ;; cider/paredit/something else. It's unusable.
 	 ;;(clojure-mode . lsp)
 	 )
   ;; We'll see if this bites me later on... default is 1000
@@ -840,11 +842,10 @@
   :commands company-lsp)
 
 (use-package rust-mode
-  :after lsp-mode
-  :hook (rust-mode . (lambda () (setq indent-tabs-mode nil)))
   :custom (rust-format-on-save t))
 
 (use-package racer
+  :disabled
   :hook ((rust-mode . racer-mode)))
 
 (use-package flycheck-rust

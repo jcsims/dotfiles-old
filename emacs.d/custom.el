@@ -4,6 +4,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(auth-sources (quote ("~/.authinfo.gpg")))
+ '(cider-auto-jump-to-error (quote errors-only))
  '(cider-jdk-src-paths
    (quote
     ("~/code/clojure" "/usr/lib/jvm/java-11-openjdk/lib/src.zip")) nil nil "Customized with use-package cider")
