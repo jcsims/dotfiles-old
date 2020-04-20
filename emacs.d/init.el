@@ -779,9 +779,9 @@
 				("Remote" "localhost" "8842")
 				("Threatbrain Server" "localhost" "4243")
 				("Integration Service" "localhost" "4244")
-				("GUNDAM" "localhost" "4245")))
+				("GUNDAM" "localhost" "4245"))))
 
-  (use-package yasnippet))
+(use-package yasnippet)
 
 (use-package clj-refactor
   :pin melpa-stable
