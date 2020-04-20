@@ -208,6 +208,7 @@ alias gl="git log --graph --abbrev-commit --date=relative --pretty=format:'%Cred
 alias gp='git push origin HEAD'
 alias gpl='git pull --rebase --prune'
 alias gd='git diff'
+alias gdc='git diff --cached'
 alias gc='git commit'
 alias gco='git checkout'
 alias ga='git add'
