@@ -721,11 +721,6 @@
    ("C-<"     . mc/mark-previous-like-this)
    ("C-c C-<" . mc/mark-all-like-this)))
 
-;; (use-package go-mode)
-;; (use-package company-go)
-;; (use-package go-eldoc
-;;   :hook (go-mode . go-eldoc-setup))
-;; (use-package go-errcheck)
 (use-package csv-mode)
 (use-package sql-indent)
 (use-package eldoc
@@ -737,20 +732,7 @@
   :pin melpa-stable
   :hook
   (clojure-mode . paredit-mode)
-  :mode (("\\.edn\\'" . clojure-mode))
-  ;; :config
-  ;; ;; Add some goodies from Emacs Live
-  ;; (font-lock-add-keywords
-  ;;  'clojure-mode `(("\\(#\\)("
-  ;;                   (0 (progn (compose-region (match-beginning 1)
-  ;;                                             (match-end 1) "ƒ")
-  ;;                             nil)))))
-  ;; (font-lock-add-keywords
-  ;;  'clojure-mode `(("\\(#\\){"
-  ;;                   (0 (progn (compose-region (match-beginning 1)
-  ;;                                             (match-end 1) "∈")
-  ;;                             nil)))))
-  )
+  :mode (("\\.edn\\'" . clojure-mode)))
 
 ;;; Cider
 (use-package cider
