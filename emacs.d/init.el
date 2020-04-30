@@ -606,7 +606,10 @@
 
 (use-package projectile
   :bind (:map projectile-mode-map
-              ("C-c p" . projectile-command-map))
+              ("C-c p" . projectile-command-map)
+	      :map projectile-command-map
+	      ;; I'm used to this binding, and ripgrep is faster
+	      ("s s" . projectile-ripgrep))
   :config (projectile-mode))
 
 (use-package counsel-projectile
