@@ -5,10 +5,10 @@
         "revision": "784f4e47c2e527c515454212db158149f869c7f3"
       },
       "homebrew/cask": {
-        "revision": "922154b0dceeef88fde64f19cb839510ccbb78a1"
+        "revision": "7fbce4c83a1d0e2a1d7c9503611f2242e79222be"
       },
       "homebrew/core": {
-        "revision": "a0e6ed090cd4023cff21f891b98a2b9e333e3e64"
+        "revision": "9f08d81bb57024d51900a434db850d2f1546862a"
       },
       "candid82/brew": {
         "revision": "413c7160afbd3420b058ea7e07f11f6b59110761"
@@ -17,7 +17,7 @@
         "revision": "8fb53fee7531c4ca6b7f900e78373adba0e93895"
       },
       "homebrew/cask-versions": {
-        "revision": "bce6c0b4c791555eeb63cb414cb121834eded5ea"
+        "revision": "6ccdebe67f7ede27d7629ae58e8fde49d4cdcfea"
       },
       "borkdude/brew": {
         "revision": "44fec47077db928c983ac8d7f20b640877a50df5"
@@ -163,22 +163,22 @@
         }
       },
       "bat": {
-        "version": "0.14.0",
+        "version": "0.15.0",
         "bottle": {
           "cellar": ":any_skip_relocation",
           "prefix": "/usr/local",
           "files": {
             "catalina": {
-              "url": "https://homebrew.bintray.com/bottles/bat-0.14.0.catalina.bottle.tar.gz",
-              "sha256": "54e9029fddae20b738e35cb9d88b4b03ed0d3d0a2e8c874d3a1a83ea1531464b"
+              "url": "https://homebrew.bintray.com/bottles/bat-0.15.0.catalina.bottle.tar.gz",
+              "sha256": "cf23ebb66078b8a02236dce0d10792d1f27a7683853702ced404ac25857bf815"
             },
             "mojave": {
-              "url": "https://homebrew.bintray.com/bottles/bat-0.14.0.mojave.bottle.tar.gz",
-              "sha256": "16026e7889c58f5841a6da727a182ba3a5a6829ebccf7fedecb472bb5a9c0c47"
+              "url": "https://homebrew.bintray.com/bottles/bat-0.15.0.mojave.bottle.tar.gz",
+              "sha256": "ae0f2d5568a547176cb6f7998cf5a2cb29aa51575a272210b02bd000fe8f2d45"
             },
             "high_sierra": {
-              "url": "https://homebrew.bintray.com/bottles/bat-0.14.0.high_sierra.bottle.tar.gz",
-              "sha256": "5d52756cca5a309cbf1027311ac74b187f78f839292f58645d615d4c0e874fc4"
+              "url": "https://homebrew.bintray.com/bottles/bat-0.15.0.high_sierra.bottle.tar.gz",
+              "sha256": "799c255bf21723f2388e24c07a39ecedd528d9cbfc2c1aa2ca7681c9ae15efaf"
             }
           }
         }
@@ -293,7 +293,7 @@
         }
       },
       "diff-so-fancy": {
-        "version": "1.2.7",
+        "version": "1.3.0",
         "bottle": false
       },
       "hub": {
@@ -754,11 +754,11 @@
     "mas": {
       "Things": {
         "id": "904280696",
-        "version": "3.12.2"
+        "version": "3.12.3"
       },
       "Bear": {
         "id": "1091189122",
-        "version": "1.7.10"
+        "version": "1.7.11"
       }
     }
   },
@@ -767,7 +767,7 @@
       "catalina": {
         "HOMEBREW_VERSION": "2.2.13",
         "HOMEBREW_PREFIX": "/usr/local",
-        "Homebrew/homebrew-core": "a0e6ed090cd4023cff21f891b98a2b9e333e3e64",
+        "Homebrew/homebrew-core": "9f08d81bb57024d51900a434db850d2f1546862a",
         "CLT": "11.0.33.17",
         "Xcode": "11.4.1",
         "macOS": "10.15.4"

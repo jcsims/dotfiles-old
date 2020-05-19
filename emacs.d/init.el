@@ -674,7 +674,7 @@
   :config (dumb-jump-mode))
 
 (use-package smart-jump
-  :disabled
+  ;;:disabled
   :config (smart-jump-setup-default-registers)
   :custom (smart-jump-refs-key "C-M-?"))
 
@@ -703,7 +703,7 @@
   (super-save-mode +1))
 
 (use-package smart-mode-line
-  :custom (sml/theme 'dark)
+  :custom (sml/theme 'automatic)
   :config (sml/setup))
 
 (use-package anzu

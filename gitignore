@@ -77,3 +77,6 @@ flycheck_*.el
 GPATH
 GRTAGS
 GTAGS
+
+# Clojure/Emacs
+.clj-kondo
