@@ -24,7 +24,16 @@ then
 fi
 
 ## Path
-export PATH=$HOME/bin:$PATH
+appendpath () {
+    case ":$PATH:" in
+        *:"$1":*)
+        ;;
+        *)
+            PATH="${PATH:+$PATH:}$1"
+    esac
+}
+
+appendpath $HOME/bin
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
     # enable programmable completion features (you don't need to enable
@@ -58,7 +67,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     # https://github.com/chriskempson/base16-shell
     BASE16_SHELL="$HOME/.config/base16-shell/"
     [ -n "$PS1" ] && \
-	[ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+        [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
         eval "$("$BASE16_SHELL/profile_helper.sh")"
 
     ## Set the terminal theme
@@ -70,13 +79,14 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     export XDG_MUSIC_DIR="$HOME/music"
     export XDG_PICTURES_DIR="$HOME/pictures"
     export XDG_VIDEOS_DIR="$HOME/videos"
-    export _JAVA_AWT_WM_NONREPARENTING=1
 
     ## Nix support
     [ -f /etc/profile.d/nix.sh ] && source /etc/profile.d/nix.sh
 
     if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
-	export XDG_CURRENT_DESKTOP=Unity
+        export _JAVA_AWT_WM_NONREPARENTING=1
+        export XDG_CURRENT_DESKTOP=sway
+        export XDG_SESSION_TYPE=wayland
         export CLUTTER_BACKEND=wayland
         export QT_QPA_PLATFORM=wayland
         export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
@@ -86,17 +96,18 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Add GOROOT bin path to PATH
-    export PATH=/usr/local/go/bin:$PATH
+    appendpath /usr/local/go/bin
 
     export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
 
     [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
 
     # Brew-installed paths
-    export PATH=/usr/local/bin:/usr/local/sbin:$PATH
+    appendpath /usr/local/bin
+    appendpath /usr/local/sbin
 
     # Add installed-from-source Postgres binary and manpage paths
-    export PATH=/usr/local/pgsql/bin:$PATH
+    appendpath /usr/local/pgsql/bin
     export MANPATH=/usr/local/pgsql/share/man:$MANPATH
 
     alias stay-awake='caffeinate -di'
@@ -114,7 +125,7 @@ fi
 export BAT_THEME="base16"
 
 # Cargo's bin path
-export PATH=$PATH:$HOME/.cargo/bin
+appendpath $HOME/.cargo/bin
 
 # Sensible options, borrowed from
 # https://github.com/mrzool/bash-sensible
@@ -228,6 +239,9 @@ man() {
         LESS_TERMCAP_us=$'\e[1;32m' \
         man "$@"
 }
+
+unset appendpath
+export PATH
 
 ## Prompt
 #PS1="[\u@\h \W]\$ " # Default prompt
