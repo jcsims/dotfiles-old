@@ -135,6 +135,9 @@ shopt -s checkwinsize
 # Automatically trim long paths in the prompt (requires Bash 4.x)
 PROMPT_DIRTRIM=2
 
+# Set the terminal title
+PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+
 ## Bind a few things in interactive shells only
 if [[ $- == *i* ]]; then
     # Enable history expansion with space
