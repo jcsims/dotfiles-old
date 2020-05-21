@@ -128,7 +128,8 @@
 
 (use-package base16-theme
   ;;:disabled
-  :init   (setq jcs-active-theme 'base16-tomorrow-night-eighties
+  :init   (setq base16-theme-256-color-source 'base16-shell
+	        jcs-active-theme 'base16-tomorrow-night-eighties
                 jcs-light-theme 'base16-gruvbox-light-hard
                 jcs-dark-theme 'base16-tomorrow-night-eighties)
   :config (load-theme jcs-active-theme t))
