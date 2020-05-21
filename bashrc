@@ -122,7 +122,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 # Set the theme for `bat`
-export BAT_THEME="base16"
+export BAT_THEME="Monokai Extended"
 
 # Cargo's bin path
 appendpath $HOME/.cargo/bin
