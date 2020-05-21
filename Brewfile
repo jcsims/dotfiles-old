@@ -61,3 +61,4 @@ brew "watch"
 brew "rustup"
 brew "zola" # static site generator
 brew "restic" # backups!
+brew "exercism"
