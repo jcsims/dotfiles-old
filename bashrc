@@ -47,7 +47,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
         fi
     fi
 
-    eval "$(keychain --eval --quiet --agents gpg,ssh id_rsa 98662236EE64EFAF0BE9973025FF041622DE3AFB)"
+    ## eval "$(keychain --eval --quiet --agents gpg,ssh id_rsa 98662236EE64EFAF0BE9973025FF041622DE3AFB)"
 
     # Add an "alert" alias for long running commands.  Use like so:
     #   sleep 10; alert
@@ -57,8 +57,13 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     alias open='xdg-open'
 
-    [ -f /usr/share/fzf/key-bindings.bash ] && source /usr/share/fzf/key-bindings.bash
-    [ -f /usr/share/fzf/completion.bash ] && source /usr/share/fzf/completion.bash
+    # For Fedora
+    #alias docker='podman' <-- this is already handled by the
+    #                          podman-docker package
+    alias docker-compose='podman-compose'
+
+    [ -f /usr/share/fzf/shell/key-bindings.bash ] && source /usr/share/fzf/shell/key-bindings.bash
+    [ -f /usr/share/fzf/shell/completion.bash ] && source /usr/share/fzf/shell/completion.bash
 
     export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle
     export GOBIN=$HOME/bin
@@ -73,12 +78,12 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     ## Set the terminal theme
     [ -f $HOME/.base16_theme ] && source $HOME/.base16_theme
 
-    export XDG_DESKTOP_DIR="$HOME"
-    export XDG_DOWNLOAD_DIR="$HOME/downloads"
-    export XDG_DOCUMENTS_DIR="$HOME/documents"
-    export XDG_MUSIC_DIR="$HOME/music"
-    export XDG_PICTURES_DIR="$HOME/pictures"
-    export XDG_VIDEOS_DIR="$HOME/videos"
+    # export XDG_DESKTOP_DIR="$HOME"
+    # export XDG_DOWNLOAD_DIR="$HOME/downloads"
+    # export XDG_DOCUMENTS_DIR="$HOME/documents"
+    # export XDG_MUSIC_DIR="$HOME/music"
+    # export XDG_PICTURES_DIR="$HOME/pictures"
+    # export XDG_VIDEOS_DIR="$HOME/videos"
 
     ## Nix support
     [ -f /etc/profile.d/nix.sh ] && source /etc/profile.d/nix.sh
@@ -122,7 +127,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 
 # Set the theme for `bat`
-export BAT_THEME="Monokai Extended"
+export BAT_THEME="Nord"
 
 # Cargo's bin path
 appendpath $HOME/.cargo/bin
