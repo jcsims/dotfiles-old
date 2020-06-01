@@ -255,3 +255,10 @@ export PATH
 #PS1="[\u@\h \W]\$ " # Default prompt
 
 PS1="[\u@\h \w]\$ "
+
+## TODO: Add some macos settings
+## defaults write NSGlobalDomain NSWindowResizeTime .001 # Speed up animations on window resizes
+## defaults write com.apple.finder DisableAllAnimations -bool true # Disable Finder animations
+# Enable subpixel font rendering on non-Apple LCDs
+# Reference: https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
+## defaults write NSGlobalDomain AppleFontSmoothing -int 1 
