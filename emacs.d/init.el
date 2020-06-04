@@ -170,6 +170,7 @@
 (defvar jcs/reference-file (expand-file-name "reference/reference.org" org-dir))
 (defvar jcs/checklists-file (expand-file-name "reference/checklists.org" org-dir))
 (defvar jcs/archive-file (expand-file-name "archive/archive.org" org-dir))
+(defvar jcs/habit-file (expand-file-name "habit.org" org-dir))
 
 (use-package org
   :custom
@@ -231,6 +232,7 @@
   (defun find-tickler-file () (interactive) (find-file jcs/tickler-file))
   (defun find-reference-file () (interactive) (find-file jcs/reference-file))
   (defun find-checklists-file () (interactive) (find-file jcs/checklists-file))
+  (defun find-habit-file () (interactive) (find-file jcs/habit-file))
 
   ;; TODO: Write some helpers for this, e.g.:
   ;; - Search across logs
@@ -260,6 +262,7 @@
          ("C-c e t" . find-tickler-file)
          ("C-c e r" . find-reference-file)
          ("C-c e c" . find-checklists-file)
+	 ("C-c e h" . find-habit-file)
          ("C-c e l" . visit-todays-log)
 
          ;; Below stolen from
@@ -338,9 +341,11 @@
   ;; Use the current window to open the agenda
   (setq org-agenda-window-setup 'current-window
 	org-agenda-block-separator nil)
-  (setq jcs/agenda-files (list jcs/projects-file jcs/tickler-file
-                               jcs/next-file jcs/inbox-file
-                               (expand-file-name "log.org" org-dir)))
+  (setq jcs/agenda-files (list jcs/projects-file
+			       jcs/tickler-file
+                               jcs/next-file
+			       jcs/inbox-file
+			       jcs/habit-file))
   (setq org-agenda-custom-commands
         '(("c" "Agenda and tasks"
            ((agenda ""
@@ -380,7 +385,7 @@
            (file "tickler.org")
            "* %i%? \n %U")
           ("r" "Reference" entry
-           (file+headline "reference.org" "Reference")
+           (file+headline "reference/reference.org" "Reference")
            "* %i%? \n %U")
           ("W" "Review: Weekly Review" entry
            ;; Destination
@@ -388,7 +393,7 @@
            ;; Capture template
            (file "~/org/weekly-review-template.org"))
           ("h" "Housework log" entry
-           (file+datetree "~/org/housework-log.org")
+           (file+datetree "~/org/log/housework-log.org")
            "* %i%? \n %U"))))
 
 (use-package autorevert
