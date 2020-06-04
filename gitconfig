@@ -16,7 +16,6 @@
   ui = true
 [core]
   excludesfile = ~/.gitignore
-  pager = delta --plus-color="#012800" --minus-color="#340001" --theme='Monokai Extended Bright'
 [apply]
   whitespace = nowarn
 [mergetool]
@@ -36,8 +35,6 @@
   compactionHeuristic = true
 [rebase]
   autostash = true
-[interactive]
-  diffFilter = delta --color-only
 [magit]
   hideCampaign = true
 [diff "gpg"]
