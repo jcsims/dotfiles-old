@@ -7,7 +7,7 @@
  '(cider-auto-jump-to-error (quote errors-only))
  '(cider-jdk-src-paths
    (quote
-    ("~/code/clojure" "/usr/lib/jvm/java-11-openjdk/lib/src.zip")) nil nil "Customized with use-package cider")
+    ("~/code/clojure-sources" "/usr/lib/jvm/java-11-openjdk/lib/src.zip")) nil nil "Customized with use-package cider")
  '(cider-repl-print-length nil t)
  '(cider-repl-use-pretty-printing t nil nil "Customized with use-package cider")
  '(cider-save-file-on-load t nil nil "Customized with use-package cider")
@@ -17,26 +17,19 @@
  '(flycheck-global-modes (quote (not org-mode)) nil nil "Customized with use-package flycheck")
  '(groovy-indent-offset 2)
  '(json-reformat:indent-width 2)
- '(magit-branch-adjust-remote-upstream-alist (quote (("upstream/master" . "issue-"))))
- '(magit-branch-prefer-remote-upstream t)
- '(magit-save-repository-buffers (quote dontask))
+ '(magit-branch-adjust-remote-upstream-alist (quote (("upstream/master" . "issue-"))) t)
+ '(magit-branch-prefer-remote-upstream t t)
+ '(magit-save-repository-buffers (quote dontask) t)
  '(nrepl-use-ssh-fallback-for-remote-hosts t)
  '(org-default-priority 67 nil nil "Customized with use-package org")
  '(org-highest-priority 65 nil nil "Customized with use-package org")
  '(org-lowest-priority 68 nil nil "Customized with use-package org")
  '(package-selected-packages
    (quote
-    (solarized-theme base16-theme nix-mode flycheck-rust jq-mode flycheck-clj-kondo rust-mode lsp-mode json-snatcher yasnippet cider clojure-mode go-mode multiple-cursors deadgrep vlf-setup vlf scpaste lsp-sh idle-highlight-mode color-theme-sanityinc-tomorrow yaml-mode which-key validate use-package systemd super-save sql-indent smex smart-mode-line smart-jump shell-pop rotate rg racer pkgbuild-mode paren-face paredit-everywhere paradox pacfiles-mode org-rich-yank ob-restclient nov no-littering nlinum minions magit macrostep lsp-ui lsp-rust libgit keychain-environment json-mode js2-mode hy-mode hl-todo highlight-symbol helpful groovy-mode go-errcheck go-eldoc git-timemachine git-link ghub flymd flycheck-joker expand-region exec-path-from-shell es-mode elisp-slime-nav doom-themes dockerfile-mode dired-collapse diff-hl define-word csv-mode crux counsel-projectile company-quickhelp company-lsp company-go clj-refactor buffer-move browse-kill-ring atomic-chrome anzu alert ag)))
+    (dumb-jump paredit forge projectile counsel swiper ivy flycheck company markdown-mode restclient solarized-theme base16-theme nix-mode flycheck-rust jq-mode flycheck-clj-kondo rust-mode lsp-mode json-snatcher yasnippet cider clojure-mode go-mode multiple-cursors deadgrep vlf-setup vlf scpaste lsp-sh idle-highlight-mode color-theme-sanityinc-tomorrow yaml-mode which-key validate use-package systemd super-save sql-indent smex smart-mode-line smart-jump shell-pop rotate rg racer pkgbuild-mode paren-face paredit-everywhere paradox pacfiles-mode org-rich-yank ob-restclient nov no-littering nlinum minions magit macrostep lsp-ui lsp-rust libgit keychain-environment json-mode js2-mode hy-mode hl-todo highlight-symbol helpful groovy-mode go-errcheck go-eldoc git-timemachine git-link ghub flymd flycheck-joker expand-region exec-path-from-shell es-mode elisp-slime-nav doom-themes dockerfile-mode dired-collapse diff-hl define-word csv-mode crux counsel-projectile company-quickhelp company-lsp company-go clj-refactor buffer-move browse-kill-ring atomic-chrome anzu alert ag)))
  '(paradox-automatically-star t)
  '(paradox-github-token t)
  '(paren-face-regexp "[][{}()]" nil nil "Customized with use-package paren-face")
  '(rust-format-on-save t nil nil "Customized with use-package rust-mode")
  '(smart-jump-refs-key "C-M-?")
- '(sml/theme (quote respectful)))
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(default ((t (:family "Hack" :foundry "SRC" :slant normal :weight normal :height 90 :width normal)))))
+ '(sml/theme (quote automatic)))

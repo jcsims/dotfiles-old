@@ -76,6 +76,7 @@
 (put 'erase-buffer 'disabled nil)
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
 
 ;; Increase the GC threshold for startup
 (setq gc-cons-threshold 20000000)
@@ -98,6 +99,9 @@
 (when (fboundp 'menu-bar-mode)
   (menu-bar-mode -1))
 
+;; Font
+(set-frame-font "Hack 11")
+
 ;;; Themes
 (defvar jcs-active-theme)
 (defvar jcs-light-theme)
@@ -113,7 +117,7 @@
   :config (load-theme jcs-active-theme t))
 
 (use-package color-theme-sanityinc-tomorrow
-  :disabled
+  ;;:disabled
   :init   (setq jcs-active-theme 'sanityinc-tomorrow-eighties
                 jcs-light-theme 'sanityinc-tomorrow-day
                 jcs-dark-theme 'sanityinc-tomorrow-eighties)
@@ -127,7 +131,7 @@
   :config (load-theme jcs-active-theme t))
 
 (use-package base16-theme
-  ;;:disabled
+  :disabled
   :init   (setq base16-theme-256-color-source 'base16-shell
 	        jcs-active-theme 'base16-tomorrow-night-eighties
                 jcs-light-theme 'base16-gruvbox-light-hard
@@ -913,4 +917,3 @@
 (setq gc-cons-threshold 800000)
 
 ;;; init.el ends here
-(put 'narrow-to-region 'disabled nil)
