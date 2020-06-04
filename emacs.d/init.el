@@ -167,8 +167,9 @@
 (defvar jcs/next-file (expand-file-name "next.org" org-dir))
 (defvar jcs/tickler-file (expand-file-name "tickler.org" org-dir))
 (defvar jcs/inbox-file (expand-file-name "inbox.org" org-dir))
-(defvar jcs/reference-file (expand-file-name "reference.org" org-dir))
-(defvar jcs/checklists-file (expand-file-name "checklists.org" org-dir))
+(defvar jcs/reference-file (expand-file-name "reference/reference.org" org-dir))
+(defvar jcs/checklists-file (expand-file-name "reference/checklists.org" org-dir))
+(defvar jcs/archive-file (expand-file-name "archive/archive.org" org-dir))
 
 (use-package org
   :custom
@@ -176,7 +177,8 @@
   (org-lowest-priority ?D)
   (org-default-priority ?C)
   :config
-  (setq org-directory org-dir
+  (setq org-archive-location (concat jcs/archive-file "::* From %s")
+	org-directory org-dir
 	org-log-done 'time
 	org-log-into-drawer t
 	org-startup-indented t
@@ -207,6 +209,7 @@
                               (:newline)
                               ("@kasey" . ?k)
                               ("@alex" . ?a)
+			      ("@parents" . ?P)
                               (:newline)
                               ("weekend" . ?W)
                               ("evening" . ?e)
@@ -257,7 +260,7 @@
          ("C-c e t" . find-tickler-file)
          ("C-c e r" . find-reference-file)
          ("C-c e c" . find-checklists-file)
-         ("C-c e l" . jcs/find-log-file)
+         ("C-c e l" . visit-todays-log)
 
          ;; Below stolen from
          ;; https://github.com/raxod502/radian/blob/ee92ea6cb0473bf7d20c6d381753011312ef4a52/radian-emacs/radian-org.el
