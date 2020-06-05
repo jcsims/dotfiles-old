@@ -100,7 +100,10 @@
   (menu-bar-mode -1))
 
 ;; Font
-(set-frame-font "Hack 11")
+;; Really, it's that the mac is a HiDPI display
+(if (memq window-system '(mac ns))
+    (set-frame-font "Hack 12")
+    (set-frame-font "Hack 11"))
 
 ;;; Themes
 (defvar jcs-active-theme)
@@ -223,7 +226,7 @@
                               ("server" . ?s)
                               ("project_idea" . ?i)))
         org-todo-keywords
-        (quote ((sequence "TODO(t)" "NEXT(n)" "DOING(o)" "|" "DONE(d)")
+        (quote ((sequence "TODO(t)" "DOING(o)" "|" "DONE(d)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
   (defun find-projects-file () (interactive) (find-file jcs/projects-file))
   (defun find-someday-file () (interactive) (find-file jcs/someday-file))
@@ -318,6 +321,11 @@
                                  (emacs-lisp . t)
                                  (elasticsearch . t)
                                  (restclient . t))))
+(use-package org-habit
+  :ensure org
+  :after org
+  :config
+  (setq org-habit-graph-column 80))
 
 (use-package org-agenda
   :ensure org
@@ -359,15 +367,17 @@
             (todo "DOING"
                   ((org-agenda-overriding-header "In Progress")
                    (org-agenda-files jcs/agenda-files)))
-            (todo "NEXT"
-                  ((org-agenda-overriding-header "Next")
-                   (org-agenda-files jcs/agenda-files)))
-            (todo "TODO"
+            ;; TODO: filter things are in my "To Refile" section already
+	    (todo "TODO"
                   ((org-agenda-overriding-header "Todo")
-                   (org-agenda-files jcs/agenda-files)))
+                   (org-agenda-files jcs/agenda-files)
+		   (org-agenda-skip-function
+                    '(org-agenda-skip-if nil '(scheduled deadline)))))
             (todo "HOLD"
                   ((org-agenda-overriding-header "On Hold")
-                   (org-agenda-files jcs/agenda-files))))))))
+                   (org-agenda-files jcs/agenda-files)
+		   (org-agenda-skip-function
+                    '(org-agenda-skip-if nil '(scheduled deadline))))))))))
 
 (use-package org-capture
   :ensure org
