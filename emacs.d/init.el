@@ -103,7 +103,7 @@
 ;; Really, it's that the mac is a HiDPI display
 (if (memq window-system '(mac ns))
     (set-frame-font "Hack 12")
-    (set-frame-font "Hack 11"))
+    (set-frame-font "Hack 9"))
 
 ;;; Themes
 (defvar jcs-active-theme)
@@ -357,7 +357,9 @@
   (setq org-agenda-custom-commands
         '(("c" "Agenda and tasks"
            ((agenda ""
-                    ((org-agenda-files jcs/agenda-files)))
+                    ((org-agenda-files jcs/agenda-files)
+		     (org-agenda-skip-function
+		      '(org-agenda-skip-if nil '(todo done)))))
             (todo ""
                   ((org-agenda-overriding-header "To Refile")
                    (org-agenda-files '("~/org/inbox.org"))))
@@ -909,7 +911,9 @@
 (use-package hl-todo
   :config (global-hl-todo-mode))
 
-(use-package pkgbuild-mode :if (eq system-type 'gnu/linux))
+(use-package pkgbuild-mode
+  :custom (pkgbuild-update-sums-on-save nil)
+  :if (eq system-type 'gnu/linux))
 
 (use-package scpaste
   :config
