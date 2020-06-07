@@ -13,6 +13,7 @@ cask 'aerial'
 cask 'keybase'
 cask 'intel-power-gadget' # For CPU frequency in iStat Menus
 cask 'mattermost'
+cask 'calibre'
 
 mas 'Things', id: 904280696
 mas 'Bear', id: 1091189122
