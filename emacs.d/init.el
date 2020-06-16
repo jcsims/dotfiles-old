@@ -934,6 +934,10 @@
 
 (use-package nix-mode)
 
+(use-package newcomment
+  :ensure f
+  :config (global-set-key [remap comment-dwim] #'comment-line))
+
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")
                               user-emacs-directory)))
