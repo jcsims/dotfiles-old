@@ -774,8 +774,8 @@
               ("C-c i" . cider-inspect-last-result)
 	      ("C-M-." . cider-xref-fn-refs-select))
   :custom
-  (cider-jdk-src-paths '("~/code/clojure-sources"
-			 "/usr/lib/jvm/java-11-openjdk/lib/src.zip"))
+  (cider-jdk-src-paths '("~/dev/clojure-sources"
+			 "/usr/local/opt/java11/libexec/openjdk.jdk/Contents/Home/lib/src.zip"))
   (cider-save-file-on-load t)
   (cider-repl-use-pretty-printing t)
   (nrepl-use-ssh-fallback-for-remote-hosts t)
