@@ -837,18 +837,23 @@
 ;; LSP
 (use-package lsp-mode
   :hook ((rust-mode . lsp)
-	 ;; This messes up basic editing when combined with
-	 ;; cider/paredit/something else. It's unusable.
+	 ;; Enabling this (and maybe just LSP in general?) causes
+	 ;; Emacs to force-quit at times
 	 ;;(clojure-mode . lsp)
 	 )
+  :config
+  ;; (add-to-list 'lsp-language-id-configuration '(clojure-mode . "clojure"))
+  ;; (setq lsp-enable-indentation nil)
   ;; We'll see if this bites me later on... default is 1000
   :custom (lsp-file-watch-threshold 15000)
   :commands lsp)
 
 (use-package lsp-ui
+  :after lsp-mode
   :commands lsp-ui-mode)
 
 (use-package company-lsp
+  :after lsp-mode
   :commands company-lsp)
 
 (use-package rust-mode
