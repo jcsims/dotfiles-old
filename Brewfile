@@ -28,6 +28,7 @@ brew 'riemann', restart_service: :changed
 
 ## Dev tools
 brew 'aspell'
+brew 'borkdude/brew/babashka'
 brew 'bash'
 brew 'bash-completion@2'
 brew 'bat'
@@ -35,9 +36,11 @@ brew 'cmake'
 brew 'borkdude/brew/clj-kondo'
 brew 'clojure'
 brew 'clojure-lsp'
+brew 'coreutils'
 brew 'curl'
 brew 'diff-so-fancy'
 brew 'dust'
+cask 'emacs'
 brew 'fd'
 brew 'fzf'
 brew 'git'
@@ -47,6 +50,7 @@ brew 'hub'
 brew 'joker'
 brew 'jq'
 brew 'leiningen'
+brew "multimarkdown"
 # For the system Java wrappers to find this JDK, symlink it with
 #  sudo ln -sfn /usr/local/opt/openjdk@11/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-11.jdk
 brew 'openjdk@11'
@@ -59,6 +63,7 @@ brew 'tmux'
 brew 'tree'
 brew 'vim'
 brew 'watch'
+cask 'Zettlr'
 
 ## Other
 brew 'rustup'

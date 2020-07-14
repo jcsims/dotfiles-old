@@ -561,11 +561,8 @@
 ;; Config other packages
 (use-package company
   :config
-  (setq company-tooltip-limit 20)                       ; bigger popup window
   (setq company-idle-delay .3)                          ; decrease delay before autocompletion popup shows
   (setq company-echo-delay 0)                           ; remove annoying blinking
-  (setq company-begin-commands '(self-insert-command))  ; start autocompletion only after typing)
-  (setq company-tooltip-align-annotations t)
   (global-company-mode))
 
 (use-package company-quickhelp
@@ -760,7 +757,10 @@
   :pin melpa-stable
   :hook
   (clojure-mode . paredit-mode)
-  :mode (("\\.edn\\'" . clojure-mode)))
+  :mode (("\\.edn\\'" . clojure-mode))
+  :config
+  (define-clojure-indent
+    (prop/for-all 1)))
 
 ;;; Cider
 (use-package cider

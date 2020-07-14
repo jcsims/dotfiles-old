@@ -54,3 +54,5 @@
   verify = off
 [github "github.threatbuild.com/api/v3"]
   user = chrsims
+[fetch]
+	prune = true
