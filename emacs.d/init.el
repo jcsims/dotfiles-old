@@ -111,35 +111,29 @@
 (defvar jcs-dark-theme)
 
 ;;; Themes
-(use-package solarized-theme
-  :disabled
-  :init
-  (setq jcs-active-theme 'solarized-dark
-        jcs-light-theme 'solarized-light
-        jcs-dark-theme 'solarized-dark)
-  :config (load-theme jcs-active-theme t))
+(use-package solarized-theme)
+(use-package color-theme-sanityinc-tomorrow)
+(use-package nord-theme)
+(use-package base16-theme)
 
-(use-package color-theme-sanityinc-tomorrow
-  ;;:disabled
-  :init   (setq jcs-active-theme 'sanityinc-tomorrow-eighties
+;; (setq base16-theme-256-color-source 'base16-shell
+;;       jcs-active-theme 'base16-tomorrow-night-eighties
+;;       jcs-light-theme 'base16-gruvbox-light-hard
+;;       jcs-dark-theme 'base16-tomorrow-night-eighties)
+
+;; (setq jcs-active-theme 'nord
+;;       jcs-light-theme 'nord
+;;       jcs-dark-theme 'nord)
+
+;; (setq jcs-active-theme 'solarized-dark
+;;       jcs-light-theme 'solarized-light
+;;       jcs-dark-theme 'solarized-dark)
+
+(setq jcs-active-theme 'sanityinc-tomorrow-eighties
                 jcs-light-theme 'sanityinc-tomorrow-day
                 jcs-dark-theme 'sanityinc-tomorrow-eighties)
-  :config (load-theme jcs-active-theme t))
 
-(use-package nord-theme
-  :disabled
-  :init   (setq jcs-active-theme 'nord
-                jcs-light-theme 'nord
-                jcs-dark-theme 'nord)
-  :config (load-theme jcs-active-theme t))
-
-(use-package base16-theme
-  :disabled
-  :init   (setq base16-theme-256-color-source 'base16-shell
-	        jcs-active-theme 'base16-tomorrow-night-eighties
-                jcs-light-theme 'base16-gruvbox-light-hard
-                jcs-dark-theme 'base16-tomorrow-night-eighties)
-  :config (load-theme jcs-active-theme t))
+(load-theme jcs-active-theme t)
 
 (defun toggle-dark-light-theme ()
   "Toggle the current theme between light and dark."
@@ -696,7 +690,7 @@
   :config (dumb-jump-mode))
 
 (use-package smart-jump
-  ;;:disabled
+  :disabled
   :config (smart-jump-setup-default-registers)
   :custom (smart-jump-refs-key "C-M-?"))
 
@@ -808,7 +802,7 @@
   (add-to-list 'cljr-magic-require-namespaces '("string" . "clojure.string")))
 
 ;;(use-package flycheck-joker)
-(use-package flycheck-clj-kondo)
+;;(use-package flycheck-clj-kondo)
 
 ;; Seed the PRNG anew, from the system's entropy pool
 (random t)
@@ -837,11 +831,9 @@
 ;; LSP
 (use-package lsp-mode
   :hook ((rust-mode . lsp)
-	 ;; Enabling this (and maybe just LSP in general?) causes
-	 ;; Emacs to force-quit at times
-	 ;;(clojure-mode . lsp)
+	 ;; (clojure-mode . lsp)
 	 )
-  :config
+  ;; :config
   ;; (add-to-list 'lsp-language-id-configuration '(clojure-mode . "clojure"))
   ;; (setq lsp-enable-indentation nil)
   ;; We'll see if this bites me later on... default is 1000
@@ -914,6 +906,10 @@
   :config (pixel-scroll-mode))
 
 (use-package hl-todo
+  :disabled ;; broken, complaining about
+  ;; "File mode specification error: (user-error Cannot enable
+  ;; hl-todo-mode without font-lock)"
+  ;;constantly
   :config (global-hl-todo-mode))
 
 (use-package pkgbuild-mode
@@ -929,8 +925,6 @@
 
 (use-package vlf
   :config (require 'vlf-setup))
-
-(use-package deadgrep)
 
 (use-package nix-mode)
 
