@@ -208,17 +208,17 @@
                               ("@kasey" . ?k)
                               ("@alex" . ?a)
 			      ("@parents" . ?P)
+			      ("james" . ?j)
                               (:newline)
                               ("weekend" . ?W)
                               ("evening" . ?e)
                               ("business_hours" . ?b)
-                              ("reading" . ?r)
                               ("learning" . ?l)
+			      ("project_idea" . ?i)
                               (:newline)
-                              ("james" . ?j)
-                              ("workstation" . ?K)
-                              ("server" . ?s)
-                              ("project_idea" . ?i)))
+                              ("high_effort" . ?H)
+			      ("quick_win" . ?q)
+			      ("focus" . ?f)))
         org-todo-keywords
         (quote ((sequence "TODO(t)" "DOING(o)" "|" "DONE(d)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
@@ -802,7 +802,7 @@
   (add-to-list 'cljr-magic-require-namespaces '("string" . "clojure.string")))
 
 ;;(use-package flycheck-joker)
-;;(use-package flycheck-clj-kondo)
+(use-package flycheck-clj-kondo)
 
 ;; Seed the PRNG anew, from the system's entropy pool
 (random t)
@@ -906,10 +906,6 @@
   :config (pixel-scroll-mode))
 
 (use-package hl-todo
-  :disabled ;; broken, complaining about
-  ;; "File mode specification error: (user-error Cannot enable
-  ;; hl-todo-mode without font-lock)"
-  ;;constantly
   :config (global-hl-todo-mode))
 
 (use-package pkgbuild-mode

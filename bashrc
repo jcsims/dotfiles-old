@@ -117,7 +117,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 
     alias stay-awake='caffeinate -di'
 
-    alias alert='terminal-notifier -activate "com.apple.Terminal" -message "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+    alias alert='terminal-notifier -activate "com.googlecode.iterm2" -message "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
 
     [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
