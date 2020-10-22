@@ -101,9 +101,7 @@
 
 ;; Font
 ;; Really, it's that the mac is a HiDPI display
-(if (memq window-system '(mac ns))
-    (set-frame-font "Hack 12")
-    (set-frame-font "Hack 9"))
+(set-frame-font "Hack Nerd Font 12")
 
 ;;; Themes
 (defvar jcs-active-theme)
