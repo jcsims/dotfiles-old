@@ -255,6 +255,7 @@ export PATH
 #PS1="[\u@\h \W]\$ " # Default prompt
 
 PS1="[\u@\h \w]\$ "
+#eval "$(starship init bash)"
 
 ## TODO: Add some macos settings
 ## defaults write NSGlobalDomain NSWindowResizeTime .001 # Speed up animations on window resizes

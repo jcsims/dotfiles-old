@@ -5,6 +5,7 @@ tap 'homebrew/cask'
 tap 'homebrew/core'
 tap 'candid82/brew' # joker
 tap 'homebrew/cask-versions' # jdk8
+tap 'homebrew/cask-fonts' # hack nerd font
 tap 'borkdude/brew' # clj-kondo
 
 ## Casks
@@ -14,6 +15,7 @@ cask 'keybase'
 cask 'intel-power-gadget' # For CPU frequency in iStat Menus
 cask 'mattermost'
 cask 'syncthing'
+cask 'font-hack-nerd-font'
 
 ## Services
 cask 'homebrew/cask-versions/adoptopenjdk8' # Needed for ES...
@@ -49,6 +51,7 @@ brew 'openjdk@11'
 brew 'pass'
 brew 'ripgrep'
 brew 'shellcheck'
+brew 'starship'
 brew 'terminal-notifier'
 brew 'the_silver_searcher'
 brew 'tmux'
