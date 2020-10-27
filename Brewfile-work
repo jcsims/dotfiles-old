@@ -4,7 +4,6 @@ tap 'homebrew/bundle'
 tap 'homebrew/cask'
 tap 'homebrew/core'
 tap 'candid82/brew' # joker
-tap 'homebrew/cask-versions' # jdk8
 tap 'homebrew/cask-fonts' # hack nerd font
 tap 'borkdude/brew' # clj-kondo
 
@@ -18,8 +17,7 @@ cask 'syncthing'
 cask 'font-hack-nerd-font'
 
 ## Services
-cask 'homebrew/cask-versions/adoptopenjdk8' # Needed for ES...
-brew 'elasticsearch', restart_service: :changed
+brew 'elasticsearch@7', restart_service: :changed, link: true
 brew 'postgresql@9.6', restart_service: :changed, link: true
 brew 'redis', restart_service: :changed
 brew 'riemann', restart_service: :changed

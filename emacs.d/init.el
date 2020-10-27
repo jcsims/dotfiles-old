@@ -688,7 +688,7 @@
   :config (dumb-jump-mode))
 
 (use-package smart-jump
-  :disabled
+  ;;:disabled
   :config (smart-jump-setup-default-registers)
   :custom (smart-jump-refs-key "C-M-?"))
 
