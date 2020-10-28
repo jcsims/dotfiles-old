@@ -16,6 +16,9 @@ cask 'mattermost'
 cask 'syncthing'
 cask 'font-hack-nerd-font'
 
+## App Store
+mas 'Things', id: 904280696
+
 ## Services
 brew 'elasticsearch@7', restart_service: :changed, link: true
 brew 'postgresql@9.6', restart_service: :changed, link: true

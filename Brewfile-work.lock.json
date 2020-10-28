@@ -5,10 +5,10 @@
         "revision": "fac685a042d875fdfff45a6dd2b3067bc1b96296"
       },
       "homebrew/cask": {
-        "revision": "c61b51ff82b45b021939ae75c7a24984bb4a7e6a"
+        "revision": "dfc74d3c68cf12b16060f8598366d9492f9067f0"
       },
       "homebrew/core": {
-        "revision": "fb19b0a6a0213b3427a7d87c5ea7797c577eb1d0"
+        "revision": "70bc15cc978206d6fdce432dd479642fac043675"
       },
       "candid82/brew": {
         "revision": "1294e1f34b24dfae8d22556940eff619c5b45dba"
@@ -94,7 +94,7 @@
     "mas": {
       "Things": {
         "id": "904280696",
-        "version": "3.12.6"
+        "version": "3.13"
       },
       "Bear": {
         "id": "1091189122",
@@ -404,22 +404,22 @@
         }
       },
       "fzf": {
-        "version": "0.24.0",
+        "version": "0.24.0_1",
         "bottle": {
           "cellar": ":any_skip_relocation",
           "prefix": "/usr/local",
           "files": {
             "catalina": {
-              "url": "https://homebrew.bintray.com/bottles/fzf-0.24.0.catalina.bottle.tar.gz",
-              "sha256": "7520365c977ae5b475779d99b9644eb2c562aadd5983ebc78c5acab5a9db9ceb"
+              "url": "https://homebrew.bintray.com/bottles/fzf-0.24.0_1.catalina.bottle.tar.gz",
+              "sha256": "a89c099dccda645a3cc6070e8e47731f6edf6cb69f238be0140f5a3b3190eaf8"
             },
             "mojave": {
-              "url": "https://homebrew.bintray.com/bottles/fzf-0.24.0.mojave.bottle.tar.gz",
-              "sha256": "73dc6dd98088d82fee1c3adf9d521f6e368d578dcdd4268a025b0d19d0412dd0"
+              "url": "https://homebrew.bintray.com/bottles/fzf-0.24.0_1.mojave.bottle.tar.gz",
+              "sha256": "f1bb31bcaf64888c390f64c30f3a1cb77e8770b005877a43912a26b4b41f8548"
             },
             "high_sierra": {
-              "url": "https://homebrew.bintray.com/bottles/fzf-0.24.0.high_sierra.bottle.tar.gz",
-              "sha256": "937c92bd34398258ed90b813abb9033b7a58d74a1fe11d2bee51fc484d21213a"
+              "url": "https://homebrew.bintray.com/bottles/fzf-0.24.0_1.high_sierra.bottle.tar.gz",
+              "sha256": "f11cdcfc847ffecafc60b5cd06f02149ecbb3c5c275055817f695814157c06dd"
             }
           }
         }
@@ -910,7 +910,7 @@
       "catalina": {
         "HOMEBREW_VERSION": "2.5.7",
         "HOMEBREW_PREFIX": "/usr/local",
-        "Homebrew/homebrew-core": "fb19b0a6a0213b3427a7d87c5ea7797c577eb1d0",
+        "Homebrew/homebrew-core": "70bc15cc978206d6fdce432dd479642fac043675",
         "CLT": "12.1.0.0.1.1602137645",
         "Xcode": "12.0",
         "macOS": "10.15.7"
