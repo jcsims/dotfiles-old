@@ -432,8 +432,7 @@
 ;;; Packages
 (use-package vc-hooks
   :ensure f
-  :config (setq vc-handled-backends nil ;; turn off vc-mode - I have Magit
-		vc-follow-symlinks t ; even when they're in version control
+  :config (setq vc-follow-symlinks t ; even when they're in version control
 		))
 
 (use-package recentf
@@ -706,9 +705,11 @@
 ;; `diff-hl-next-hunk'       C-x v ]
 (use-package diff-hl
   :config
-  (setq diff-hl-draw-borders nil)
+  ;;(setq diff-hl-draw-borders nil)
   (global-diff-hl-mode)
-  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh t))
+  (diff-hl-dired-mode)
+  (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
+  (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
 (use-package super-save
   :init (setq auto-save-default nil)
