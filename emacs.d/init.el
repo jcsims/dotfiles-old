@@ -633,7 +633,7 @@
   :mode "\\.js\\'")
 
 (require 'ivy)
-(use-package libgit)
+(use-package magit-libgit)
 (use-package magit
   :bind (("C-c g"   . magit-status)
          ("C-c M-g" . magit-dispatch-popup))
