@@ -17,7 +17,6 @@
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
         ("melpa" . "https://melpa.org/packages/")
-        ("melpa-stable" . "https://stable.melpa.org/packages/")
         ("org" . "https://orgmode.org/elpa/")))
 (package-initialize)
 
@@ -653,8 +652,7 @@
 (use-package git-timemachine)
 
 ;; ghub and dash are required by threatgrid.el
-(use-package ghub
-  :pin melpa-stable)
+(use-package ghub)
 
 (use-package dash
   :config (dash-enable-font-lock))
@@ -747,7 +745,6 @@
   :config (global-eldoc-mode))
 
 (use-package clojure-mode
-  :pin melpa-stable
   :hook
   (clojure-mode . paredit-mode)
   :mode (("\\.edn\\'" . clojure-mode))
@@ -757,7 +754,6 @@
 
 ;;; Cider
 (use-package cider
-  :pin melpa-stable
   :hook
   ((clojure-mode . cider-mode)
    (cider-repl-mode . paredit-mode)
@@ -787,7 +783,6 @@
 (use-package yasnippet)
 
 (use-package clj-refactor
-  :pin melpa-stable
   :hook (clojure-mode . (lambda ()
                           (clj-refactor-mode 1)
                           (yas-minor-mode 1)
@@ -926,6 +921,8 @@
 (use-package newcomment
   :ensure f
   :config (global-set-key [remap comment-dwim] #'comment-line))
+
+(use-package snow)
 
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")

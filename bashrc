@@ -33,6 +33,15 @@ appendpath () {
     esac
 }
 
+prepend_path () {
+    case ":$PATH:" in
+        *:"$1":*)
+        ;;
+        *)
+            PATH="$1:$PATH"
+    esac
+}
+
 appendpath $HOME/bin
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
@@ -78,38 +87,29 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     ## Set the terminal theme
     [ -f $HOME/.base16_theme ] && source $HOME/.base16_theme
 
-    # export XDG_DESKTOP_DIR="$HOME"
-    # export XDG_DOWNLOAD_DIR="$HOME/downloads"
-    # export XDG_DOCUMENTS_DIR="$HOME/documents"
-    # export XDG_MUSIC_DIR="$HOME/music"
-    # export XDG_PICTURES_DIR="$HOME/pictures"
-    # export XDG_VIDEOS_DIR="$HOME/videos"
-
     ## Nix support
     [ -f /etc/profile.d/nix.sh ] && source /etc/profile.d/nix.sh
-
-    if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
-        export _JAVA_AWT_WM_NONREPARENTING=1
-        export XDG_CURRENT_DESKTOP=sway
-        export XDG_SESSION_TYPE=wayland
-        export CLUTTER_BACKEND=wayland
-        export QT_QPA_PLATFORM=wayland
-        export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
-        export SDL_VIDEODRIVER=wayland
-        exec sway
-    fi
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Add GOROOT bin path to PATH
     appendpath /usr/local/go/bin
 
-    export BASH_COMPLETION_COMPAT_DIR="/usr/local/etc/bash_completion.d"
+    export BASH_COMPLETION_COMPAT_DIR="/opt/homebrew/etc/bash_completion.d"
 
-    [[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+    [[ -r "/opt/homebrew/etc/profile.d/bash_completion.sh" ]] && . "/opt/homebrew/etc/profile.d/bash_completion.sh"
 
-    # Brew-installed paths
+    # Brew-installed paths, arm64 variant
+    prepend_path /opt/homebrew/bin
+    prepend_path /opt/homebrew/sbin
+
+    #export JAVA_HOME=$(brew --prefix openjdk)
+
+    ## Intel-version paths get added towards the end, so we favor arm64 variants when possible
     appendpath /usr/local/bin
     appendpath /usr/local/sbin
+
+    # Add an explicit alias here, so that we can call the intel variant when needed
+    alias ibrew='arch -x86_64 /usr/local/bin/brew'
 
     # Add installed-from-source Postgres binary and manpage paths
     appendpath /usr/local/pgsql/bin
@@ -118,8 +118,6 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     alias stay-awake='caffeinate -di'
 
     alias alert='terminal-notifier -activate "com.googlecode.iterm2" -message "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
-
-    [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 
     export GOPATH=$HOME/dev/go:$HOME/dev/tg/sandcastle:$HOME/dev/tg/ops
     export GOBIN=$HOME/bin
@@ -263,3 +261,4 @@ PS1="[\u@\h \w]\$ "
 # Enable subpixel font rendering on non-Apple LCDs
 # Reference: https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
 ## defaults write NSGlobalDomain AppleFontSmoothing -int 1
+source "$HOME/.cargo/env"
