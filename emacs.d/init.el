@@ -13,6 +13,9 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
+;; Fix this to TLS 1.3 in an attempt to fix resolution of package archives.
+;;(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
+
 (require 'package)
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
@@ -36,7 +39,7 @@
 ; contents over https.
 ; https://www.reddit.com/r/emacs/comments/cdei4p/failed_to_download_gnu_archive_bad_request/etw48ux
 ; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
-(if (and (version< emacs-version "26.3") (>= libgnutls-version 30600))
+(if (and (version< emacs-version "28.3") (>= libgnutls-version 30600))
     (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
 (use-package no-littering
@@ -290,6 +293,12 @@
          ([remap backward-paragraph] . org-backward-paragraph)
          ([remap forward-paragraph] . org-forward-paragraph)))
 
+(use-package org-tempo :ensure org)
+
+(use-package org-roam
+  :init (setq org-roam-directory "~/org-roam")
+  :config (org-roam-mode))
+
 (use-package ox-md :ensure org)
 
 (use-package restclient)
@@ -506,7 +515,9 @@
 
 (use-package simple
   :ensure f
-  :config (column-number-mode)
+  :config
+  (column-number-mode)
+  (setq-default what-cursor-show-names t)
   :bind ("M-SPC" . cycle-spacing)
   :hook ((text-mode org-mode markdown-mode) . turn-on-auto-fill))
 
@@ -685,7 +696,7 @@
   :config (dumb-jump-mode))
 
 (use-package smart-jump
-  ;;:disabled
+  :disabled
   :config (smart-jump-setup-default-registers)
   :custom (smart-jump-refs-key "C-M-?"))
 
@@ -761,9 +772,10 @@
    (cider-mode . cider-company-enable-fuzzy-completion))
   :bind (:map clojure-mode-map
               ("C-c i" . cider-inspect-last-result)
-	      ("C-M-." . cider-xref-fn-refs-select))
+	      ([remap cider-find-var] . lsp-find-definition))
   :custom
-  (cider-jdk-src-paths '("~/dev/clojure-sources"
+  ;; TODO: update these paths
+  (cider-jdk-src-paths '("~/code/clojure-sources"
 			 "/usr/local/opt/java11/libexec/openjdk.jdk/Contents/Home/lib/src.zip"))
   (cider-save-file-on-load t)
   (cider-repl-use-pretty-printing t)
@@ -795,8 +807,8 @@
   (add-to-list 'cljr-magic-require-namespaces '("json" . "cheshire.core"))
   (add-to-list 'cljr-magic-require-namespaces '("string" . "clojure.string")))
 
-;;(use-package flycheck-joker)
-(use-package flycheck-clj-kondo)
+;; This is used by clojure-lsp via lsp-mode now
+;;(use-package flycheck-clj-kondo)
 
 ;; Seed the PRNG anew, from the system's entropy pool
 (random t)
@@ -825,25 +837,35 @@
 ;; LSP
 (use-package lsp-mode
   :hook ((rust-mode . lsp)
-	 ;; (clojure-mode . lsp)
-	 )
-  ;; :config
-  ;; (add-to-list 'lsp-language-id-configuration '(clojure-mode . "clojure"))
-  ;; (setq lsp-enable-indentation nil)
+	 (clojure-mode . lsp))
+   :config
+  (setq read-process-output-max (* 1024 1024))
+  (setq lsp-enable-indentation nil)
   ;; We'll see if this bites me later on... default is 1000
   :custom (lsp-file-watch-threshold 15000)
   :commands lsp)
 
 (use-package lsp-ui
   :after lsp-mode
-  :commands lsp-ui-mode)
+  :commands lsp-ui-mode
+  :bind (:map lsp-ui-mode-map
+	      ("C-M-." . xref-find-references)
+	      ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+	      ([remap xref-find-references] . lsp-ui-peek-find-references))
+  :custom (lsp-ui-sideline-show-code-actions nil))
 
 (use-package company-lsp
   :after lsp-mode
   :commands company-lsp)
 
-(use-package rust-mode
-  :custom (rust-format-on-save t))
+(use-package lsp-treemacs
+  :after lsp-mode
+  :config (setq treemacs-space-between-root-nodes nil))
+
+;; (use-package rust-mode
+;;   :custom (rust-format-on-save nil))
+
+(use-package rustic)
 
 (use-package racer
   :disabled
@@ -857,7 +879,11 @@
   :config (savehist-mode))
 
 (use-package atomic-chrome
-  :config (atomic-chrome-start-server))
+  :config
+  (setq atomic-chrome-url-major-mode-alist
+	'(("github\\.com" . gfm-mode)
+	  ("github\\.threatbuild\\.com" . gfm-mode)))
+  (atomic-chrome-start-server))
 
 (use-package crux
   :bind (("C-x 4 t" . crux-transpose-windows)
@@ -929,8 +955,5 @@
                               user-emacs-directory)))
   (when (file-exists-p file)
     (load file)))
-
-;; Set the GC threshold back to default
-(setq gc-cons-threshold 800000)
 
 ;;; init.el ends here
