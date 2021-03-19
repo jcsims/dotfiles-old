@@ -103,7 +103,9 @@
 
 ;; Font
 ;; Really, it's that the mac is a HiDPI display
-(set-frame-font "Hack Nerd Font 12")
+(if (eq system-type 'gnu/linux)
+    (set-frame-font "Hack 9")
+  (set-frame-font "Hack Nerd Font 12"))
 
 ;;; Themes
 (defvar jcs-active-theme)
@@ -362,7 +364,8 @@
 		      '(org-agenda-skip-if nil '(todo done)))))
             (todo ""
                   ((org-agenda-overriding-header "To Refile")
-                   (org-agenda-files '("~/org/inbox.org"))))
+                   (org-agenda-files '("~/org/inbox.org"
+				       "~/org/beorg.org"))))
             (todo "WAITING"
                   ((org-agenda-overriding-header "Waiting")
                    (org-agenda-files jcs/agenda-files)))
@@ -855,6 +858,7 @@
   :custom (lsp-ui-sideline-show-code-actions nil))
 
 (use-package company-lsp
+  :disabled ;; it seems that LSP no longer supports this?
   :after lsp-mode
   :commands company-lsp)
 
@@ -949,6 +953,16 @@
   :config (global-set-key [remap comment-dwim] #'comment-line))
 
 (use-package snow)
+
+(use-package nov
+  :mode "\\.epub\\'"
+  :config
+  (setq nov-text-width 80)
+  (setq visual-fill-column-center-text t)
+  ;; :hook
+  ;; (nov-mode-hook . visual-line-mode)
+  ;; (nov-mode-hook . visual-fill-column-mode)
+  )
 
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")

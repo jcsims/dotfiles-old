@@ -5,15 +5,9 @@ export CLICOLOR=1
 export EDITOR='emacsclient -t -a ""'
 export VISUAL='emacsclient -c -a ""'
 export TERM=xterm-256color
-export LSCOLORS='exfxcxdxbxegedabagacad'
 
 if [[ -x /usr/bin/dircolors ]] ; then
     eval "$(dircolors)"
-fi
-
-# Source global definitions
-if [[ -f /etc/bashrc ]]; then
-    . /etc/bashrc
 fi
 
 # use .localrc for SUPER SECRET CRAP that you don't
@@ -45,18 +39,7 @@ prepend_path () {
 appendpath $HOME/bin
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    # enable programmable completion features (you don't need to enable
-    # this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-    # sources /etc/bash.bashrc).
-    if ! shopt -oq posix; then
-        if [ -f /usr/share/bash-completion/bash_completion ]; then
-            . /usr/share/bash-completion/bash_completion
-        elif [ -f /etc/bash_completion ]; then
-            . /etc/bash_completion
-        fi
-    fi
-
-    ## eval "$(keychain --eval --quiet --agents gpg,ssh id_rsa 98662236EE64EFAF0BE9973025FF041622DE3AFB)"
+        ## eval "$(keychain --eval --quiet --agents gpg,ssh id_rsa 98662236EE64EFAF0BE9973025FF041622DE3AFB)"
 
     # Add an "alert" alias for long running commands.  Use like so:
     #   sleep 10; alert
@@ -69,10 +52,10 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     # For Fedora
     #alias docker='podman' <-- this is already handled by the
     #                          podman-docker package
-    alias docker-compose='podman-compose'
+    #alias docker-compose='podman-compose'
 
-    [ -f /usr/share/fzf/shell/key-bindings.bash ] && source /usr/share/fzf/shell/key-bindings.bash
-    [ -f /usr/share/fzf/shell/completion.bash ] && source /usr/share/fzf/shell/completion.bash
+    [ -f /usr/share/skim/key-bindings.bash ] && source /usr/share/skim/key-bindings.bash
+    [ -f /usr/share/skim/completion.bash ] && source /usr/share/skim/completion.bash
 
     export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle
     export GOBIN=$HOME/bin
@@ -118,6 +101,8 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     alias stay-awake='caffeinate -di'
 
     alias alert='terminal-notifier -activate "com.googlecode.iterm2" -message "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+    source "$HOME/.cargo/env"
 
     export GOPATH=$HOME/dev/go:$HOME/dev/tg/sandcastle:$HOME/dev/tg/ops
     export GOBIN=$HOME/bin
@@ -261,4 +246,4 @@ PS1="[\u@\h \w]\$ "
 # Enable subpixel font rendering on non-Apple LCDs
 # Reference: https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
 ## defaults write NSGlobalDomain AppleFontSmoothing -int 1
-source "$HOME/.cargo/env"
+
