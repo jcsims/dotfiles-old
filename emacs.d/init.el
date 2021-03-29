@@ -964,6 +964,11 @@
   ;; (nov-mode-hook . visual-fill-column-mode)
   )
 
+;; Emoji support
+(use-package unicode-fonts
+  :config
+  (unicode-fonts-setup))
+
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")
                               user-emacs-directory)))
