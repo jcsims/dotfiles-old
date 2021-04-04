@@ -955,6 +955,7 @@
 (use-package snow)
 
 (use-package nov
+  :disabled
   :mode "\\.epub\\'"
   :config
   (setq nov-text-width 80)

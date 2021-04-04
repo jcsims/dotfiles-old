@@ -18,7 +18,7 @@ then
 fi
 
 ## Path
-appendpath () {
+append_path () {
     case ":$PATH:" in
         *:"$1":*)
         ;;
@@ -36,10 +36,10 @@ prepend_path () {
     esac
 }
 
-appendpath $HOME/bin
+prepend_path $HOME/bin
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-        ## eval "$(keychain --eval --quiet --agents gpg,ssh id_rsa 98662236EE64EFAF0BE9973025FF041622DE3AFB)"
+    eval "$(keychain --eval --quiet --agents gpg,ssh id_rsa 98662236EE64EFAF0BE9973025FF041622DE3AFB)"
 
     # Add an "alert" alias for long running commands.  Use like so:
     #   sleep 10; alert
@@ -48,11 +48,6 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     alias ls='ls --color=auto'
 
     alias open='xdg-open'
-
-    # For Fedora
-    #alias docker='podman' <-- this is already handled by the
-    #                          podman-docker package
-    #alias docker-compose='podman-compose'
 
     [ -f /usr/share/skim/key-bindings.bash ] && source /usr/share/skim/key-bindings.bash
     [ -f /usr/share/skim/completion.bash ] && source /usr/share/skim/completion.bash
@@ -73,9 +68,30 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     ## Nix support
     [ -f /etc/profile.d/nix.sh ] && source /etc/profile.d/nix.sh
 
+    export XDG_DESKTOP_DIR="$HOME"
+    export XDG_DOWNLOAD_DIR="$HOME/downloads"
+    export XDG_DOCUMENTS_DIR="$HOME/documents"
+    export XDG_MUSIC_DIR="$HOME/music"
+    export XDG_PICTURES_DIR="$HOME/pictures"
+    export XDG_VIDEOS_DIR="$HOME/videos"
+
+    if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
+	export MOZ_ENABLE_WAYLAND=1
+	export GDK_SCALE=2
+        export _JAVA_AWT_WM_NONREPARENTING=1
+        export XDG_CURRENT_DESKTOP=sway
+        export XDG_SESSION_TYPE=wayland
+        export CLUTTER_BACKEND=wayland
+        export QT_QPA_PLATFORM=wayland
+        export QT_WAYLAND_DISABLE_WINDOWDECORATION=1
+        export SDL_VIDEODRIVER=wayland
+        exec sway
+    fi
+
+
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Add GOROOT bin path to PATH
-    appendpath /usr/local/go/bin
+    append_path /usr/local/go/bin
 
     export BASH_COMPLETION_COMPAT_DIR="/opt/homebrew/etc/bash_completion.d"
 
@@ -88,14 +104,14 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     #export JAVA_HOME=$(brew --prefix openjdk)
 
     ## Intel-version paths get added towards the end, so we favor arm64 variants when possible
-    appendpath /usr/local/bin
-    appendpath /usr/local/sbin
+    append_path /usr/local/bin
+    append_path /usr/local/sbin
 
     # Add an explicit alias here, so that we can call the intel variant when needed
     alias ibrew='arch -x86_64 /usr/local/bin/brew'
 
     # Add installed-from-source Postgres binary and manpage paths
-    appendpath /usr/local/pgsql/bin
+    append_path /usr/local/pgsql/bin
     export MANPATH=/usr/local/pgsql/share/man:$MANPATH
 
     alias stay-awake='caffeinate -di'
@@ -113,7 +129,7 @@ fi
 export BAT_THEME="Nord"
 
 # Cargo's bin path
-appendpath $HOME/.cargo/bin
+append_path $HOME/.cargo/bin
 
 # Sensible options, borrowed from
 # https://github.com/mrzool/bash-sensible
@@ -231,7 +247,8 @@ man() {
         man "$@"
 }
 
-unset appendpath
+unset append_path
+unset prepend_path
 export PATH
 
 ## Prompt
