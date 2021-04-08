@@ -631,12 +631,20 @@
   (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
 
 (use-package projectile
+  :init (setq projectile-project-search-path '("~/code" "~/dev"))
   :bind (:map projectile-mode-map
               ("C-c p" . projectile-command-map)
+	      ;; This is handy on macOS
+	      ("s-p" . projectile-command-map)
 	      :map projectile-command-map
 	      ;; I'm used to this binding, and ripgrep is faster
 	      ("s s" . projectile-ripgrep))
-  :config (projectile-mode))
+  :config (projectile-mode)
+  ;; hybrid gives us sorting, but lag on each keystroke =/
+  ;; :custom
+  ;; (projectile-sort-order 'recently-active)
+  ;; (projectile-indexing-method 'hybrid)
+  )
 
 (use-package counsel-projectile
   :config (counsel-projectile-mode))
