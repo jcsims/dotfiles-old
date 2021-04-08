@@ -753,10 +753,6 @@
 
 (use-package csv-mode)
 (use-package sql-indent)
-(use-package eldoc
-  :ensure f
-  :when (version< "25" emacs-version)
-  :config (global-eldoc-mode))
 
 (use-package clojure-mode
   :hook
