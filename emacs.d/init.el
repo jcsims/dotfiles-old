@@ -511,6 +511,8 @@
          ("\\.markdown\\'" . markdown-mode))
   :config (setq markdown-fontify-code-blocks-natively t))
 
+(use-package grip-mode)
+
 (use-package minions
   :config
   (setq minions-direct '(flycheck-mode cider-mode vlf-mode lsp-mode))
