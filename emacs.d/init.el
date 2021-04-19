@@ -127,13 +127,13 @@
 ;;       jcs-light-theme 'nord
 ;;       jcs-dark-theme 'nord)
 
-;; (setq jcs-active-theme 'solarized-dark
-;;       jcs-light-theme 'solarized-light
-;;       jcs-dark-theme 'solarized-dark)
+(setq jcs-active-theme 'solarized-gruvbox-dark
+      jcs-light-theme 'solarized-gruvbox-light
+      jcs-dark-theme 'solarized-gruvbox-dark)
 
-(setq jcs-active-theme 'sanityinc-tomorrow-eighties
-                jcs-light-theme 'sanityinc-tomorrow-day
-                jcs-dark-theme 'sanityinc-tomorrow-eighties)
+;; (setq jcs-active-theme 'sanityinc-tomorrow-eighties
+;;                 jcs-light-theme 'sanityinc-tomorrow-day
+;;                 jcs-dark-theme 'sanityinc-tomorrow-eighties)
 
 (load-theme jcs-active-theme t)
 
@@ -577,7 +577,7 @@
 (use-package elisp-slime-nav
   :config
   ;; Enable M-. and M-, along with C-c C-d {c,C-d} for elisp
-  :hook ((emacs-lisp-mode ielm-mode) . turn-on-elisp-slime-nav-mode))
+  :hook ((emacs-lisp-mode ielm-mode) . elisp-slime-nav-mode))
 
 (use-package highlight-symbol
   :bind (:map mode-specific-map
@@ -658,7 +658,7 @@
 (use-package magit-libgit)
 (use-package magit
   :bind (("C-c g"   . magit-status)
-         ("C-c M-g" . magit-dispatch-popup))
+         ("C-c M-g" . magit-dispatch))
   :custom
   (magit-branch-prefer-remote-upstream t)
   (magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-")))
@@ -670,21 +670,7 @@
                           'magit-insert-stashes
                           'append))
 
-(use-package forge
-  :after magit)
-
 (use-package git-timemachine)
-
-;; ghub and dash are required by threatgrid.el
-(use-package ghub)
-
-(use-package dash
-  :config (dash-enable-font-lock))
-
-(use-package threatgrid
-  :ensure f
-  :commands (preq tg-insert-weekly-work-report tg-create-tb-issue)
-  :load-path "lisp")
 
 (use-package windmove
   :config (windmove-default-keybindings))
@@ -705,8 +691,7 @@
   :mode "Dockerfile")
 
 (use-package dumb-jump
-  :bind ("C-M-g" . dumb-jump-go)
-  :config (dumb-jump-mode))
+  :hook (xref-backend-functions .dumb-jump-xref-activate))
 
 (use-package smart-jump
   :disabled
