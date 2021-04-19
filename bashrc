@@ -123,6 +123,12 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     export GOPATH=$HOME/dev/go:$HOME/dev/tg/sandcastle:$HOME/dev/tg/ops
     export GOBIN=$HOME/bin
 
+    # Base16 Shell
+    BASE16_SHELL="$HOME/.config/base16-shell/"
+    [ -n "$PS1" ] && \
+	[ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+        eval "$("$BASE16_SHELL/profile_helper.sh")"
+
 fi
 
 # Set the theme for `bat`
@@ -222,7 +228,7 @@ alias ec='emacsclient -c -a ""'
 alias cat='bat'
 
 ## Git aliases
-alias gl="git log --graph --abbrev-commit --date=relative --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
+alias gl="git log --graph --abbrev-commit --date=relative --pretty=format:'%C(bold blue)%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'"
 alias gp='git push origin HEAD'
 alias gpl='git pull --rebase --prune'
 alias gd='git diff'
