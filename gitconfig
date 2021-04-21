@@ -58,3 +58,5 @@
 	prune = true
 [init]
 	defaultBranch = main
+[gpg]
+	program = gpg2
