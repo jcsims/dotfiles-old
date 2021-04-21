@@ -2,8 +2,8 @@
 
 ## Basic bash config
 export CLICOLOR=1
-export EDITOR='emacsclient -t -a ""'
-export VISUAL='emacsclient -c -a ""'
+export EDITOR=$HOME/bin/e
+export VISUAL=$HOME/bin/ec
 export TERM=xterm-256color
 
 if [[ -x /usr/bin/dircolors ]] ; then
