@@ -13,9 +13,6 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
-;; Fix this to TLS 1.3 in an attempt to fix resolution of package archives.
-;;(setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3")
-
 (require 'package)
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
@@ -66,8 +63,6 @@
 (set-language-environment 'utf-8)
 (setq locale-coding-system 'utf-8)
 (set-selection-coding-system 'utf-8)
-;; disable CJK coding/encoding (Chinese/Japanese/Korean characters)
-(setq utf-translate-cjk-mode nil)
 
 ;; Blank scratch buffer
 (setq initial-scratch-message nil)
@@ -117,6 +112,7 @@
 (use-package color-theme-sanityinc-tomorrow)
 (use-package nord-theme)
 (use-package base16-theme)
+(use-package gruvbox-theme)
 
 ;; (setq base16-theme-256-color-source 'base16-shell
 ;;       jcs-active-theme 'base16-tomorrow-night-eighties
@@ -134,6 +130,11 @@
 ;; (setq jcs-active-theme 'sanityinc-tomorrow-eighties
 ;;                 jcs-light-theme 'sanityinc-tomorrow-day
 ;;                 jcs-dark-theme 'sanityinc-tomorrow-eighties)
+
+;; (setq jcs-active-theme 'gruvbox
+;;       jcs-light-theme 'gruvbox-light-medium
+;;       jcs-dark-theme 'gruvbox)
+
 
 (load-theme jcs-active-theme t)
 
@@ -166,10 +167,12 @@
 (defvar jcs/next-file (expand-file-name "next.org" org-dir))
 (defvar jcs/tickler-file (expand-file-name "tickler.org" org-dir))
 (defvar jcs/inbox-file (expand-file-name "inbox.org" org-dir))
+(defvar jcs/beorg-file (expand-file-name "beorg.org" org-dir))
 (defvar jcs/reference-file (expand-file-name "reference/reference.org" org-dir))
 (defvar jcs/checklists-file (expand-file-name "reference/checklists.org" org-dir))
 (defvar jcs/archive-file (expand-file-name "archive/archive.org" org-dir))
 (defvar jcs/habit-file (expand-file-name "habit.org" org-dir))
+(defvar jcs/log-dir (expand-file-name "log/" org-dir))
 
 (use-package org
   :custom
@@ -195,9 +198,11 @@
 			       jcs/inbox-file
 			       jcs/someday-file
 			       jcs/next-file
-			       jcs/tickler-file))
+			       jcs/tickler-file
+                               (expand-file-name "log/" org-dir)))
   (setq org-refile-targets '((jcs/projects-file . (:maxlevel . 2))
                              (jcs/someday-file . (:level . 0))
+			     (jcs/beorg-file . (:level . 0))
                              (jcs/next-file . (:level . 1))
                              (jcs/tickler-file . (:level . 1))
                              (jcs/reference-file . (:level . 1)))
@@ -348,14 +353,22 @@
               ("C-<left>" . org-agenda-do-date-earlier)
               ("C-<right>" . org-agenda-do-date-later))
   :config
+  ;; TODO: Use a `let*` binding here and turn on lexical scoping for
+  ;; this file.
   ;; Use the current window to open the agenda
   (setq org-agenda-window-setup 'current-window
-	org-agenda-block-separator nil)
-  (setq jcs/agenda-files (list jcs/projects-file
+	org-agenda-block-separator nil
+        jcs/agenda-files (list jcs/projects-file
 			       jcs/tickler-file
                                jcs/next-file
 			       jcs/inbox-file
-			       jcs/habit-file))
+			       jcs/habit-file
+			       jcs/log-dir)
+        jcs/non-inbox-files (remq jcs/beorg-file
+			      (remq jcs/inbox-file
+			            jcs/agenda-files))
+        jcs/inbox-files (list jcs/inbox-file
+		          jcs/beorg-file))
   (setq org-agenda-custom-commands
         '(("c" "Agenda and tasks"
            ((agenda ""
@@ -364,23 +377,21 @@
 		      '(org-agenda-skip-if nil '(todo done)))))
             (todo ""
                   ((org-agenda-overriding-header "To Refile")
-                   (org-agenda-files '("~/org/inbox.org"
-				       "~/org/beorg.org"))))
+                   (org-agenda-files jcs/inbox-files)))
             (todo "WAITING"
                   ((org-agenda-overriding-header "Waiting")
-                   (org-agenda-files jcs/agenda-files)))
+                   (org-agenda-files jcs/non-inbox-files)))
             (todo "DOING"
                   ((org-agenda-overriding-header "In Progress")
-                   (org-agenda-files jcs/agenda-files)))
-            ;; TODO: filter things are in my "To Refile" section already
-	    (todo "TODO"
+                   (org-agenda-files jcs/non-inbox-files)))
+            (todo "TODO"
                   ((org-agenda-overriding-header "Todo")
-                   (org-agenda-files jcs/agenda-files)
+                   (org-agenda-files jcs/non-inbox-files)
 		   (org-agenda-skip-function
                     '(org-agenda-skip-if nil '(scheduled deadline)))))
             (todo "HOLD"
                   ((org-agenda-overriding-header "On Hold")
-                   (org-agenda-files jcs/agenda-files)
+                   (org-agenda-files jcs/non-inbox-files)
 		   (org-agenda-skip-function
                     '(org-agenda-skip-if nil '(scheduled deadline))))))))))
 
@@ -421,7 +432,8 @@
 
 (use-package dired
   :ensure f
-  :config (setq dired-listing-switches "-alhv"))
+  ;; :config (setq dired-listing-switches "-alhv")
+  )
 
 (use-package saveplace
   :ensure f
@@ -471,6 +483,9 @@
   :ensure f
   :config (epa-file-enable))
 
+
+;; Used for async package updating in paradox
+(use-package async)
 (use-package paradox
   :after (auth-source epa-file epg exec-path-from-shell)
   :commands (paradox-list-packages)
