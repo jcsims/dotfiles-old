@@ -76,8 +76,8 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
     export XDG_VIDEOS_DIR="$HOME/videos"
 
     if [[ -z $DISPLAY ]] && [[ $(tty) = /dev/tty1 ]]; then
-	export MOZ_ENABLE_WAYLAND=1
-	export GDK_SCALE=2
+        export MOZ_ENABLE_WAYLAND=1
+        export GDK_SCALE=2
         export _JAVA_AWT_WM_NONREPARENTING=1
         export XDG_CURRENT_DESKTOP=sway
         export XDG_SESSION_TYPE=wayland
@@ -126,7 +126,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     # Base16 Shell
     BASE16_SHELL="$HOME/.config/base16-shell/"
     [ -n "$PS1" ] && \
-	[ -s "$BASE16_SHELL/profile_helper.sh" ] && \
+        [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
         eval "$("$BASE16_SHELL/profile_helper.sh")"
 
 fi
@@ -269,4 +269,3 @@ PS1="[\u@\h \w]\$ "
 # Enable subpixel font rendering on non-Apple LCDs
 # Reference: https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
 ## defaults write NSGlobalDomain AppleFontSmoothing -int 1
-
