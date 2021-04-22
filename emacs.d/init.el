@@ -32,10 +32,10 @@
       use-package-verbose t)
 (use-package bind-key)
 
-; Some combination of GNU TLS and Emacs fail to retrieve archive
-; contents over https.
-; https://www.reddit.com/r/emacs/comments/cdei4p/failed_to_download_gnu_archive_bad_request/etw48ux
-; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
+;; Some combination of GNU TLS and Emacs fail to retrieve archive
+;; contents over https.
+;; https://www.reddit.com/r/emacs/comments/cdei4p/failed_to_download_gnu_archive_bad_request/etw48ux
+;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
 (if (and (version< emacs-version "28.3") (>= libgnutls-version 30600))
     (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
 
@@ -43,7 +43,7 @@
   :config
   (require 'files)
   (setq auto-save-file-name-transforms
-	`((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
 (setq source-directory "~/dev/emacs")
 
@@ -55,7 +55,7 @@
 (setq user-full-name "Chris Sims"
       user-mail-address "chris@jcsi.ms")
 
- ;; Always use UTF-8
+;; Always use UTF-8
 (set-terminal-coding-system 'utf-8)
 (set-keyboard-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
@@ -181,28 +181,28 @@
   (org-default-priority ?C)
   :config
   (setq org-archive-location (concat jcs/archive-file "::* From %s")
-	org-directory org-dir
-	org-log-done 'time
-	org-log-into-drawer t
-	org-startup-indented t
-	org-startup-folded t
-	org-default-notes-file jcs/inbox-file
-	org-src-fontify-natively t
-	org-use-fast-todo-selection t
-	org-refile-allow-creating-parent-nodes t
-	org-refile-use-outline-path 'file
-	org-outline-path-complete-in-steps nil
-	;; Don't ask every time before evaluating an org source block
-	org-confirm-babel-evaluate nil
-	org-agenda-files (list jcs/projects-file
-			       jcs/inbox-file
-			       jcs/someday-file
-			       jcs/next-file
-			       jcs/tickler-file
+        org-directory org-dir
+        org-log-done 'time
+        org-log-into-drawer t
+        org-startup-indented t
+        org-startup-folded t
+        org-default-notes-file jcs/inbox-file
+        org-src-fontify-natively t
+        org-use-fast-todo-selection t
+        org-refile-allow-creating-parent-nodes t
+        org-refile-use-outline-path 'file
+        org-outline-path-complete-in-steps nil
+        ;; Don't ask every time before evaluating an org source block
+        org-confirm-babel-evaluate nil
+        org-agenda-files (list jcs/projects-file
+                               jcs/inbox-file
+                               jcs/someday-file
+                               jcs/next-file
+                               jcs/tickler-file
                                (expand-file-name "log/" org-dir)))
   (setq org-refile-targets '((jcs/projects-file . (:maxlevel . 2))
                              (jcs/someday-file . (:level . 0))
-			     (jcs/beorg-file . (:level . 0))
+                             (jcs/beorg-file . (:level . 0))
                              (jcs/next-file . (:level . 1))
                              (jcs/tickler-file . (:level . 1))
                              (jcs/reference-file . (:level . 1)))
@@ -214,18 +214,18 @@
                               (:newline)
                               ("@kasey" . ?k)
                               ("@alex" . ?a)
-			      ("@parents" . ?P)
-			      ("james" . ?j)
+                              ("@parents" . ?P)
+                              ("james" . ?j)
                               (:newline)
                               ("weekend" . ?W)
                               ("evening" . ?e)
                               ("business_hours" . ?b)
                               ("learning" . ?l)
-			      ("project_idea" . ?i)
+                              ("project_idea" . ?i)
                               (:newline)
                               ("high_effort" . ?H)
-			      ("quick_win" . ?q)
-			      ("focus" . ?f)))
+                              ("quick_win" . ?q)
+                              ("focus" . ?f)))
         org-todo-keywords
         (quote ((sequence "TODO(t)" "DOING(o)" "|" "DONE(d)")
                 (sequence "WAITING(w@/!)" "HOLD(h@/!)" "|" "CANCELLED(c@/!)"))))
@@ -266,7 +266,7 @@
          ("C-c e t" . find-tickler-file)
          ("C-c e r" . find-reference-file)
          ("C-c e c" . find-checklists-file)
-	 ("C-c e h" . find-habit-file)
+         ("C-c e h" . find-habit-file)
          ("C-c e l" . visit-todays-log)
 
          ;; Below stolen from
@@ -357,24 +357,24 @@
   ;; this file.
   ;; Use the current window to open the agenda
   (setq org-agenda-window-setup 'current-window
-	org-agenda-block-separator nil
+        org-agenda-block-separator nil
         jcs/agenda-files (list jcs/projects-file
-			       jcs/tickler-file
+                               jcs/tickler-file
                                jcs/next-file
-			       jcs/inbox-file
-			       jcs/habit-file
-			       jcs/log-dir)
+                               jcs/inbox-file
+                               jcs/habit-file
+                               jcs/log-dir)
         jcs/non-inbox-files (remq jcs/beorg-file
-			      (remq jcs/inbox-file
-			            jcs/agenda-files))
+                                  (remq jcs/inbox-file
+                                        jcs/agenda-files))
         jcs/inbox-files (list jcs/inbox-file
-		          jcs/beorg-file))
+                              jcs/beorg-file))
   (setq org-agenda-custom-commands
         '(("c" "Agenda and tasks"
            ((agenda ""
                     ((org-agenda-files jcs/agenda-files)
-		     (org-agenda-skip-function
-		      '(org-agenda-skip-if nil '(todo done)))))
+                     (org-agenda-skip-function
+                      '(org-agenda-skip-if nil '(todo done)))))
             (todo ""
                   ((org-agenda-overriding-header "To Refile")
                    (org-agenda-files jcs/inbox-files)))
@@ -387,12 +387,12 @@
             (todo "TODO"
                   ((org-agenda-overriding-header "Todo")
                    (org-agenda-files jcs/non-inbox-files)
-		   (org-agenda-skip-function
+                   (org-agenda-skip-function
                     '(org-agenda-skip-if nil '(scheduled deadline)))))
             (todo "HOLD"
                   ((org-agenda-overriding-header "On Hold")
                    (org-agenda-files jcs/non-inbox-files)
-		   (org-agenda-skip-function
+                   (org-agenda-skip-function
                     '(org-agenda-skip-if nil '(scheduled deadline))))))))))
 
 (use-package org-capture
@@ -426,7 +426,7 @@
   :ensure f
   :config
   (setq global-auto-revert-non-file-buffers t ; Refresh dired buffers
-	auto-revert-verbose nil) ; but do it quietly
+        auto-revert-verbose nil) ; but do it quietly
   ;; Auto-refresh buffers
   (global-auto-revert-mode))
 
@@ -456,7 +456,7 @@
 (use-package vc-hooks
   :ensure f
   :config (setq vc-follow-symlinks t ; even when they're in version control
-		))
+                ))
 
 (use-package recentf
   :ensure f
@@ -469,9 +469,9 @@
   :ensure f
   :config
   (setq backup-directory-alist ; Save backups to a central location
-	`(("." . ,(no-littering-expand-var-file-name "backup/")))
-	auto-save-file-name-transforms
-	`((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
+        `(("." . ,(no-littering-expand-var-file-name "backup/")))
+        auto-save-file-name-transforms
+        `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
 ;; Handles ssh-agent and gpg-agent configuration from `keychain`
 (use-package keychain-environment
@@ -491,8 +491,8 @@
   :commands (paradox-list-packages)
   :config
   (setq paradox-execute-asynchronously t
-	paradox-github-token (cadr (auth-source-user-and-password
-				    "api.github.com" "jcsims^paradox")))
+        paradox-github-token (cadr (auth-source-user-and-password
+                                    "api.github.com" "jcsims^paradox")))
   (paradox-enable))
 
 (use-package macrostep
@@ -515,9 +515,12 @@
 (use-package whitespace
   :config
   (setq whitespace-line-column 80
-	fill-column 80
-	whitespace-style '(face trailing lines-tail))
-  :hook (prog-mode . whitespace-mode))
+        fill-column 80
+        whitespace-style '(face tabs empty trailing lines-tail))
+  :hook
+  (prog-mode . whitespace-mode)
+  (text-mode . whitespace-mode)
+  (before-save . whitespace-cleanup))
 
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
@@ -589,6 +592,9 @@
 (use-package company-quickhelp
   :config (company-quickhelp-mode))
 
+(use-package company-prescient
+  :config (company-prescient-mode +1))
+
 (use-package elisp-slime-nav
   :config
   ;; Enable M-. and M-, along with C-c C-d {c,C-d} for elisp
@@ -610,7 +616,7 @@
 (use-package ag
   :config
   (setq ag-highlight-search t
-	ag-reuse-buffers t))
+        ag-reuse-buffers t))
 
 (use-package paren-face
   :disabled
@@ -621,57 +627,86 @@
   :config (global-flycheck-mode)
   :custom (flycheck-global-modes '(not org-mode)))
 
+(use-package selectrum
+  :config (selectrum-mode +1))
+
+(use-package selectrum-prescient
+  :after selectrum
+  :config
+  (selectrum-prescient-mode +1)
+  (prescient-persist-mode +1))
+
 ;; Require'ing this gives most-recently-used M-x commands in ivy
-(use-package smex)
+;;(use-package smex)
 
-(use-package ivy
-  :bind (("C-c C-r" . ivy-resume)) ; TODO: Find a binding that doesn't
-                                   ; get overwritten...
-  :config
-  (setq ivy-use-virtual-buffers t
-	enable-recursive-minibuffers t
-	ivy-use-selectable-prompt t)
-  (ivy-mode 1))
+;; (use-package ivy
+;;   :bind (("C-c C-r" . ivy-resume)) ; TODO: Find a binding that doesn't
+;;                                    ; get overwritten...
+;;   :config
+;;   (setq ivy-use-virtual-buffers t
+;;      enable-recursive-minibuffers t
+;;      ivy-use-selectable-prompt t)
+;;   (ivy-mode 1))
 
-(use-package swiper)
+;; (use-package swiper)
 
-(use-package counsel
-  :bind (("M-x" . counsel-M-x)
-         ("C-x C-f" . counsel-find-file)
-         ("C-h f" . counsel-describe-function)
-         ("C-h v" . counsel-describe-variable)
-         ("C-s" . counsel-grep-or-swiper)
-         ("M-y" . counsel-yank-pop)
-         :map ivy-minibuffer-map
-         ("M-y" . ivy-next-line))
-  :config
-  (define-key read-expression-map (kbd "C-r") 'counsel-expression-history))
+;; (use-package counsel
+;;   :bind (("M-x" . counsel-M-x)
+;;          ("C-x C-f" . counsel-find-file)
+;;          ("C-h f" . counsel-describe-function)
+;;          ("C-h v" . counsel-describe-variable)
+;;          ("C-s" . counsel-grep-or-swiper)
+;;          ("M-y" . counsel-yank-pop)
+;;          :map ivy-minibuffer-map
+;;          ("M-y" . ivy-next-line))
+;;   :config
+;;   (define-key read-expression-map (kbd "C-r")
+;;   'counsel-expression-history))
+
+(use-package deadgrep)
+
+(defun jcs/projectile-ripgrep (search-term &optional arg)
+  "Run a Ripgrep search with `SEARCH-TERM' at current project root.
+
+With an optional prefix argument ARG SEARCH-TERM is interpreted as a
+regular expression.  Uses the `deadgrep' package instead of `ripgrep'."
+  (interactive
+   (list (projectile--read-search-string-with-default
+          "Ripgrep search for")))
+  (if (require 'deadgrep nil 'noerror)
+      (deadgrep search-term)
+    (error "Package `deadgrep' is not available")))
 
 (use-package projectile
   :init (setq projectile-project-search-path '("~/code" "~/dev"))
-  :bind (:map projectile-mode-map
-              ("C-c p" . projectile-command-map)
-	      ;; This is handy on macOS
-	      ("s-p" . projectile-command-map)
-	      :map projectile-command-map
-	      ;; I'm used to this binding, and ripgrep is faster
-	      ("s s" . projectile-ripgrep))
-  :config (projectile-mode)
+  :bind (("C-c p" . projectile-command-map)
+         :map projectile-mode-map
+         ("C-c p" . projectile-command-map)
+         ;; This is handy on macOS
+         ("s-p" . projectile-command-map)
+         :map projectile-command-map
+         ;; I'm used to this binding, and ripgrep is faster
+         ("s s" . jcs/projectile-ripgrep))
+  :config (projectile-mode +1)
   ;; hybrid gives us sorting, but lag on each keystroke =/
   ;; :custom
   ;; (projectile-sort-order 'recently-active)
   ;; (projectile-indexing-method 'hybrid)
   )
 
-(use-package counsel-projectile
-  :config (counsel-projectile-mode))
+;; (use-package counsel-projectile
+;;   :config (counsel-projectile-mode))
+
+(use-package ctrlf
+  :config (ctrlf-mode +1))
 
 (use-package js2-mode
   :mode "\\.js\\'")
 
-(require 'ivy)
+;; (require 'ivy)
 (use-package magit-libgit)
 (use-package magit
+  :after selectrum
   :bind (("C-c g"   . magit-status)
          ("C-c M-g" . magit-dispatch))
   :custom
@@ -679,7 +714,8 @@
   (magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-")))
   (magit-save-repository-buffers 'dontask)
   :config
-  (setq magit-completing-read-function #'ivy-completing-read)
+  (setq magit-completing-read-function #'selectrum-completing-read)
+  ;;(setq magit-completing-read-function #'ivy-completing-read)
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules
                           'magit-insert-stashes
@@ -706,7 +742,7 @@
   :mode "Dockerfile")
 
 (use-package dumb-jump
-  :hook (xref-backend-functions .dumb-jump-xref-activate))
+  :hook (xref-backend-functions . dumb-jump-xref-activate))
 
 (use-package smart-jump
   :disabled
@@ -781,11 +817,11 @@
    (cider-mode . cider-company-enable-fuzzy-completion))
   :bind (:map clojure-mode-map
               ("C-c i" . cider-inspect-last-result)
-	      ([remap cider-find-var] . lsp-find-definition))
+              ([remap cider-find-var] . lsp-find-definition))
   :custom
   ;; TODO: update these paths
   (cider-jdk-src-paths '("~/code/clojure-sources"
-			 "/usr/local/opt/java11/libexec/openjdk.jdk/Contents/Home/lib/src.zip"))
+                         "/usr/local/opt/java11/libexec/openjdk.jdk/Contents/Home/lib/src.zip"))
   (cider-save-file-on-load t)
   (cider-repl-use-pretty-printing t)
   (nrepl-use-ssh-fallback-for-remote-hosts t)
@@ -793,13 +829,13 @@
   (cider-auto-jump-to-error 'errors-only)
   :config
   (setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
-	cider-repl-display-help-banner nil
-	nrepl-log-messages t
-	cider-known-endpoints '(("Face" "localhost" "4242")
-				("Remote" "localhost" "8842")
-				("Threatbrain Server" "localhost" "4243")
-				("Integration Service" "localhost" "4244")
-				("GUNDAM" "localhost" "4245"))))
+        cider-repl-display-help-banner nil
+        nrepl-log-messages t
+        cider-known-endpoints '(("Face" "localhost" "4242")
+                                ("Remote" "localhost" "8842")
+                                ("Threatbrain Server" "localhost" "4243")
+                                ("Integration Service" "localhost" "4244")
+                                ("GUNDAM" "localhost" "4245"))))
 
 (use-package yasnippet)
 
@@ -810,9 +846,9 @@
                           (cljr-add-keybindings-with-prefix "C-c r")))
   :config
   (setq cljr-suppress-middleware-warnings t
-	cljr-favor-prefix-notation nil
-	;; Lazily build ASTs, instead of immediately on REPL connect
-	cljr-eagerly-build-asts-on-startup nil)
+        cljr-favor-prefix-notation nil
+        ;; Lazily build ASTs, instead of immediately on REPL connect
+        cljr-eagerly-build-asts-on-startup nil)
   (add-to-list 'cljr-magic-require-namespaces '("json" . "cheshire.core"))
   (add-to-list 'cljr-magic-require-namespaces '("string" . "clojure.string")))
 
@@ -846,8 +882,8 @@
 ;; LSP
 (use-package lsp-mode
   :hook ((rust-mode . lsp)
-	 (clojure-mode . lsp))
-   :config
+         (clojure-mode . lsp))
+  :config
   (setq read-process-output-max (* 1024 1024))
   (setq lsp-enable-indentation nil)
   ;; We'll see if this bites me later on... default is 1000
@@ -858,9 +894,9 @@
   :after lsp-mode
   :commands lsp-ui-mode
   :bind (:map lsp-ui-mode-map
-	      ("C-M-." . xref-find-references)
-	      ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
-	      ([remap xref-find-references] . lsp-ui-peek-find-references))
+              ("C-M-." . xref-find-references)
+              ([remap xref-find-definitions] . lsp-ui-peek-find-definitions)
+              ([remap xref-find-references] . lsp-ui-peek-find-references))
   :custom (lsp-ui-sideline-show-code-actions nil))
 
 (use-package company-lsp
@@ -891,8 +927,8 @@
 (use-package atomic-chrome
   :config
   (setq atomic-chrome-url-major-mode-alist
-	'(("github\\.com" . gfm-mode)
-	  ("github\\.threatbuild\\.com" . gfm-mode)))
+        '(("github\\.com" . gfm-mode)
+          ("github\\.threatbuild\\.com" . gfm-mode)))
   (atomic-chrome-start-server))
 
 (use-package crux
@@ -945,9 +981,9 @@
 (use-package scpaste
   :config
   (setq scpaste-http-destination "https://paste.jcsi.ms"
-	scpaste-scp-destination "paste.jcsi.ms:/srv/paste"
-	scpaste-user-name "jcsims"
-	scpaste-user-address "https://www.jcsi.ms/"))
+        scpaste-scp-destination "paste.jcsi.ms:/srv/paste"
+        scpaste-user-name "jcsims"
+        scpaste-user-address "https://www.jcsi.ms/"))
 
 (use-package vlf
   :config (require 'vlf-setup))
