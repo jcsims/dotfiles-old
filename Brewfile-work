@@ -1,7 +1,6 @@
 # -*- mode: ruby; -*-
 
 tap 'borkdude/brew' # clj-kondo
-tap 'candid82/brew' # joker
 tap 'homebrew/bundle'
 tap 'homebrew/cask'
 tap 'homebrew/cask-fonts' # hack nerd font
@@ -24,7 +23,6 @@ cask 'intel-power-gadget' # For CPU frequency in iStat Menus
 cask 'istat-menus'
 cask 'iterm2'
 cask 'jetbrains-toolbox'
-cask 'keybase'
 cask 'mattermost'
 cask 'proxyman'
 cask 'syncthing'
@@ -56,14 +54,12 @@ brew 'diff-so-fancy'
 brew 'fd'
 brew 'git'
 brew 'htop'
-brew 'joker'
 brew 'jq'
 brew 'leiningen'
 # For the system Java wrappers to find this JDK, symlink it with
 #  sudo ln -sfn /usr/local/opt/openjdk@11/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk-11.jdk
 brew 'openjdk@11'
 brew 'pass'
-brew 'qemu'
 brew 'ripgrep'
 brew 'shellcheck'
 brew 'sk'
