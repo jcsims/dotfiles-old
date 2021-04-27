@@ -45,8 +45,6 @@
   (setq auto-save-file-name-transforms
         `((".*" ,(no-littering-expand-var-file-name "auto-save/") t))))
 
-(setq source-directory "~/dev/emacs")
-
 (use-package auth-source
   :ensure f
   :custom (auth-sources '("~/.authinfo.gpg")))
@@ -123,18 +121,17 @@
 ;;       jcs-light-theme 'nord
 ;;       jcs-dark-theme 'nord)
 
-(setq jcs-active-theme 'solarized-gruvbox-dark
-      jcs-light-theme 'solarized-gruvbox-light
-      jcs-dark-theme 'solarized-gruvbox-dark)
+;; (setq jcs-active-theme 'solarized-gruvbox-dark
+;;       jcs-light-theme 'solarized-gruvbox-light
+;;       jcs-dark-theme 'solarized-gruvbox-dark)
 
-;; (setq jcs-active-theme 'sanityinc-tomorrow-eighties
-;;                 jcs-light-theme 'sanityinc-tomorrow-day
-;;                 jcs-dark-theme 'sanityinc-tomorrow-eighties)
+(setq jcs-active-theme 'sanityinc-tomorrow-eighties
+      jcs-light-theme 'sanityinc-tomorrow-day
+      jcs-dark-theme 'sanityinc-tomorrow-eighties)
 
-;; (setq jcs-active-theme 'gruvbox
+;; (setq jcs-active-theme 'gruvbox-dark-soft
 ;;       jcs-light-theme 'gruvbox-light-medium
-;;       jcs-dark-theme 'gruvbox)
-
+;;       jcs-dark-theme 'gruvbox-dark-soft)
 
 (load-theme jcs-active-theme t)
 
@@ -700,6 +697,8 @@ regular expression.  Uses the `deadgrep' package instead of `ripgrep'."
 (use-package ctrlf
   :config (ctrlf-mode +1))
 
+(use-package consult)
+
 (use-package js2-mode
   :mode "\\.js\\'")
 
@@ -808,7 +807,6 @@ regular expression.  Uses the `deadgrep' package instead of `ripgrep'."
   (define-clojure-indent
     (prop/for-all 1)))
 
-;;; Cider
 (use-package cider
   :hook
   ((clojure-mode . cider-mode)
