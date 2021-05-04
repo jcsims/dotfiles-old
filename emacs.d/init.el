@@ -97,7 +97,7 @@
 ;; Font
 ;; Really, it's that the mac is a HiDPI display
 (if (eq system-type 'gnu/linux)
-    (set-frame-font "Hack 9")
+    (set-frame-font "Hack Nerd Font 9")
   (set-frame-font "Hack Nerd Font 12"))
 
 ;;; Themes
@@ -624,55 +624,55 @@
   :config (global-flycheck-mode)
   :custom (flycheck-global-modes '(not org-mode)))
 
-(use-package selectrum
-  :config (selectrum-mode +1))
+;; (use-package selectrum
+;;   :config (selectrum-mode +1))
 
-(use-package selectrum-prescient
-  :after selectrum
-  :config
-  (selectrum-prescient-mode +1)
-  (prescient-persist-mode +1))
+;; (use-package selectrum-prescient
+;;   :after selectrum
+;;   :config
+;;   (selectrum-prescient-mode +1)
+;;   (prescient-persist-mode +1))
 
 ;; Require'ing this gives most-recently-used M-x commands in ivy
-;;(use-package smex)
+(use-package smex)
 
-;; (use-package ivy
-;;   :bind (("C-c C-r" . ivy-resume)) ; TODO: Find a binding that doesn't
-;;                                    ; get overwritten...
-;;   :config
-;;   (setq ivy-use-virtual-buffers t
-;;      enable-recursive-minibuffers t
-;;      ivy-use-selectable-prompt t)
-;;   (ivy-mode 1))
+(use-package ivy
+  :bind (("C-c C-r" . ivy-resume)) ; TODO: Find a binding that doesn't
+                                   ; get overwritten...
+  :config
+  (setq ivy-use-virtual-buffers t
+     enable-recursive-minibuffers t
+     ivy-use-selectable-prompt t)
+  (ivy-mode 1))
 
-;; (use-package swiper)
+(use-package swiper)
 
-;; (use-package counsel
-;;   :bind (("M-x" . counsel-M-x)
-;;          ("C-x C-f" . counsel-find-file)
-;;          ("C-h f" . counsel-describe-function)
-;;          ("C-h v" . counsel-describe-variable)
-;;          ("C-s" . counsel-grep-or-swiper)
-;;          ("M-y" . counsel-yank-pop)
-;;          :map ivy-minibuffer-map
-;;          ("M-y" . ivy-next-line))
-;;   :config
-;;   (define-key read-expression-map (kbd "C-r")
-;;   'counsel-expression-history))
+(use-package counsel
+  :bind (("M-x" . counsel-M-x)
+         ("C-x C-f" . counsel-find-file)
+         ("C-h f" . counsel-describe-function)
+         ("C-h v" . counsel-describe-variable)
+         ("C-s" . counsel-grep-or-swiper)
+         ("M-y" . counsel-yank-pop)
+         :map ivy-minibuffer-map
+         ("M-y" . ivy-next-line))
+  :config
+  (define-key read-expression-map (kbd "C-r")
+  'counsel-expression-history))
 
-(use-package deadgrep)
+;; (use-package deadgrep)
 
-(defun jcs/projectile-ripgrep (search-term &optional arg)
-  "Run a Ripgrep search with `SEARCH-TERM' at current project root.
+;; (defun jcs/projectile-ripgrep (search-term &optional arg)
+;;   "Run a Ripgrep search with `SEARCH-TERM' at current project root.
 
-With an optional prefix argument ARG SEARCH-TERM is interpreted as a
-regular expression.  Uses the `deadgrep' package instead of `ripgrep'."
-  (interactive
-   (list (projectile--read-search-string-with-default
-          "Ripgrep search for")))
-  (if (require 'deadgrep nil 'noerror)
-      (deadgrep search-term)
-    (error "Package `deadgrep' is not available")))
+;; With an optional prefix argument ARG SEARCH-TERM is interpreted as a
+;; regular expression.  Uses the `deadgrep' package instead of `ripgrep'."
+;;   (interactive
+;;    (list (projectile--read-search-string-with-default
+;;           "Ripgrep search for")))
+;;   (if (require 'deadgrep nil 'noerror)
+;;       (deadgrep search-term)
+;;     (error "Package `deadgrep' is not available")))
 
 (use-package projectile
   :init (setq projectile-project-search-path '("~/code" "~/dev"))
@@ -683,7 +683,7 @@ regular expression.  Uses the `deadgrep' package instead of `ripgrep'."
          ("s-p" . projectile-command-map)
          :map projectile-command-map
          ;; I'm used to this binding, and ripgrep is faster
-         ("s s" . jcs/projectile-ripgrep))
+         ("s s" . projectile-ripgrep))
   :config (projectile-mode +1)
   ;; hybrid gives us sorting, but lag on each keystroke =/
   ;; :custom
@@ -691,13 +691,13 @@ regular expression.  Uses the `deadgrep' package instead of `ripgrep'."
   ;; (projectile-indexing-method 'hybrid)
   )
 
-;; (use-package counsel-projectile
-;;   :config (counsel-projectile-mode))
+(use-package counsel-projectile
+  :config (counsel-projectile-mode))
 
-(use-package ctrlf
-  :config (ctrlf-mode +1))
+;; (use-package ctrlf
+;;   :config (ctrlf-mode +1))
 
-(use-package consult)
+;; (use-package consult)
 
 (use-package js2-mode
   :mode "\\.js\\'")
@@ -705,7 +705,7 @@ regular expression.  Uses the `deadgrep' package instead of `ripgrep'."
 ;; (require 'ivy)
 (use-package magit-libgit)
 (use-package magit
-  :after selectrum
+  :after ivy
   :bind (("C-c g"   . magit-status)
          ("C-c M-g" . magit-dispatch))
   :custom
@@ -713,8 +713,8 @@ regular expression.  Uses the `deadgrep' package instead of `ripgrep'."
   (magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-")))
   (magit-save-repository-buffers 'dontask)
   :config
-  (setq magit-completing-read-function #'selectrum-completing-read)
-  ;;(setq magit-completing-read-function #'ivy-completing-read)
+  ;;(setq magit-completing-read-function #'selectrum-completing-read)
+  (setq magit-completing-read-function #'ivy-completing-read)
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules
                           'magit-insert-stashes
