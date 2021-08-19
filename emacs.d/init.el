@@ -13,6 +13,9 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
+;; Seed the PRNG anew, from the system's entropy pool
+(random t)
+
 (require 'package)
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
@@ -32,12 +35,18 @@
       use-package-verbose t)
 (use-package bind-key)
 
+(use-package gcmh
+  :custom (gcmh-verbose t)
+  :config (gcmh-mode 1))
+
 ;; Some combination of GNU TLS and Emacs fail to retrieve archive
 ;; contents over https.
 ;; https://www.reddit.com/r/emacs/comments/cdei4p/failed_to_download_gnu_archive_bad_request/etw48ux
 ;; https://debbugs.gnu.org/cgi/bugreport.cgi?bug=34341
 (if (and (version< emacs-version "28.3") (>= libgnutls-version 30600))
     (setq gnutls-algorithm-priority "NORMAL:-VERS-TLS1.3"))
+
+(setq source-directory (concat "~/code/emacs-" emacs-version))
 
 (use-package no-littering
   :config
@@ -73,12 +82,22 @@
 (put 'downcase-region 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 
-;; Increase the GC threshold for startup
-(setq gc-cons-threshold 20000000)
-
 ;; Get rid of the insert key. I never use it, and I turn it on
 ;; accidentally all the time
 (global-set-key (kbd "<insert>") nil)
+
+(when (featurep 'ns)
+  (defun ns-raise-emacs ()
+    "Raise Emacs."
+    (ns-do-applescript "tell application \"Emacs\" to activate"))
+
+  (defun ns-raise-emacs-with-frame (frame)
+    "Raise Emacs and select the provided frame."
+    (with-selected-frame frame
+      (when (display-graphic-p)
+        (ns-raise-emacs))))
+
+  (add-hook 'after-make-frame-functions 'ns-raise-emacs-with-frame))
 
 (setq isearch-allow-scroll t)
 (global-set-key (kbd "C-S") 'isearch-forward-regexp)
@@ -95,7 +114,6 @@
   (menu-bar-mode -1))
 
 ;; Font
-;; Really, it's that the mac is a HiDPI display
 (if (eq system-type 'gnu/linux)
     (set-frame-font "Hack Nerd Font 9")
   (set-frame-font "Hack Nerd Font 12"))
@@ -108,32 +126,41 @@
 ;;; Themes
 (use-package solarized-theme)
 (use-package color-theme-sanityinc-tomorrow)
-(use-package nord-theme)
 (use-package base16-theme)
 (use-package gruvbox-theme)
+
+;; emacs-plus offers this handy hook to tie in to system appearance
+(defun jcs/apply-theme (appearance)
+  "Load theme, taking current system APPEARANCE into consideration."
+  (when (featurep 'ns)
+    (mapc #'disable-theme custom-enabled-themes)
+    (pcase appearance
+      ('light (modus-themes-load-operandi))
+      ('dark (modus-themes-load-vivendi)))))
+
+(use-package modus-themes
+  :init (modus-themes-load-themes)
+  :config (jcs/apply-theme ns-system-appearance)
+  (setq ns-system-appearance-change-functions '(jcs/apply-theme)))
 
 ;; (setq base16-theme-256-color-source 'base16-shell
 ;;       jcs-active-theme 'base16-tomorrow-night-eighties
 ;;       jcs-light-theme 'base16-gruvbox-light-hard
 ;;       jcs-dark-theme 'base16-tomorrow-night-eighties)
 
-;; (setq jcs-active-theme 'nord
-;;       jcs-light-theme 'nord
-;;       jcs-dark-theme 'nord)
-
 ;; (setq jcs-active-theme 'solarized-gruvbox-dark
 ;;       jcs-light-theme 'solarized-gruvbox-light
 ;;       jcs-dark-theme 'solarized-gruvbox-dark)
 
-(setq jcs-active-theme 'sanityinc-tomorrow-eighties
-      jcs-light-theme 'sanityinc-tomorrow-day
-      jcs-dark-theme 'sanityinc-tomorrow-eighties)
+;; (setq jcs-active-theme 'sanityinc-tomorrow-eighties
+;;       jcs-light-theme 'sanityinc-tomorrow-day
+;;       jcs-dark-theme 'sanityinc-tomorrow-eighties)
 
 ;; (setq jcs-active-theme 'gruvbox-dark-soft
 ;;       jcs-light-theme 'gruvbox-light-medium
 ;;       jcs-dark-theme 'gruvbox-dark-soft)
 
-(load-theme jcs-active-theme t)
+;;(load-theme jcs-active-theme t)
 
 (defun toggle-dark-light-theme ()
   "Toggle the current theme between light and dark."
@@ -142,6 +169,10 @@
       (setq jcs-active-theme jcs-dark-theme)
     (setq jcs-active-theme jcs-light-theme))
   (load-theme jcs-active-theme t)
+  (sml/apply-theme 'respectful))
+
+(use-package smart-mode-line
+  :config
   (sml/setup))
 
 (use-package prog-mode
@@ -177,7 +208,9 @@
   (org-lowest-priority ?D)
   (org-default-priority ?C)
   :config
-  (setq org-archive-location (concat jcs/archive-file "::* From %s")
+  (setq org-hide-leading-stars t
+        org-hide-emphasis-markers t ;; Hide things like `*` for bold, etc.
+        org-archive-location (concat jcs/archive-file "::* From %s")
         org-directory org-dir
         org-log-done 'time
         org-log-into-drawer t
@@ -299,10 +332,6 @@
 
 (use-package org-tempo :ensure org)
 
-(use-package org-roam
-  :init (setq org-roam-directory "~/org-roam")
-  :config (org-roam-mode))
-
 (use-package ox-md :ensure org)
 
 (use-package restclient)
@@ -394,8 +423,22 @@
 
 (use-package org-capture
   :ensure org
-  :after org
+  :init
+  ;; ;; borrowed from https://fuco1.github.io/2017-09-02-Maximize-the-org-capture-buffer.html
+  ;; (defvar my-org-capture-before-config nil
+  ;;   "Window configuration before `org-capture'.")
+
+  (defun my-org-capture-cleanup ()
+    "Clean up the frame created while capturing."
+    ;; In case we run capture from emacs itself and not an external app,
+    ;; we want to restore the old window config
+    (-when-let ((&alist 'name name) (frame-parameters))
+      (when (equal name "capture")
+        (delete-frame))))
+
   :bind ("C-c c" . org-capture)
+  :hook ((org-capture-after-finalize . my-org-capture-cleanup)
+         (org-capture-mode . delete-other-windows))
   :config
   (setq org-capture-templates
         '(("t" "Todo [inbox]" entry
@@ -423,14 +466,13 @@
   :ensure f
   :config
   (setq global-auto-revert-non-file-buffers t ; Refresh dired buffers
-        auto-revert-verbose nil) ; but do it quietly
+        auto-revert-verbose nil)              ; but do it quietly
   ;; Auto-refresh buffers
   (global-auto-revert-mode))
 
 (use-package dired
   :ensure f
-  ;; :config (setq dired-listing-switches "-alhv")
-  )
+  :config (setq dired-listing-switches "-alhv"))
 
 (use-package saveplace
   :ensure f
@@ -480,7 +522,6 @@
   :ensure f
   :config (epa-file-enable))
 
-
 ;; Used for async package updating in paradox
 (use-package async)
 (use-package paradox
@@ -516,8 +557,7 @@
         whitespace-style '(face tabs empty trailing lines-tail))
   :hook
   (prog-mode . whitespace-mode)
-  (text-mode . whitespace-mode)
-  (before-save . whitespace-cleanup))
+  (text-mode . whitespace-mode))
 
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
@@ -526,8 +566,6 @@
          ("\\.markdown\\'" . markdown-mode))
   :config (setq markdown-fontify-code-blocks-natively t))
 
-(use-package grip-mode)
-
 (use-package minions
   :config
   (setq minions-direct '(flycheck-mode cider-mode vlf-mode lsp-mode))
@@ -535,6 +573,8 @@
 
 (use-package simple
   :ensure f
+  :after org
+  :hook (org-mode . visual-line-mode)
   :config
   (column-number-mode)
   (setq-default what-cursor-show-names t)
@@ -564,9 +604,17 @@
 
 ;; Ensure that a server is running for quicker start times
 (use-package server
+  :if (display-graphic-p)
+  :config (unless (server-running-p)
+            (server-start)))
+
+(use-package atomic-chrome
+  :if (display-graphic-p)
   :config
-  (unless (server-running-p)
-    (server-start)))
+  (setq atomic-chrome-url-major-mode-alist
+        '(("github\\.com" . gfm-mode)
+          ("github\\.threatbuild\\.com" . gfm-mode)))
+  (atomic-chrome-start-server))
 
 ;; Work-specific code - should be encrypted!
 (defvar work-init (concat user-emacs-directory "lisp/init-work.el.gpg"))
@@ -579,7 +627,6 @@
   (text-mode . flyspell-mode)
   (prog-mode . flyspell-prog-mode))
 
-;; Config other packages
 (use-package company
   :config
   (setq company-idle-delay .3)                          ; decrease delay before autocompletion popup shows
@@ -588,9 +635,6 @@
 
 (use-package company-quickhelp
   :config (company-quickhelp-mode))
-
-(use-package company-prescient
-  :config (company-prescient-mode +1))
 
 (use-package elisp-slime-nav
   :config
@@ -606,76 +650,53 @@
               ("h p" . highlight-symbol-prev)
               ("h a" . highlight-symbol-nav-mode)))
 
-(use-package idle-highlight-mode
-  :disabled
-  :hook (prog-mode . idle-highlight-mode))
-
-(use-package ag
-  :config
-  (setq ag-highlight-search t
-        ag-reuse-buffers t))
-
-(use-package paren-face
-  :disabled
-  :custom (paren-face-regexp "[][{}()]")
-  :config (global-paren-face-mode))
-
 (use-package flycheck
   :config (global-flycheck-mode)
-  :custom (flycheck-global-modes '(not org-mode)))
+  :bind (:map flycheck-mode-map
+              ("M-n" . flycheck-next-error)
+              ("M-p" . flycheck-previous-error))
+  :custom (flycheck-global-modes '(not org-mode
+                                       cider-repl-mode)))
 
-;; (use-package selectrum
-;;   :config (selectrum-mode +1))
+;; Borrowed from https://github.com/daviwil/dotfiles/commit/58eff6723515e438443b9feb87735624acd23c73
+(defun jcs/minibuffer-backward-kill (arg)
+  "When completing a filename in the minibuffer, kill according to path.
+Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
+  (interactive "p")
+  (if minibuffer-completing-file-name
+      ;; Borrowed from https://github.com/raxod502/selectrum/issues/498#issuecomment-803283608
+      (if (string-match-p "/." (minibuffer-contents))
+          (zap-up-to-char (- arg) ?/)
+        (delete-minibuffer-contents))
+    (backward-kill-word arg)))
 
-;; (use-package selectrum-prescient
-;;   :after selectrum
-;;   :config
-;;   (selectrum-prescient-mode +1)
-;;   (prescient-persist-mode +1))
+(use-package vertico
+  :init (vertico-mode)
+  :bind (:map vertico-map
+              ("M-<backspace>" . jcs/minibuffer-backward-kill)))
 
-;; Require'ing this gives most-recently-used M-x commands in ivy
-(use-package smex)
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles . (partial-completion))))))
 
-(use-package ivy
-  :bind (("C-c C-r" . ivy-resume)) ; TODO: Find a binding that doesn't
-                                   ; get overwritten...
-  :config
-  (setq ivy-use-virtual-buffers t
-     enable-recursive-minibuffers t
-     ivy-use-selectable-prompt t)
-  (ivy-mode 1))
+(use-package consult
+  :demand ;; never want to lazy-load this package
+  :bind (("M-y" . consult-yank-from-kill-ring)
+         ([remap isearch-forward-regexp] . consult-line)))
 
-(use-package swiper)
-
-(use-package counsel
-  :bind (("M-x" . counsel-M-x)
-         ("C-x C-f" . counsel-find-file)
-         ("C-h f" . counsel-describe-function)
-         ("C-h v" . counsel-describe-variable)
-         ("C-s" . counsel-grep-or-swiper)
-         ("M-y" . counsel-yank-pop)
-         :map ivy-minibuffer-map
-         ("M-y" . ivy-next-line))
-  :config
-  (define-key read-expression-map (kbd "C-r")
-  'counsel-expression-history))
-
-;; (use-package deadgrep)
-
-;; (defun jcs/projectile-ripgrep (search-term &optional arg)
-;;   "Run a Ripgrep search with `SEARCH-TERM' at current project root.
-
-;; With an optional prefix argument ARG SEARCH-TERM is interpreted as a
-;; regular expression.  Uses the `deadgrep' package instead of `ripgrep'."
-;;   (interactive
-;;    (list (projectile--read-search-string-with-default
-;;           "Ripgrep search for")))
-;;   (if (require 'deadgrep nil 'noerror)
-;;       (deadgrep search-term)
-;;     (error "Package `deadgrep' is not available")))
+(defun jcs/project-ripgrep ()
+  "Start a ripgrep search in the configured project root."
+  (interactive)
+  (consult-ripgrep (projectile-project-root)))
 
 (use-package projectile
-  :init (setq projectile-project-search-path '("~/code" "~/dev"))
+  :demand ;; never want to lazy-load this package
+  :after consult
+  :init
+  (setq projectile-project-search-path '("~/code" "~/dev"))
+  (projectile-mode +1)
   :bind (("C-c p" . projectile-command-map)
          :map projectile-mode-map
          ("C-c p" . projectile-command-map)
@@ -683,29 +704,18 @@
          ("s-p" . projectile-command-map)
          :map projectile-command-map
          ;; I'm used to this binding, and ripgrep is faster
-         ("s s" . projectile-ripgrep))
-  :config (projectile-mode +1)
-  ;; hybrid gives us sorting, but lag on each keystroke =/
-  ;; :custom
-  ;; (projectile-sort-order 'recently-active)
-  ;; (projectile-indexing-method 'hybrid)
-  )
+         ("s s" . jcs/project-ripgrep)))
 
-(use-package counsel-projectile
-  :config (counsel-projectile-mode))
+(use-package marginalia
+  :init (marginalia-mode))
 
-;; (use-package ctrlf
-;;   :config (ctrlf-mode +1))
+(use-package embark
+  :demand
+  :bind ("C-o" . embark-act))
 
-;; (use-package consult)
-
-(use-package js2-mode
-  :mode "\\.js\\'")
-
-;; (require 'ivy)
-(use-package magit-libgit)
 (use-package magit
-  :after ivy
+  :demand
+  :after project
   :bind (("C-c g"   . magit-status)
          ("C-c M-g" . magit-dispatch))
   :custom
@@ -713,12 +723,12 @@
   (magit-branch-adjust-remote-upstream-alist '(("upstream/master" . "issue-")))
   (magit-save-repository-buffers 'dontask)
   :config
-  ;;(setq magit-completing-read-function #'selectrum-completing-read)
-  (setq magit-completing-read-function #'ivy-completing-read)
   (magit-add-section-hook 'magit-status-sections-hook
                           'magit-insert-modules
                           'magit-insert-stashes
                           'append))
+
+(use-package magit-libgit :after magit)
 
 (use-package git-timemachine)
 
@@ -742,11 +752,6 @@
 
 (use-package dumb-jump
   :hook (xref-backend-functions . dumb-jump-xref-activate))
-
-(use-package smart-jump
-  :disabled
-  :config (smart-jump-setup-default-registers)
-  :custom (smart-jump-refs-key "C-M-?"))
 
 (use-package yaml-mode
   :mode (("\\.yml\\'" . yaml-mode)
@@ -774,10 +779,6 @@
   (setq super-save-auto-save-when-idle t)
   (super-save-mode +1))
 
-(use-package smart-mode-line
-  :custom (sml/theme 'automatic)
-  :config (sml/setup))
-
 (use-package anzu
   :config
   (global-anzu-mode)
@@ -786,18 +787,17 @@
 
 (use-package display-line-numbers
   :ensure f
-  :config (global-display-line-numbers-mode))
-
-(use-package dired-collapse)
+  :config
+  (setq display-line-numbers-width-start t)
+  (global-display-line-numbers-mode))
 
 (use-package multiple-cursors
   :bind
   (("C->"     . mc/mark-next-like-this)
    ("C-<"     . mc/mark-previous-like-this)
-   ("C-c C-<" . mc/mark-all-like-this)))
+   ("C-c C->" . mc/mark-all-like-this)))
 
 (use-package csv-mode)
-(use-package sql-indent)
 
 (use-package clojure-mode
   :hook
@@ -837,25 +837,6 @@
 
 (use-package yasnippet)
 
-(use-package clj-refactor
-  :hook (clojure-mode . (lambda ()
-                          (clj-refactor-mode 1)
-                          (yas-minor-mode 1)
-                          (cljr-add-keybindings-with-prefix "C-c r")))
-  :config
-  (setq cljr-suppress-middleware-warnings t
-        cljr-favor-prefix-notation nil
-        ;; Lazily build ASTs, instead of immediately on REPL connect
-        cljr-eagerly-build-asts-on-startup nil)
-  (add-to-list 'cljr-magic-require-namespaces '("json" . "cheshire.core"))
-  (add-to-list 'cljr-magic-require-namespaces '("string" . "clojure.string")))
-
-;; This is used by clojure-lsp via lsp-mode now
-;;(use-package flycheck-clj-kondo)
-
-;; Seed the PRNG anew, from the system's entropy pool
-(random t)
-
 (use-package systemd :if (eq system-type 'gnu/linux))
 
 (use-package browse-url
@@ -884,8 +865,8 @@
   :config
   (setq read-process-output-max (* 1024 1024))
   (setq lsp-enable-indentation nil)
-  ;; We'll see if this bites me later on... default is 1000
-  :custom (lsp-file-watch-threshold 15000)
+  ;; Using a locally-built version
+  ;;:custom (lsp-clojure-custom-server-command "/Users/jcsims/code/clojure-lsp/clojure-lsp")
   :commands lsp)
 
 (use-package lsp-ui
@@ -897,37 +878,18 @@
               ([remap xref-find-references] . lsp-ui-peek-find-references))
   :custom (lsp-ui-sideline-show-code-actions nil))
 
-(use-package company-lsp
-  :disabled ;; it seems that LSP no longer supports this?
-  :after lsp-mode
-  :commands company-lsp)
-
 (use-package lsp-treemacs
   :after lsp-mode
   :config (setq treemacs-space-between-root-nodes nil))
 
-;; (use-package rust-mode
-;;   :custom (rust-format-on-save nil))
-
 (use-package rustic)
-
-(use-package racer
-  :disabled
-  :hook ((rust-mode . racer-mode)))
 
 (use-package flycheck-rust
   :after rust-mode
   :hook (flycheck-mode . flycheck-rust-setup))
 
 (use-package savehist
-  :config (savehist-mode))
-
-(use-package atomic-chrome
-  :config
-  (setq atomic-chrome-url-major-mode-alist
-        '(("github\\.com" . gfm-mode)
-          ("github\\.threatbuild\\.com" . gfm-mode)))
-  (atomic-chrome-start-server))
+  :init (savehist-mode))
 
 (use-package crux
   :bind (("C-x 4 t" . crux-transpose-windows)
@@ -950,8 +912,6 @@
   (add-to-list 'git-link-remote-alist
                '("github\\.threatbuild\\.com" git-link-github)))
 
-(use-package define-word)
-
 (use-package buffer-move
   :bind (("C-S-<up>" . buf-move-up)
          ("C-S-<down>" . buf-move-down)
@@ -964,11 +924,6 @@
                          (setq tab-width 2)))
   :custom (groovy-indent-offset 2))
 
-(use-package pixel-scroll
-  :disabled
-  :ensure f
-  :config (pixel-scroll-mode))
-
 (use-package hl-todo
   :config (global-hl-todo-mode))
 
@@ -976,34 +931,12 @@
   :custom (pkgbuild-update-sums-on-save nil)
   :if (eq system-type 'gnu/linux))
 
-(use-package scpaste
-  :config
-  (setq scpaste-http-destination "https://paste.jcsi.ms"
-        scpaste-scp-destination "paste.jcsi.ms:/srv/paste"
-        scpaste-user-name "jcsims"
-        scpaste-user-address "https://www.jcsi.ms/"))
-
 (use-package vlf
   :config (require 'vlf-setup))
-
-(use-package nix-mode)
 
 (use-package newcomment
   :ensure f
   :config (global-set-key [remap comment-dwim] #'comment-line))
-
-(use-package snow)
-
-(use-package nov
-  :disabled
-  :mode "\\.epub\\'"
-  :config
-  (setq nov-text-width 80)
-  (setq visual-fill-column-center-text t)
-  ;; :hook
-  ;; (nov-mode-hook . visual-line-mode)
-  ;; (nov-mode-hook . visual-fill-column-mode)
-  )
 
 ;; Emoji support
 (use-package unicode-fonts

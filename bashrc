@@ -36,8 +36,6 @@ prepend_path () {
     esac
 }
 
-prepend_path $HOME/bin
-
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     # Add an "alert" alias for long running commands.  Use like so:
@@ -128,7 +126,6 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
     [ -n "$PS1" ] && \
         [ -s "$BASE16_SHELL/profile_helper.sh" ] && \
         eval "$("$BASE16_SHELL/profile_helper.sh")"
-
 fi
 
 # Set the theme for `bat`
@@ -146,7 +143,8 @@ shopt -s checkwinsize
 PROMPT_DIRTRIM=2
 
 # Set the terminal title
-PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
+# Using PROMPT_COMMAND here conflicts with bash-preexec
+#PROMPT_COMMAND=${PROMPT_COMMAND:+$PROMPT_COMMAND; }'printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/\~}"'
 
 ## Bind a few things in interactive shells only
 if [[ $- == *i* ]]; then
@@ -253,6 +251,9 @@ man() {
         man "$@"
 }
 
+# ~/bin should always come first
+prepend_path $HOME/bin
+
 unset append_path
 unset prepend_path
 export PATH
@@ -260,8 +261,8 @@ export PATH
 ## Prompt
 #PS1="[\u@\h \W]\$ " # Default prompt
 
-PS1="[\u@\h \w]\$ "
-#eval "$(starship init bash)"
+#PS1="[\u@\h \w]\$ "
+eval "$(starship init bash)"
 
 ## TODO: Add some macos settings
 ## defaults write NSGlobalDomain NSWindowResizeTime .001 # Speed up animations on window resizes
@@ -269,3 +270,5 @@ PS1="[\u@\h \w]\$ "
 # Enable subpixel font rendering on non-Apple LCDs
 # Reference: https://github.com/kevinSuttle/macOS-Defaults/issues/17#issuecomment-266633501
 ## defaults write NSGlobalDomain AppleFontSmoothing -int 1
+
+#[ -f $HOME/.bash-preexec.sh ] && source $HOME/.bash-preexec.sh
