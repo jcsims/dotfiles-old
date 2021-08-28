@@ -115,7 +115,7 @@
 
 ;; Font
 (if (eq system-type 'gnu/linux)
-    (set-frame-font "Hack Nerd Font 9")
+    (set-frame-font "Hack 9")
   (set-frame-font "Hack Nerd Font 12"))
 
 ;;; Themes
@@ -140,7 +140,9 @@
 
 (use-package modus-themes
   :init (modus-themes-load-themes)
-  :config (jcs/apply-theme ns-system-appearance)
+  :config (if (eq system-type 'darwin)
+              (jcs/apply-theme ns-system-appearance)
+              (load-theme 'gruvbox-dark-soft t))
   (setq ns-system-appearance-change-functions '(jcs/apply-theme)))
 
 ;; (setq base16-theme-256-color-source 'base16-shell
@@ -507,6 +509,7 @@
 (use-package files
   :ensure f
   :config
+  (auto-save-visited-mode 1)
   (setq backup-directory-alist ; Save backups to a central location
         `(("." . ,(no-littering-expand-var-file-name "backup/")))
         auto-save-file-name-transforms
@@ -671,9 +674,20 @@ Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
     (backward-kill-word arg)))
 
 (use-package vertico
+  ;; :disabled
   :init (vertico-mode)
+  :custom (vertico-cycle t)
   :bind (:map vertico-map
               ("M-<backspace>" . jcs/minibuffer-backward-kill)))
+
+;; (use-package icomplete
+;;   :ensure f
+;;   :demand
+;;   :config
+;;   (fido-mode 1)
+;;   (fido-vertical-mode)
+;;   (setq  icomplete-scroll t
+;;          icomplete-show-matches-on-no-input t))
 
 (use-package orderless
   :init
@@ -773,12 +787,6 @@ Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
   (add-hook 'magit-pre-refresh-hook 'diff-hl-magit-pre-refresh)
   (add-hook 'magit-post-refresh-hook 'diff-hl-magit-post-refresh))
 
-(use-package super-save
-  :init (setq auto-save-default nil)
-  :config
-  (setq super-save-auto-save-when-idle t)
-  (super-save-mode +1))
-
 (use-package anzu
   :config
   (global-anzu-mode)
@@ -796,8 +804,6 @@ Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
   (("C->"     . mc/mark-next-like-this)
    ("C-<"     . mc/mark-previous-like-this)
    ("C-c C->" . mc/mark-all-like-this)))
-
-(use-package csv-mode)
 
 (use-package clojure-mode
   :hook
@@ -826,10 +832,14 @@ Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
   (cider-repl-print-length nil)
   (cider-auto-jump-to-error 'errors-only)
   :config
+  ;; kill REPL buffers for a project as well
+  (add-to-list 'project-kill-buffer-conditions
+	       '(derived-mode . cider-repl-mode)
+	       t)
   (setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
         cider-repl-display-help-banner nil
         nrepl-log-messages t
-        cider-known-endpoints '(("Face" "localhost" "4242")
+	cider-known-endpoints '(("Face" "localhost" "4242")
                                 ("Remote" "localhost" "8842")
                                 ("Threatbrain Server" "localhost" "4243")
                                 ("Integration Service" "localhost" "4244")

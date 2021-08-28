@@ -19,12 +19,10 @@ fi
 
 ## Path
 append_path () {
-    case ":$PATH:" in
-        *:"$1":*)
-        ;;
-        *)
-            PATH="${PATH:+$PATH:}$1"
-    esac
+    if ! [[ "$PATH" =~ "$1" ]]
+    then
+	PATH="${PATH:+$PATH:}$1"
+    fi
 }
 
 prepend_path () {
@@ -38,6 +36,10 @@ prepend_path () {
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
+    if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+    fi
+
     # Add an "alert" alias for long running commands.  Use like so:
     #   sleep 10; alert
     alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
@@ -46,8 +48,7 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     alias open='xdg-open'
 
-    [ -f /usr/share/skim/key-bindings.bash ] && source /usr/share/skim/key-bindings.bash
-    [ -f /usr/share/skim/completion.bash ] && source /usr/share/skim/completion.bash
+    [ -f /usr/share/skim/shell/key-bindings.bash ] && source /usr/share/skim/shell/key-bindings.bash
 
     export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle
     export GOBIN=$HOME/bin
