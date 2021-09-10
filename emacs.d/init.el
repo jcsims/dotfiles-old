@@ -19,6 +19,7 @@
 (require 'package)
 (setq package-archives
       '(("gnu" . "https://elpa.gnu.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
         ("melpa" . "https://melpa.org/packages/")
         ("org" . "https://orgmode.org/elpa/")))
 (package-initialize)
@@ -139,10 +140,11 @@
       ('dark (modus-themes-load-vivendi)))))
 
 (use-package modus-themes
+  :disabled
   :init (modus-themes-load-themes)
   :config (if (eq system-type 'darwin)
               (jcs/apply-theme ns-system-appearance)
-              (load-theme 'gruvbox-dark-soft t))
+            (load-theme 'gruvbox-dark-soft t))
   (setq ns-system-appearance-change-functions '(jcs/apply-theme)))
 
 ;; (setq base16-theme-256-color-source 'base16-shell
@@ -154,15 +156,15 @@
 ;;       jcs-light-theme 'solarized-gruvbox-light
 ;;       jcs-dark-theme 'solarized-gruvbox-dark)
 
-;; (setq jcs-active-theme 'sanityinc-tomorrow-eighties
-;;       jcs-light-theme 'sanityinc-tomorrow-day
-;;       jcs-dark-theme 'sanityinc-tomorrow-eighties)
+(setq jcs-active-theme 'sanityinc-tomorrow-eighties
+      jcs-light-theme 'sanityinc-tomorrow-day
+      jcs-dark-theme 'sanityinc-tomorrow-eighties)
 
-;; (setq jcs-active-theme 'gruvbox-dark-soft
+;; (setq jcs-active-theme 'gruvbox-dark-hard
 ;;       jcs-light-theme 'gruvbox-light-medium
-;;       jcs-dark-theme 'gruvbox-dark-soft)
+;;       jcs-dark-theme 'gruvbox-dark-hard)
 
-;;(load-theme jcs-active-theme t)
+(load-theme jcs-active-theme t)
 
 (defun toggle-dark-light-theme ()
   "Toggle the current theme between light and dark."
@@ -571,7 +573,10 @@
 
 (use-package minions
   :config
-  (setq minions-direct '(flycheck-mode cider-mode vlf-mode lsp-mode))
+  (setq minions-direct '(flycheck-mode
+                         vlf-mode
+                         lsp-mode
+                         whitespace-cleanup-mode))
   (minions-mode))
 
 (use-package simple
@@ -700,11 +705,6 @@ Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
   :bind (("M-y" . consult-yank-from-kill-ring)
          ([remap isearch-forward-regexp] . consult-line)))
 
-(defun jcs/project-ripgrep ()
-  "Start a ripgrep search in the configured project root."
-  (interactive)
-  (consult-ripgrep (projectile-project-root)))
-
 (use-package projectile
   :demand ;; never want to lazy-load this package
   :after consult
@@ -718,7 +718,7 @@ Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
          ("s-p" . projectile-command-map)
          :map projectile-command-map
          ;; I'm used to this binding, and ripgrep is faster
-         ("s s" . jcs/project-ripgrep)))
+         ("s s" . projectile-ripgrep)))
 
 (use-package marginalia
   :init (marginalia-mode))
@@ -729,7 +729,6 @@ Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
 
 (use-package magit
   :demand
-  :after project
   :bind (("C-c g"   . magit-status)
          ("C-c M-g" . magit-dispatch))
   :custom
@@ -749,9 +748,6 @@ Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
 (use-package windmove
   :config (windmove-default-keybindings))
 
-(use-package winner
-  :config (winner-mode))
-
 (use-package paredit
   :hook (emacs-lisp-mode . paredit-mode))
 
@@ -763,10 +759,6 @@ Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
 
 (use-package dockerfile-mode
   :mode "Dockerfile")
-
-(use-package dumb-jump
-  :hook (xref-backend-functions . dumb-jump-xref-activate))
-
 (use-package yaml-mode
   :mode (("\\.yml\\'" . yaml-mode)
          ("\\.sls\\'" . yaml-mode)))
@@ -834,18 +826,17 @@ Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
   :config
   ;; kill REPL buffers for a project as well
   (add-to-list 'project-kill-buffer-conditions
-	       '(derived-mode . cider-repl-mode)
-	       t)
+               '(derived-mode . cider-repl-mode)
+               t)
   (setq cider-prompt-for-symbol nil ; Don't prompt for a symbol with `M-.`
         cider-repl-display-help-banner nil
         nrepl-log-messages t
-	cider-known-endpoints '(("Face" "localhost" "4242")
+        cider-known-endpoints '(("Face" "localhost" "4242")
                                 ("Remote" "localhost" "8842")
                                 ("Threatbrain Server" "localhost" "4243")
                                 ("Integration Service" "localhost" "4244")
                                 ("GUNDAM" "localhost" "4245"))))
 
-(use-package yasnippet)
 
 (use-package systemd :if (eq system-type 'gnu/linux))
 
@@ -899,7 +890,8 @@ Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
   :hook (flycheck-mode . flycheck-rust-setup))
 
 (use-package savehist
-  :init (savehist-mode))
+  :ensure f
+  :config (savehist-mode))
 
 (use-package crux
   :bind (("C-x 4 t" . crux-transpose-windows)
@@ -952,6 +944,9 @@ Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
 (use-package unicode-fonts
   :config
   (unicode-fonts-setup))
+
+(use-package whitespace-cleanup-mode
+  :config (global-whitespace-cleanup-mode))
 
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")
