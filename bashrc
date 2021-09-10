@@ -48,7 +48,8 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 
     alias open='xdg-open'
 
-    [ -f /usr/share/skim/shell/key-bindings.bash ] && source /usr/share/skim/shell/key-bindings.bash
+    [ -f /usr/share/skim/completion.bash ] && source /usr/share/skim/completion.bash
+    [ -f /usr/share/skim/key-bindings.bash ] && source /usr/share/skim/key-bindings.bash
 
     export GOPATH=$HOME/code/go:$HOME/code/tg/sandcastle
     export GOBIN=$HOME/bin
