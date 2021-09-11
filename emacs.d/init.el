@@ -948,6 +948,10 @@ Passes ARG onto `zap-to-char` or `backward-kill-word` if used."
 (use-package whitespace-cleanup-mode
   :config (global-whitespace-cleanup-mode))
 
+(use-package xref
+  :ensure f
+  :custom (xref-search-program 'ripgrep))
+
 ;; Local personalization
 (let ((file (expand-file-name (concat (user-real-login-name) ".el")
                               user-emacs-directory)))
